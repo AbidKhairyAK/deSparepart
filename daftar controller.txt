@@ -1,0 +1,27 @@
+controller
+- pembelian
+- penjualan
+- hutang
+	- pembayaran
+	- pelunasan
+- piutang
+	- pembayaran
+	- pelunasan
+- pemasok
+- pelanggan
+- barang
+	- multiedit
+- karyawan
+- pengguna
+- penjual?
+- mobil
+- komponen
+- laporan
+	- penjualan
+	- pembelian
+	- kinerja karyawan
+	- laba rugi
+- jabatan
+- hak akses
+- enkripsi angka
+- backup & restore
