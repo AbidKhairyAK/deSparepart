@@ -14,6 +14,8 @@
 Route::get('/beranda', 'BerandaController@index')->name('beranda.index');
 Route::redirect('/', '/beranda');
 
+Route::get('/barang/multiedit', 'BarangController@multiedit');
+
 Route::resource('/pembelian', 'PembelianController');
 Route::resource('/penjualan', 'PenjualanController');
 Route::resource('/hutang', 'HutangController');
@@ -29,7 +31,11 @@ Route::resource('/pengguna', 'PenggunaController');
 Route::resource('/penjual', 'PenjualController');
 Route::resource('/mobil', 'MobilController');
 Route::resource('/komponen', 'KomponenController');
-Route::resource('/laporan', 'LaporanController');
 Route::resource('/jabatan', 'JabatanController');
 Route::resource('/enkripsi', 'EnkripsiController');
 Route::resource('/backup', 'BackupController');
+
+Route::get('/laporan-penjualan', 'LaporanPenjualanController@index')->name('laporan-penjualan.index');
+Route::get('/laporan-pembelian', 'LaporanPembelianController@index')->name('laporan-pembelian.index');
+Route::get('/laporan-kinerja-karyawan', 'LaporanKinerjaKaryawanController@index')->name('laporan-kinerja-karyawan.index');
+Route::get('/laporan-laba-rugi', 'LaporanLabaRugiController@index')->name('laporan-laba-rugi.index');

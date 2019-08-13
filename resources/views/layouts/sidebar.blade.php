@@ -50,17 +50,17 @@
     ],
     [
       'name' => 'Laporan', 'icon' => 'file-invoice-dollar', 'child' => [
-        ['name' => 'Laporan Penjualan', 'link' => '/laporan/penjualan'],
-        ['name' => 'Laporan Pembelian', 'link' => '/laporan/pembelian'],
-        ['name' => 'Laporan Kinerja Karyawan', 'link' => '/laporan/kinerja-karyawan'],
-        ['name' => 'Laporan Laba Rugi', 'link' => '/laporan/laba-rugi'],
+        ['name' => 'Laporan Penjualan', 'link' => '/laporan-penjualan'],
+        ['name' => 'Laporan Pembelian', 'link' => '/laporan-pembelian'],
+        ['name' => 'Laporan Kinerja Karyawan', 'link' => '/laporan-kinerja-karyawan'],
+        ['name' => 'Laporan Laba Rugi', 'link' => '/laporan-laba-rugi'],
       ],
     ],
     [
       'name' => 'Pengaturan', 'icon' => 'cog', 'child' => [
         ['name' => 'Daftar Jabatan', 'link' => '/jabatan'],
         ['name' => 'Daftar Akses', 'link' => '/akses'],
-        ['name' => 'Enkripsi Angka', 'link' => '/angka'],
+        ['name' => 'Enkripsi Angka', 'link' => '/enkripsi'],
         ['name' => 'Backup & Restore', 'link' => '/backup'],
       ],
     ],

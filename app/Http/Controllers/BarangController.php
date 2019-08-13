@@ -8,7 +8,12 @@ class BarangController extends Controller
 {
     public function index()
     {
-    	return view('components.barang.index');
+        return view('components.barang.index');
+    }
+
+    public function multiedit()
+    {
+        return view('components.barang.multiedit');
     }
 
     public function create()
