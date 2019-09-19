@@ -1,0 +1,74 @@
+pertanyaan
+- butuh kode mesin?
+- prefer opsi dropdown atau icon?
+
+yg diperbaiki terakhir
+	- pembelian form
+	- penjualan form
+	- barang form
+	- pembayaran utang/piutang form
+
+buat form
+- pemasok -/
+	- logo
+	- nama
+	- alamat
+	- kontak (add system)
+		- no
+		- category
+	- npwp
+	- pkp
+	- kategori
+
+- pelanggan -/
+	- nama
+	- toko
+	- alamat (combo)
+	- kontak
+		- no
+		- category
+	- kategori
+
+- karyawan
+	- foto
+	- nama
+	- alamat (combo)
+	- kontak
+		- no
+		- category
+	- gaji
+
+- pengguna
+	- username
+	- password
+	- email
+	- role_id
+	- status
+	- last_login
+
+- kendaraan
+	- kode
+	- tipe
+	- merk
+	- pabrikan
+	- silinder
+	- bahan bakar
+	- keluaran tahun
+
+- komponen
+	- kode
+	- nama komponen
+	- Merk
+	- bagian
+	- Untuk Tipe
+
+
+
+- data faktur 1
+	- no faktur
+	- tanggal
+	- jatuh tempo
+	- data barang
+		- no
+		- 
+

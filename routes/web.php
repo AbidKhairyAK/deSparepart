@@ -29,9 +29,10 @@ Route::resource('/barang', 'BarangController');
 Route::resource('/karyawan', 'KaryawanController');
 Route::resource('/pengguna', 'PenggunaController');
 Route::resource('/penjual', 'PenjualController');
-Route::resource('/mobil', 'MobilController');
+Route::resource('/kendaraan', 'KendaraanController');
 Route::resource('/komponen', 'KomponenController');
 Route::resource('/jabatan', 'JabatanController');
+Route::resource('/hak-akses', 'HakAksesController');
 Route::resource('/enkripsi', 'EnkripsiController');
 Route::resource('/backup', 'BackupController');
 

@@ -1,14 +1,14 @@
 @extends('app')
 
-@section('title', 'Mobil')
+@section('title', 'Hak Akses')
 
 @section('content')
 <div id="page-header">
-	<h1 class="h3 mb-1 text-gray-800">Daftar Mobil</h1>
-	<p class="mb-4">Daftar data mobil</p>
+	<h1 class="h3 mb-1 text-gray-800">Daftar Hak Akses</h1>
+	<p class="mb-4">Daftar data hak akses</p>
 </div>
 
-@include('components.mobil.table')
+@include('components.hak-akses.table')
 
 @endsection
 

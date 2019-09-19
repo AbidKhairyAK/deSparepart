@@ -1,16 +1,16 @@
 @extends('app')
 
-@section('title', 'Form Komponen')
+@section('title', 'Form Kendaraan')
 
 @section('content')
 <div id="page-header">
-	<h1 class="h3 mb-1 text-gray-800">Form Komponen</h1>
-	<p class="mb-4">form yang digunakan untuk input data komponen</p>
+	<h1 class="h3 mb-1 text-gray-800">Form Kendaraan</h1>
+	<p class="mb-4">form yang digunakan untuk input data kendaraan</p>
 </div>
 
 <div class="card shadow mb-4">
 	<div class="card-header">
-		<h6 class="m-0 font-weight-bold text-secondary">Form Komponen</h6>
+		<h6 class="m-0 font-weight-bold text-secondary">Form Kendaraan</h6>
 	</div>
 	<div class="card-body">
 		
@@ -19,12 +19,7 @@
 				<div class="row">
 
 					<div class="form-group col-sm-12">
-						<label>Nama Komponen:</label>
-						<input type="text" class="form-control">
-					</div>
-
-					<div class="form-group col-sm-12">
-						<label>Untuk Tipe:</label>
+						<label>Tipe:</label>
 						<br>
 						<label class="pr-3 d-inline-flex align-items-center">
 							<input type="radio" name="pkp">
@@ -40,19 +35,30 @@
 						</label>
 					</div>
 
+					<div class="form-group col-sm-6">
+						<label>Merk:</label>
+						<input type="text" class="form-control">
+					</div>
+					<div class="form-group col-sm-6">
+						<label>Pabrikan:</label>
+						<input type="text" class="form-control">
+					</div>
+
 					<div class="form-group col-sm-12">
-						<label>Bagian:</label>
+						<label>Silinder:</label>
+						<input type="number" class="form-control">
+					</div>
+
+					<div class="form-group col-sm-12">
+						<label>Bahan Bakar:</label>
 						<select class="form-control">
 							<option></option>
-							<option>Body</option>
-							<option>Atap</option>
-							<option>Dalam</option>
-							<option>Bawah</option>
-							<option>Ban</option>
-							<option>Pintu</option>
-							<option>Bagian Lain</option>
-							<option>Bagian Lain</option>
-							<option>Bagian Lain</option>
+							<option>Bensin</option>
+							<option>Solar</option>
+							<option>Pertamax</option>
+							<option>Avtur</option>
+							<option>Yg Lain 1</option>
+							<option>Yg Lain 2</option>
 						</select>
 					</div>
 

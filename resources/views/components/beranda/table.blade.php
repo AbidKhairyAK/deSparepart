@@ -88,14 +88,14 @@
 					<thead class="thead-dark">
 						<tr>
 							<th>Gambar</th>
-							<th>Kode</th>
-							<th>Mobil</th>
-							<th>Stok</th>
+							<th>Part No</th>
+							<th>Merk</th>
+							<th>Type Kendaraan</th>
+							<th>Jml Stock</th>
 							<th>Satuan</th>
-							<th>Kondisi</th>
-							<th>Kualitas</th>
-							<th>Harga Beli</th>
-							<th>Harga Jual</th>
+							<th>Stock Limit</th>
+							<th>Hrg Beli</th>
+							<th>Hrg Jual</th>
 							<th>Aksi</th>
 						</tr>
 					</thead>
@@ -103,23 +103,14 @@
 						@for($i=0;$i<=2;$i++)
 						<tr>
 							<td><a target="_blank" href="https://imgx.gridoto.com/crop/0x0:0x0/700x465/photo/gridoto/2017/11/03/2961387798.jpg"><img width="50" src="https://imgx.gridoto.com/crop/0x0:0x0/700x465/photo/gridoto/2017/11/03/2961387798.jpg"></a></td>
-							<td>
-								<b>32HJ1239</b><br>Rem Kaki
-							</td>
-							<td>Toyota Kijang</td>
-							<td>10</td>
+							<td>92034-2930492</td>
+							<td>V-Gen</td>
+							<td>SupraFit XX</td>
+							<td>30</td>
 							<td>Buah</td>
-							<td><span class="badge badge-primary">BAIK</span></td>
-							<td>Original</td>
-							<td><span class="badge badge-success">MISADIOIOIOI</span></td>
-							<td>
-								<div class="row">
-									<span class="col-5">Harga</span><span class="col-1">:</span><span class="col-5 text-right">Rp 2.000.000</span>
-								</div>
-								<div class="row">
-									<span class="col-5">Rekomendasi</span><span class="col-1">:</span><span class="col-5 text-right">Rp 2.200.000</span>
-								</div>
-							</td>
+							<td>5</td>
+							<td><span class="badge badge-success">SAABULYHVWPP</span></td>
+							<td><span class="badge badge-primary">IUABYWOVCWYC</span></td>
 							<td>
 								<div class="dropdown no-arrow">
 									<button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
@@ -134,24 +125,15 @@
 							</td>
 						</tr>
 						<tr>
-							<td><a target="_blank" href="https://ecs7.tokopedia.net/img/cache/700/product-1/2019/2/19/21249751/21249751_290e775e-ca8d-414e-a73b-7b8648be43d8_476_451.jpg"><img width="50" src="https://ecs7.tokopedia.net/img/cache/700/product-1/2019/2/19/21249751/21249751_290e775e-ca8d-414e-a73b-7b8648be43d8_476_451.jpg"></a></td>
-							<td>
-								<b>89SDF67D</b><br>Pelek Ban
-							</td>
+							<td><a target="_blank" href="https://www.static-src.com/wcsstore/Indraprastha/images/catalog/medium//90/MTA-1940029/dny_head-lamp-avanza-2008--kanan-_full02.jpg"><img width="50" src="https://www.static-src.com/wcsstore/Indraprastha/images/catalog/medium//90/MTA-1940029/dny_head-lamp-avanza-2008--kanan-_full02.jpg"></a></td>
+							<td>92034-2930492</td>
+							<td>V-Gen</td>
 							<td>Honda CRV</td>
-							<td>5</td>
-							<td>Set</td>
-							<td><span class="badge badge-primary">BAIK</span></td>
-							<td>KW 5</td>
-							<td><span class="badge badge-success">JAKDJFLAKLKK</span></td>
-							<td>
-								<div class="row">
-									<span class="col-5">Harga</span><span class="col-1">:</span><span class="col-5 text-right">Rp 1.500.000</span>
-								</div>
-								<div class="row">
-									<span class="col-5">Rekomendasi</span><span class="col-1">:</span><span class="col-5 text-right">Rp 1.200.000</span>
-								</div>
-							</td>
+							<td>10</td>
+							<td>Buah</td>
+							<td>2</td>
+							<td><span class="badge badge-success">MISADIOIOIOI</span></td>
+							<td><span class="badge badge-primary">APOPRIOIOIOI</span></td>
 							<td>
 								<div class="dropdown no-arrow">
 									<button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">

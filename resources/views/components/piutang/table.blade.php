@@ -1,11 +1,11 @@
 <div class="card shadow mb-4">
 	<div class="card-header py-3 d-flex justify-content-between align-items-center">
-		<h6 class="m-0 font-weight-bold text-secondary">Tabel Daftar Pembelian</h6>
+		<h6 class="m-0 font-weight-bold text-secondary">Tabel Daftar Piutang</h6>
 		<div>
-			<a href="#" class="btn btn-sm btn-primary">
+			<a href="{{ url('penjualan/create') }}" class="btn btn-sm btn-primary">
 				<i class="fas fa-plus"></i> <b>Tambah Penjualan</b>
 			</a>
-			<a href="#" class="btn btn-sm btn-warning">
+			<a href="{{ url('penjualan') }}" class="btn btn-sm btn-warning">
 				<i class="fas fa-money-bill-wave"></i> <b>Daftar Penjualan</b>
 			</a>
 		</div>
@@ -15,49 +15,67 @@
 		<table class="table table-striped">
 			<thead class="thead-dark">
 				<tr>
-					<th>No Faktur</th>
-					<th>Tanggal</th>
-					<th>Piutang</th>
-					<th>Kasir</th>
-					<th>Karyawan</th>
-					<th>Keterangan</th>
-					<th>Status</th>
+					<th>Debitur</th>
+					<th>Total Piutang</th>
+					<th>Jatuh Tempo Terdekat</th>
+					<th>Penjualan</th>
 					<th>Aksi</th>
 				</tr>
 			</thead>
 			<tbody>
-				@for($i=0;$i<=2;$i++)
 				<tr>
 					<td>
-						<div class="d-flex justify-content-between flex-row-reverse">
-							<span class="text-right">
-								<div><b>139</b></div>
-								<div><b>SI12NJ3</b></div>
-								<div><b>Umum</b></div>
+						<div class="d-flex">
+							<span>
+								<div>Kode</div>
+								<div>Nama</div>
+							</span>
+							<span class="px-2">
+								<div>:</div>
+								<div>:</div>
 							</span>
 							<span>
-								<div>No Faktur</div>
+								<div><b>RR41</b></div>
+								<div><b>Risma Rumianti</b></div>
+							</span>
+						</div>
+					</td>
+					<td><b>Rp. 12.000.000</b></td>
+					<td>
+						<div class="d-flex">
+							<span>
+								<div>Tgl Tempo</div>
 								<div>No Nota</div>
-								<div>Pembeli</div>
+								<div>Hutang</div>
+							</span>
+							<span class="px-2">
+								<div>:</div>
+								<div>:</div>
+								<div>:</div>
+							</span>
+							<span>
+								<div><b>12-9-2019</b></div>
+								<div><b>78JHDS</b></div>
+								<div><b>Rp. 6.000.000</b></div>
 							</span>
 						</div>
 					</td>
 					<td>
-						<div class="d-flex justify-content-between flex-row-reverse">
-							<span class="text-right">
-								<div>: 2019-02-01</div>
-								<div>: 2019-02-16</div>
+						<div class="d-flex">
+							<span>
+								<div>Lunas</div>
+								<div>Belum Lunas</div>
+							</span>
+							<span class="px-2">
+								<div>:</div>
+								<div>:</div>
 							</span>
 							<span>
-								<div>Tanggal Jual</div>
-								<div>Jatuh Tempo</div>
+								<div><b>490 Transaksi</b></div>
+								<div><b>4 Transaksi</b></div>
 							</span>
-						</div></td>
-					<td>Rp 8.000.000</td>
-					<td>Bambang</td>
-					<td>Sutrisno</td>
-					<td>Ini Keterangan ...</td>
-					<td>Kredit</td>
+						</div>
+					</td>
 					<td>
 						<div class="dropdown no-arrow">
 							<button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
@@ -65,42 +83,65 @@
 							</button>
 							<div class="dropdown-menu dropdown-menu-right shadow">
 								<a class="dropdown-item" href="#">Detail</a>
-								<a class="dropdown-item" href="#">Hapus</a>
+								<a class="dropdown-item" href="#">Lunasi</a>
 							</div>
 						</div>
 					</td>
 				</tr>
+
 				<tr>
 					<td>
-						<div class="d-flex justify-content-between flex-row-reverse">
-							<span class="text-right">
-								<div><b>184</b></div>
-								<div><b>KL98ASDK</b></div>
-								<div><b>CV. Motor Sakti</b></div>
+						<div class="d-flex">
+							<span>
+								<div>Kode</div>
+								<div>Nama</div>
+							</span>
+							<span class="px-2">
+								<div>:</div>
+								<div>:</div>
 							</span>
 							<span>
-								<div>No Faktur</div>
+								<div><b>BM12</b></div>
+								<div><b>Bengkel Mawar</b></div>
+							</span>
+						</div>
+					</td>
+					<td><b>Rp. 20.000.000</b></td>
+					<td>
+						<div class="d-flex">
+							<span>
+								<div>Tgl Tempo</div>
 								<div>No Nota</div>
-								<div>Pembeli</div>
+								<div>Hutang</div>
+							</span>
+							<span class="px-2">
+								<div>:</div>
+								<div>:</div>
+								<div>:</div>
+							</span>
+							<span>
+								<div><b>20-10-2019</b></div>
+								<div><b>AS89HF</b></div>
+								<div><b>Rp. 2.000.000</b></div>
 							</span>
 						</div>
 					</td>
 					<td>
-						<div class="d-flex justify-content-between flex-row-reverse">
-							<span class="text-right">
-								<div>: 2019-03-01</div>
-								<div>: 2019-04-16</div>
+						<div class="d-flex">
+							<span>
+								<div>Lunas</div>
+								<div>Belum Lunas</div>
+							</span>
+							<span class="px-2">
+								<div>:</div>
+								<div>:</div>
 							</span>
 							<span>
-								<div>Tanggal Jual</div>
-								<div>Jatuh Tempo</div>
+								<div><b>230 Transaksi</b></div>
+								<div><b>10 Transaksi</b></div>
 							</span>
-						</div></td>
-					<td>Rp 2.000.000</td>
-					<td>Cahya</td>
-					<td>Purnama</td>
-					<td>Ini Keterangan ...</td>
-					<td>Kredit</td>
+						</div>
+					</td>
 					<td>
 						<div class="dropdown no-arrow">
 							<button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
@@ -108,12 +149,11 @@
 							</button>
 							<div class="dropdown-menu dropdown-menu-right shadow">
 								<a class="dropdown-item" href="#">Detail</a>
-								<a class="dropdown-item" href="#">Hapus</a>
+								<a class="dropdown-item" href="#">Lunasi</a>
 							</div>
 						</div>
 					</td>
 				</tr>
-				@endfor
 			</tbody>
 		</table>
 	</div>

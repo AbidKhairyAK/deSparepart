@@ -11,7 +11,7 @@
 <link href="/sb-admin/css/sb-admin-2.min.css" rel="stylesheet">
 
 <style type="text/css">
-	td, th {
+	body, td, th, input, select {
 		font-size: 14px !important;
 	}
 	@media only screen and (max-width: 720px) {

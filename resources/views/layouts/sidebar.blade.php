@@ -28,24 +28,24 @@
       'name' => 'Barang', 'icon' => 'cubes', 'child' => [
         ['name' => 'Tambah Barang', 'link' => '/barang/create'],
         ['name' => 'Daftar Barang', 'link' => '/barang'],
-        ['name' => 'Edit Harga Barang', 'link' => '/barang/multiedit'],
+        // ['name' => 'Edit Harga Barang', 'link' => '/barang/multiedit'],
       ],
     ],
     [
       'name' => 'Pengguna', 'icon' => 'users', 'child' => [
-        ['name' => 'Daftar Karyawan', 'link' => '/karyawan'],
         ['name' => 'Tambah Karyawan', 'link' => '/karyawan/create'],
-        ['name' => 'Daftar Pengguna', 'link' => '/pengguna'],
+        ['name' => 'Daftar Karyawan', 'link' => '/karyawan'],
         ['name' => 'Tambah Pengguna', 'link' => '/pengguna/create'],
-        ['name' => 'Daftar Penjual', 'link' => '/penjual'],
+        ['name' => 'Daftar Pengguna', 'link' => '/pengguna'],
+        // ['name' => 'Daftar Penjual', 'link' => '/penjual'],
       ],
     ],
     [
-      'name' => 'Mobil & Komponen', 'icon' => 'car', 'child' => [
-        ['name' => 'Tambah Mobil', 'link' => '/mobil/create'],
-        ['name' => 'Daftar Mobil', 'link' => '/mobil'],
-        ['name' => 'Tambah Komponen', 'link' => '/komponen/create'],
-        ['name' => 'Daftar Komponen', 'link' => '/komponen'],
+      'name' => 'Kendaraan & Komponen', 'icon' => 'car', 'child' => [
+        ['name' => 'Tambah Kendaraan', 'link' => '/kendaraan/create'],
+        ['name' => 'Daftar Kendaraan', 'link' => '/kendaraan'],
+        ['name' => 'Tambah Komponen / Part', 'link' => '/komponen/create'],
+        ['name' => 'Daftar Komponen / Part', 'link' => '/komponen'],
       ],
     ],
     [
@@ -59,7 +59,7 @@
     [
       'name' => 'Pengaturan', 'icon' => 'cog', 'child' => [
         ['name' => 'Daftar Jabatan', 'link' => '/jabatan'],
-        ['name' => 'Daftar Akses', 'link' => '/akses'],
+        ['name' => 'Daftar Hak Akses', 'link' => '/hak-akses'],
         ['name' => 'Enkripsi Angka', 'link' => '/enkripsi'],
         ['name' => 'Backup & Restore', 'link' => '/backup'],
       ],

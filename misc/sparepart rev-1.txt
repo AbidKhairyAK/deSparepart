@@ -1,0 +1,12 @@
+- daftar pembelian 
+	- dikasih kolom kredit 30 hari
+	- jatuh tempo pertanggal
+- suplier dan customer berupa huruf dan angka
+- daftar pemasok: nama orang dan contact person
+- auto hitung tanggal jatuh temponya (30 hari)
+
+- daftar penujalan sort by tanggal, lalu faktur
+- tipe pelunasan hutang (giro, transfer, cash)
+- karyawan : tanggal masuk dan resign
+- daftar barang sesuai yg dikertas
+- 

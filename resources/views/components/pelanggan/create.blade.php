@@ -1,16 +1,16 @@
 @extends('app')
 
-@section('title', 'Form Karyawan')
+@section('title', 'Form Pelanggan')
 
 @section('content')
 <div id="page-header">
-	<h1 class="h3 mb-1 text-gray-800">Form Karyawan</h1>
-	<p class="mb-4">form yang digunakan untuk input data karyawan</p>
+	<h1 class="h3 mb-1 text-gray-800">Form Pelanggan</h1>
+	<p class="mb-4">form yang digunakan untuk input data pelanggan</p>
 </div>
 
 <div class="card shadow mb-4">
 	<div class="card-header">
-		<h6 class="m-0 font-weight-bold text-secondary">Form Karyawan</h6>
+		<h6 class="m-0 font-weight-bold text-secondary">Form Pelanggan</h6>
 	</div>
 	<div class="card-body">
 		
@@ -19,7 +19,12 @@
 				<div class="row">
 
 					<div class="form-group col-sm-12">
-						<label>Nama Karyawan:</label>
+						<label>Nama Pelanggan:</label>
+						<input type="text" class="form-control">
+					</div>
+
+					<div class="form-group col-sm-12">
+						<label>Nama Toko <small>(optional)</small>:</label>
 						<input type="text" class="form-control">
 					</div>
 
@@ -60,13 +65,15 @@
 					</div>
 
 					<div class="form-group col-sm-12">
-						<label>Gaji:</label>
-						<input type="number" class="form-control">
-					</div>
-
-					<div class="form-group col-sm-12">
-						<label>Foto:</label>
-						<input type="file" class="form-control">
+						<label>Kategori:</label>
+						<select class="form-control">
+							<option></option>
+							<option>Bengkel</option>
+							<option>Umum</option>
+							<option>Toko</option>
+							<option>Kategori 4</option>
+							<option>Kategori 5</option>
+						</select>
 					</div>
 
 				</div>

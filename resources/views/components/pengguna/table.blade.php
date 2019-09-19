@@ -1,12 +1,9 @@
 <div class="card shadow mb-4">
 	<div class="card-header py-3 d-flex justify-content-between align-items-center">
-		<h6 class="m-0 font-weight-bold text-secondary">Tabel Daftar Pembelian</h6>
+		<h6 class="m-0 font-weight-bold text-secondary">Tabel Daftar Pengguna</h6>
 		<div>
-			<a href="#" class="btn btn-sm btn-primary">
-				<i class="fas fa-plus"></i> <b>Tambah Pembelian</b>
-			</a>
-			<a href="#" class="btn btn-sm btn-warning">
-				<i class="fas fa-coins"></i> <b>Daftar Hutang</b>
+			<a href="{{ url('pengguna/create') }}" class="btn btn-sm btn-primary">
+				<i class="fas fa-plus"></i> <b>Tambah Pengguna</b>
 			</a>
 		</div>
 	</div>
@@ -16,7 +13,7 @@
 			<thead class="thead-dark">
 				<tr>
 					<th>Username</th>
-					<th>Nama</th>
+					<th>Email</th>
 					<th>Role</th>
 					<th>Status</th>
 					<th>Tgl Register</th>
@@ -27,8 +24,8 @@
 			<tbody>
 				@for($i=0;$i<=2;$i++)
 				<tr>
-					<td>usmanbcl</td>
-					<td>Usman BCL</td>
+					<td>usman_bcl</td>
+					<td>usman@bcl.com</td>
 					<td>Admin</td>
 					<td><span class="badge badge-primary">Aktif</span></td>
 					<td>2019-02-16 20:42:12</td>
@@ -47,8 +44,8 @@
 					</td>
 				</tr>
 				<tr>
-					<td>bambangkau</td>
-					<td>Bambang Kau</td>
+					<td>bambang_kau</td>
+					<td>bambang@kau.com</td>
 					<td>Gudang</td>
 					<td><span class="badge badge-warning">Nonaktif</span></td>
 					<td>2019-09-23 13:31:27</td>

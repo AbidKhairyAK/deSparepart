@@ -10,4 +10,6 @@
 	<p class="text-gray-500 mb-0">Maaf, halaman tidak ditemukan...</p>
 	<a href="{{ url('/') }}">&larr; ke beranda</a>
 </div>
+
+
 @endsection
