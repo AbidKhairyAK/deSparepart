@@ -170,7 +170,7 @@ class PenjualanController extends Controller
 
     public function create()
     {
-        $data['no_faktur'] = '0'.rand(1,9).rand(0,1).'.00'.rand(1,4).'-'.date('y').'.00000'.rand(100,999);
+        $data['no_faktur'] = '0'.rand(1,9).rand(0,1).'.00'.rand(1,4).'-'.date('y').'.0000'.rand(1000,9999);
         $data['main'] = $this->main;
         $data['title'] = $this->title;
         $data['action'] = route($this->uri.'.store');;
