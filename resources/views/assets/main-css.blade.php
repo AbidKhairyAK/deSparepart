@@ -32,4 +32,20 @@
 		top: 0px;
 		z-index: 10;
 	}
+	.select2-selection {
+		padding-top: 4px !important;
+		padding-bottom: 30px !important;
+		border-color: #d1d3e2 !important;
+	}
+	table table tr {
+		background-color: transparent !important;
+	}
+	table table tr td,
+	table table tr th {
+		padding: 0 !important;
+		border-top: none !important;
+	}
+	table table tr th {
+		max-width: 200px;
+	}
 </style>

@@ -11,32 +11,70 @@
 |
 */
 
-Route::get('/beranda', 'BerandaController@index')->name('beranda.index');
-Route::redirect('/', '/beranda');
+//real routes
+Route::group(['middleware' => ['guest']], function () {
+	Route::get('login', 'AuthController@loginForm')->name('login');
+	Route::post('login', 'AuthController@login')->name('login');
+});
+Route::post('logout', 'AuthController@logout')->name('logout');
 
-Route::get('/barang/multiedit', 'BarangController@multiedit');
+Route::group(['middleware' => ['auth']], function () {
 
-Route::resource('/pembelian', 'PembelianController');
-Route::resource('/penjualan', 'PenjualanController');
-Route::resource('/hutang', 'HutangController');
-Route::resource('/piutang', 'PiutangController');
-Route::resource('/pembayaran-hutang', 'PembayaranHutangController');
-Route::resource('/pembayaran-piutang', 'PembayaranPiutangController');
-Route::resource('/pemasok', 'PemasokController');
-Route::resource('/pemasok', 'PemasokController');
-Route::resource('/pelanggan', 'PelangganController');
-Route::resource('/barang', 'BarangController');
-Route::resource('/karyawan', 'KaryawanController');
-Route::resource('/pengguna', 'PenggunaController');
-Route::resource('/penjual', 'PenjualController');
-Route::resource('/kendaraan', 'KendaraanController');
-Route::resource('/komponen', 'KomponenController');
-Route::resource('/jabatan', 'JabatanController');
-Route::resource('/hak-akses', 'HakAksesController');
-Route::resource('/enkripsi', 'EnkripsiController');
-Route::resource('/backup', 'BackupController');
+	Route::get('pengguna/data', 'PenggunaController@data')->name('pengguna.data');
+	Route::get('pengguna/{id}/activate', 'PenggunaController@activate')->name('pengguna.activate');
+	Route::get('pengguna/{id}/deactivate', 'PenggunaController@deactivate')->name('pengguna.deactivate');
+	Route::resource('pengguna', 'PenggunaController');
 
-Route::get('/laporan-penjualan', 'LaporanPenjualanController@index')->name('laporan-penjualan.index');
-Route::get('/laporan-pembelian', 'LaporanPembelianController@index')->name('laporan-pembelian.index');
-Route::get('/laporan-kinerja-karyawan', 'LaporanKinerjaKaryawanController@index')->name('laporan-kinerja-karyawan.index');
-Route::get('/laporan-laba-rugi', 'LaporanLabaRugiController@index')->name('laporan-laba-rugi.index');
+	Route::get('pelanggan/api', 'PelangganController@api')->name('pelanggan.api');
+	Route::get('pelanggan/data', 'PelangganController@data')->name('pelanggan.data');
+	Route::get('pelanggan/{id}/activate', 'PelangganController@activate')->name('pelanggan.activate');
+	Route::get('pelanggan/{id}/deactivate', 'PelangganController@deactivate')->name('pelanggan.deactivate');
+	Route::resource('pelanggan', 'PelangganController');
+
+	Route::get('hak-akses/data', 'HakAksesController@data')->name('hak-akses.data');
+	Route::resource('/hak-akses', 'HakAksesController');
+
+	Route::get('komponen/api', 'KomponenController@api')->name('komponen.api');
+	Route::get('komponen/data', 'KomponenController@data')->name('komponen.data');
+	Route::resource('/komponen', 'KomponenController');
+
+	Route::get('kendaraan/api', 'KendaraanController@api')->name('kendaraan.api');
+	Route::get('kendaraan/data', 'KendaraanController@data')->name('kendaraan.data');
+	Route::resource('/kendaraan', 'KendaraanController');
+
+	Route::get('barang/api', 'BarangController@api')->name('barang.api');
+	Route::get('barang/data', 'BarangController@data')->name('barang.data');
+	Route::resource('/barang', 'BarangController');
+
+	Route::get('penjualan/data', 'PenjualanController@data')->name('penjualan.data');
+	Route::resource('/penjualan', 'PenjualanController');
+
+
+	// testing routes
+	Route::get('/beranda', 'BerandaController@index')->name('beranda.index');
+	Route::redirect('/', '/beranda');
+
+	Route::get('/barang/multiedit', 'BarangController@multiedit');
+
+	Route::resource('/pembelian', 'PembelianController');
+	Route::resource('/hutang', 'HutangController');
+	Route::resource('/piutang', 'PiutangController');
+	Route::resource('/pembayaran-hutang', 'PembayaranHutangController');
+	Route::resource('/pembayaran-piutang', 'PembayaranPiutangController');
+	Route::resource('/pemasok', 'PemasokController');
+	Route::resource('/pemasok', 'PemasokController');
+	Route::resource('/pelanggan', 'PelangganController');
+	Route::resource('/barang', 'BarangController');
+	Route::resource('/karyawan', 'KaryawanController');
+	// Route::resource('/pengguna', 'PenggunaController');
+	Route::resource('/penjual', 'PenjualController');
+	Route::resource('/jabatan', 'JabatanController');
+	Route::resource('/enkripsi', 'EnkripsiController');
+	Route::resource('/backup', 'BackupController');
+
+	Route::get('/laporan-penjualan', 'LaporanPenjualanController@index')->name('laporan-penjualan.index');
+	Route::get('/laporan-pembelian', 'LaporanPembelianController@index')->name('laporan-pembelian.index');
+	Route::get('/laporan-kinerja-karyawan', 'LaporanKinerjaKaryawanController@index')->name('laporan-kinerja-karyawan.index');
+	Route::get('/laporan-laba-rugi', 'LaporanLabaRugiController@index')->name('laporan-laba-rugi.index');
+});
+

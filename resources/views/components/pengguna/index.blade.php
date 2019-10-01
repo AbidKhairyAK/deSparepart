@@ -1,19 +1,39 @@
 @extends('app')
 
-@section('title', 'Pengguna')
+@section('title', $title)
 
 @section('content')
 <div id="page-header">
-	<h1 class="h3 mb-1 text-gray-800">Daftar Pengguna</h1>
-	<p class="mb-4">Daftar data pengguna</p>
+	<h1 class="h3 mb-1 text-gray-800">Daftar {{ $title }}</h1>
+	<p class="mb-4">Daftar data {{ $title }}</p>
 </div>
 
-@include('components.pengguna.table')
+@include('components.'.$main.'.table')
+@include('layouts.multi')
 
 @endsection
 
 @section('script')
+<script src="/js/multi.js"></script>
 <script type="text/javascript">
-	$('.table').DataTable();
+	var table;
+	$(function() {
+	    table = $('.table').DataTable({
+	        processing: true,
+	        serverSide: true,
+	        ajax: '{{$ajax}}',
+            order: [[1,'asc']],
+	        columns: [
+	            { data: 'id', searchable: false, orderable: false },
+            	{ data: 'username' },
+	            { data: 'email' },
+	            { data: 'role' },
+	            { data: 'status' },
+	            { data: 'last_login' },
+	            { data: 'created_at' },
+	            { data: 'action', searchable: false, orderable: false }
+	        ],
+	    });
+	});
 </script>
 @endsection
