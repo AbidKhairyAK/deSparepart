@@ -15,7 +15,7 @@ class PenjualanDetailTableSeeder extends Seeder
     {
         $faker = Factory::create('id_ID');
 
-        for ($i=1; $i <= 100; $i++) { 
+        for ($i=1; $i <= 94; $i++) { 
         	$debt = rand(0, 1);
         	$total = rand(1, 99) * 100000;
         	$qty = rand(1, 50);
