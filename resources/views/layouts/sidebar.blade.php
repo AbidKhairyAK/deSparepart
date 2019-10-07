@@ -100,7 +100,7 @@
     @php
       $checkChild = false;
       foreach($menu['child'] as $child) {
-        if(auth()->user()->can($child['perm'])) {
+        if(!empty(auth()->user()) && auth()->user()->can($child['perm'])) {
           $checkChild = true;
         }
       }
@@ -116,7 +116,7 @@
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">{{ $menu['name'] }}</h6>
             @foreach($menu['child'] as $child)
-              @if(auth()->user()->can($child['perm']))
+              @if(!empty(auth()->user()) && auth()->user()->can($child['perm']))
                 <a class="collapse-item" href="{{ url($child['link']) }}"><i class="fas fa-{{ strpos($child['link'], 'create') ? 'plus' : 'list' }} text-black-50"></i> {{ $child['name'] }}</a>
               @endif
             @endforeach

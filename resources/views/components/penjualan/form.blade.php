@@ -46,8 +46,9 @@
 							<tr>
 								<th>Kode - Nama Barang</th>
 								<th width="100">Qty</th>
-								<th width="200">Harga</th>
-								<th width="200">Subtotal</th>
+								<th width="100">Diskon %</th>
+								<th width="150">Harga</th>
+								<th width="150">Subtotal</th>
 								<th>*</th>
 							</tr>
 						</thead>
@@ -69,6 +70,7 @@
 									</select>
 								</td>
 								<td><input id="qty{{ $i+1 }}" name="qty[]" type="number" value="{{ $e ? $d[$i]->qty : 1 }}" class="form-control form-control-sm qty" required></td>
+								<td><input id="diskon{{ $i+1 }}" name="diskon[]" type="number" value="{{ $e ? $d[$i]->diskon : 0 }}" class="form-control form-control-sm diskon" required></td>
 								<td><input id="harga{{ $i+1 }}" name="harga[]" type="text" value="{{ $e ? $d[$i]->harga : 0 }}" class="form-control form-control-sm maskin" readonly required></td>
 								<td><input id="subtotal{{ $i+1 }}" name="subtotal[]" type="text" value="{{ $e ? $d[$i]->subtotal : 0 }}" class="form-control form-control-sm subtotal maskin" readonly required></td>
 								<td><i class="fas fa-times" style="cursor: pointer;" onclick="remove_barang('.barang{{ $i+1 }}')"></i></td>
@@ -76,7 +78,7 @@
 							@endfor
 
 							<tr class="last-barang">
-								<td colspan="5">
+								<td colspan="6">
 									<button type="button" id="add-barang" class="btn btn-sm btn-block btn-light"><i class="fas fa-plus"></i> Tambah Baris</button>
 								</td>
 							</tr>
@@ -216,6 +218,8 @@
 <script type="text/javascript">
 	function remove_barang(tag) {
 		$(tag).remove();
+		count_total();
+		payin();
 	}
 	function select2_init() {
 	    $('.select-barang').select2(select_barang).on('select2-open', function() { dropdown() });
@@ -236,24 +240,19 @@
     	}
     }
     function count_pay() {
-    	$('.barang_id, .qty').change(function() {
+    	$('.barang_id, .qty, .diskon').change(function() {
     		var id = $(this).attr('id').substr(-1);
     		var barang_id = $('#barang_id'+id).val();
     		var qty = $('#qty'+id).val();
+    		var diskon = $('#diskon'+id).val();
     		var harga = listHarga[barang_id];
-    		var subtotal = listHarga[barang_id] * qty;
+    		var harga_diskon = harga - (harga * diskon / 100);
+    		var subtotal = harga_diskon * qty;
 
-    		$('#harga'+id).val(harga);
+    		$('#harga'+id).val(harga_diskon);
     		$('#subtotal'+id).val(subtotal);
 			
-			var total=0;
-    		$('.subtotal').each(function(){
-    		    total += parseInt($(this).cleanVal());
-    		});
-    		$('#total').val(total);
-
-    		$('.maskin').trigger('input');
-
+    		count_total();
 			payin();
     	});
     }
@@ -275,6 +274,15 @@
     }
     function maskin() {
 		$('.maskin').mask('0.000.000.000.000.000', {reverse: true});
+		$('.diskon').mask('00', {reverse: true});
+    }
+    function count_total() {
+    	var total=0;
+		$('.subtotal').each(function(){
+		    total += parseInt($(this).cleanVal());
+		});
+		$('#total').val(total);
+		$('.maskin').trigger('input');
     }
 	
 	var listHarga = [];
@@ -362,10 +370,11 @@
 			$(".last-barang").before(`
 				<tr class="barang${no}">
 					<td>
-						<select id="barang_id${no}" name="barang_id[]" class="form-control select-barang barang_id">
+						<select id="barang_id${no}" name="barang_id[]" class="form-control select-barang barang_id" required>
 						</select>
 					</td>
-					<td><input id="qty${no}" name="qty[]" type="number" value="1" class="form-control form-control-sm qty"></td>
+					<td><input id="qty${no}" name="qty[]" type="number" value="1" class="form-control form-control-sm qty" required></td>
+					<td><input id="diskon${no}" name="diskon[]" type="number" value="0" class="form-control form-control-sm diskon maskin" required></td>
 					<td><input id="harga${no}" name="harga[]" type="text" value="0" class="form-control form-control-sm maskin" readonly></td>
 					<td><input id="subtotal${no}" name="subtotal[]" type="text" value="0" class="form-control form-control-sm subtotal maskin" readonly></td>
 					<td><i class="fas fa-times" style="cursor: pointer;" onclick="remove_barang('.barang${no}')"></i></td>

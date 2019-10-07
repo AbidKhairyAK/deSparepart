@@ -13,10 +13,16 @@
 		<h6 class="m-0 font-weight-bold text-secondary">Detail {{ $title }}</h6>
 		<div>
 			@if(auth()->user()->can('create-'.$main))
+			<a href="{{ route($main.'.cetak', $model->id) }}" class="btn btn-sm btn-info" target="_blank">
+				<i class="fas fa-print"></i> <b>Cetak Faktur</b>
+			</a>
 			<a href="{{ route($main.'.create') }}" class="btn btn-sm btn-primary">
 				<i class="fas fa-plus"></i> <b>Tambah {{ $title }}</b>
 			</a>
 			@else
+			<a href="#" class="btn btn-sm btn-primary disabled">
+				<i class="fas fa-print"></i> <b>Cetak Faktur {{ $title }}</b>
+			</a>
 			<a href="#" class="btn btn-sm btn-primary disabled">
 				<i class="fas fa-plus"></i> <b>Tambah {{ $title }}</b>
 			</a>
@@ -24,11 +30,11 @@
 
 			@if(auth()->user()->can('index-piutang'))
 			<a href="{{ route('piutang.index') }}" class="btn btn-sm btn-warning">
-				<i class="fas fa-list"></i> <b>Detail Piutang</b>
+				<i class="fas fa-list"></i> <b>Daftar Piutang</b>
 			</a>
 			@else
 			<a href="#" class="btn btn-sm btn-warning disabled">
-				<i class="fas fa-list"></i> <b>Detail Piutang</b>
+				<i class="fas fa-list"></i> <b>Daftar Piutang</b>
 			</a>
 			@endif
 		</div>
@@ -77,7 +83,7 @@
 				</div>
 				<div class="row pb-2">
 					<span class="col-4">Status Hutang</span>
-					<span class="col-8">: <b>{{ $model->status_hutang ? 'Lunas' : 'Belum Lunas' }}</b></span>
+					<span class="col-8">: <b>{{ $model->status_lunas ? 'Lunas' : 'Belum Lunas' }}</b></span>
 				</div>
 			</div>
 			<div class="col-sm-4">
@@ -109,6 +115,7 @@
 					<th>Part No</th>
 					<th>Nama Barang</th>
 					<th>Qty</th>
+					<th>Diskon</th>
 					<th>Harga</th>
 					<th>Subtotal</th>
 				</tr>
@@ -121,6 +128,7 @@
 					<td>{{ $detail->part_no }}</td>
 					<td>{{ $detail->nama }}</td>
 					<td>{{ $detail->qty }}</td>
+					<td>{{ $detail->diskon }}%</td>
 					<td>{{ number_format($detail->harga, 0, '', '.')}}</td>
 					<td>{{ number_format($detail->subtotal, 0, '', '.')}}</td>
 				</tr>

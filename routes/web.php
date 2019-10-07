@@ -46,9 +46,16 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::get('barang/data', 'BarangController@data')->name('barang.data');
 	Route::resource('/barang', 'BarangController');
 
+	Route::get('penjualan/{id}/cetak', 'PenjualanController@cetak')->name('penjualan.cetak');
+	Route::get('penjualan/api/{type?}', 'PenjualanController@api')->name('penjualan.api');
 	Route::get('penjualan/data', 'PenjualanController@data')->name('penjualan.data');
 	Route::resource('/penjualan', 'PenjualanController');
 
+	Route::get('piutang/data', 'PiutangController@data')->name('piutang.data');
+	Route::resource('/piutang', 'PiutangController');
+
+	Route::get('/pembayaran-piutang/data', 'PembayaranPiutangController@data')->name('pembayaran-piutang.data');
+	Route::resource('/pembayaran-piutang', 'PembayaranPiutangController');
 
 	// testing routes
 	Route::get('/beranda', 'BerandaController@index')->name('beranda.index');
@@ -58,9 +65,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 	Route::resource('/pembelian', 'PembelianController');
 	Route::resource('/hutang', 'HutangController');
-	Route::resource('/piutang', 'PiutangController');
 	Route::resource('/pembayaran-hutang', 'PembayaranHutangController');
-	Route::resource('/pembayaran-piutang', 'PembayaranPiutangController');
 	Route::resource('/pemasok', 'PemasokController');
 	Route::resource('/pemasok', 'PemasokController');
 	Route::resource('/pelanggan', 'PelangganController');

@@ -9,6 +9,7 @@ use App\Model\Pelanggan;
 use Kris\LaravelFormBuilder\FormBuilder;
 use DataTables;
 use Form;
+use PDF;
 
 class PenjualanController extends Controller
 {
@@ -24,6 +25,25 @@ class PenjualanController extends Controller
         $this->middleware('permission:create-'.$this->main, ['only' => ['create','store']]);
         $this->middleware('permission:edit-'.$this->main, ['only' => ['edit','update']]);
         $this->middleware('permission:delete-'.$this->main, ['only' => ['destroy']]);
+    }
+
+    public function api(Request $request, $type=false)
+    {
+        $search = $request->get('search');
+        $id = $request->get('id');
+        $data = $this->table->where('status_lunas', '0');
+
+        if (!empty($search)) {
+            $data = $data->where('no_faktur', 'like', "%$search%");
+        }
+
+        if ($type=='select') {
+            $data = $data->select('no_faktur', 'id')->get();
+        } else if ($type=='full' && !empty($id)){
+            $data = $data->with(['pelanggan', 'penjualan_detail', 'pembayaran_piutang'])->where('id', $id)->first();
+        }
+
+        return response()->json($data);
     }
 
     public function index()
@@ -43,7 +63,7 @@ class PenjualanController extends Controller
 
         $data = $this->table
                     ->with(['pelanggan', 'user'])
-                    ->select(['id', "user_id", "pelanggan_id", "no_faktur", "no_nota", "pembayaran", "dibayarkan", "hutang", "status_hutang", "status_post", "jatuh_tempo", "total", "keterangan", "created_at"])
+                    ->select(['id', "user_id", "pelanggan_id", "no_faktur", "no_nota", "pembayaran", "dibayarkan", "hutang", "status_lunas", "status_post", "jatuh_tempo", "total", "keterangan", "created_at"])
                     ->orderBy('created_at', 'desc');
         return DataTables::of($data)
             ->editColumn('id', function($index) {
@@ -110,7 +130,7 @@ class PenjualanController extends Controller
             })
             ->addColumn('status', function($index) {
                 $tag = "<div>
-                        <div><span class='badge badge-".($index->status_hutang ? 'success' : 'warning')."'>".($index->status_hutang ? 'Lunas' : 'Belum Lunas')."</span></div>
+                        <div><span class='badge badge-".($index->status_lunas ? 'success' : 'warning')."'>".($index->status_lunas ? 'Lunas' : 'Belum Lunas')."</span></div>
                         <div><span class='badge badge-".($index->status_post ? 'primary' : 'secondary')."'>".($index->status_post ? 'Publish' : 'Draft')."</span></div>
                     </div>
                 ";
@@ -152,7 +172,7 @@ class PenjualanController extends Controller
                 $query->whereRaw($sql, ["%{$keyword}%"]);
             })
             ->filterColumn('status', function($query, $keyword) {
-                $sql = "CONCAT(penjualan.status_hutang,'-',penjualan.status_post)  like ?";
+                $sql = "CONCAT(penjualan.status_lunas,'-',penjualan.status_post)  like ?";
                 $query->whereRaw($sql, ["%{$keyword}%"]);
             })
             ->rawColumns(['id', 'nomor', 'tanggal', 'pembeli', 'biaya', 'status', 'action'])
@@ -194,7 +214,7 @@ class PenjualanController extends Controller
         $penjualan = $this->table->create($data);
         $this->detailPenjualan($request, $penjualan->id);
 
-        return redirect($this->uri);
+        return redirect($this->uri)->with('print', route('penjualan.cetak', $penjualan->id));
     }
 
     public function update(Request $request, $id)
@@ -257,7 +277,7 @@ class PenjualanController extends Controller
             "dibayarkan" => $bayar > 0 ? $total : $dibayarkan,
             "hutang" => $hutang,
             "jatuh_tempo" => $request->jatuh_tempo,
-            "status_hutang" => $request->hutang == 0,
+            "status_lunas" => $request->hutang == 0,
             "status_post" => $request->publish > 0 ? '1' : '0',
         ];
 
@@ -277,9 +297,18 @@ class PenjualanController extends Controller
                 'part_no' => $model->part_no,
                 'nama' => $model->nama,
                 'qty' => $request->qty[$key],
+                'diskon' => $request->diskon[$key],
                 'harga' => str_replace(".", "", $request->harga[$key]),
                 'subtotal' => str_replace(".", "", $request->subtotal[$key]),
             ]);
         }
+    }
+
+    public function cetak($id)
+    {
+        $data['model'] = $this->table->find($id);
+        
+        // return view($this->folder.'.cetak',$data);
+        return PDF::setOptions(['orientation' => 'landscape'])->loadView($this->folder.'.cetak',$data)->setPaper('a4', 'landscape')->stream();
     }
 }

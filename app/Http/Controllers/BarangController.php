@@ -29,11 +29,12 @@ class BarangController extends Controller
     {
         $search = $request->get('search');
 
-        $data = Barang::select(DB::raw('CONCAT(part_no," - ",nama) as name, id, harga_jual'));
+        $data = $this->table->select(DB::raw('CONCAT("(",satuan,") ",nama) as name, id, harga_jual'));
 
         if (!empty($search)) {
             $data = $data->where('nama', 'like', "%$search%")
-                        ->orWhere('part_no', 'like', "%$search%");
+                        ->orWhere('part_no', 'like', "%$search%")
+                        ->orWhere('satuan', 'like', "%$search%");
         }
 
         $data = $data->get();

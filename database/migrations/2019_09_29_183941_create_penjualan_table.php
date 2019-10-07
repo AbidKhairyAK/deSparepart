@@ -22,7 +22,7 @@ class CreatePenjualanTable extends Migration
             $table->enum('pembayaran', ['tunai', 'kredit', 'giro']);
             $table->integer('dibayarkan');
             $table->integer('hutang')->nullable();
-            $table->boolean('status_hutang');
+            $table->boolean('status_lunas');
             $table->boolean('status_post');
             $table->date('jatuh_tempo')->nullable();
             $table->integer('total');

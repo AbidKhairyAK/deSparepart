@@ -1,6 +1,6 @@
 @extends('app')
 
-@section('not found')
+@section('title', 'Unauthorized')
 
 @section('content')
 <!-- 404 Error Text -->
