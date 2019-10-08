@@ -111,18 +111,18 @@
 								</select>
 							</span>
 						</div>
-						<!-- <div class="row mb-3">
+						<div class="row mb-3">
 							<span class="col-sm-3"><b>Toko:</b></span>
-							<span class="col-sm-9">-</span>
+							<span id="p-toko" class="col-sm-9">-</span>
 						</div>
 						<div class="row mb-3">
 							<span class="col-sm-3"><b>Alamat:</b></span>
-							<span class="col-sm-9">Jl. Kaliurang KM.12, Sleman, DIY</span>
+							<span id="p-alamat" class="col-sm-9">-</span>
 						</div>
 						<div class="row mb-3">
-							<span class="col-sm-3"><b>No HP:</b></span>
-							<span class="col-sm-9">0823 8234 0912</span>
-						</div> -->
+							<span class="col-sm-3"><b>Kontak:</b></span>
+							<span id="p-kontak" class="col-sm-9">-</span>
+						</div>
 					</div>
 
 					<div class="p0">
@@ -216,6 +216,19 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha256-bqVeqGdJ7h/lYPq6xrPv/YGzMEb6dNxlfiTUHSgRCp8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.13.4/jquery.mask.min.js"></script>
 <script type="text/javascript">
+	function get_pelanggan(index) {
+		var detailPelanggan = [];
+		$.get(`/pelanggan/api?id=${index}`)
+		.done(function(data) {
+			detailPelanggan['toko'] = data.toko ? data.toko : '-';
+			detailPelanggan['alamat'] = data.alamat ? data.alamat : '-';
+			detailPelanggan['kontak'] = data.kontak_pelanggan.length ? data.kontak_pelanggan[0].kontak : '-';
+
+			$('#p-toko').text(detailPelanggan['toko']);
+			$('#p-alamat').text(detailPelanggan['alamat']);
+			$('#p-kontak').text(detailPelanggan['kontak']);
+		});
+	}
 	function remove_barang(tag) {
 		$(tag).remove();
 		count_total();
@@ -355,6 +368,8 @@
 			}
 			$('input[name=jatuh_tempo]').val(newVal);
 		});
+
+		$('.select-pelanggan').change(function() { get_pelanggan(this.value) });
 
 	    $('.datepicker').datepicker({
 	    	format: 'yyyy-mm-dd',

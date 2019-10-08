@@ -301,6 +301,9 @@ class PenjualanController extends Controller
                 'harga' => str_replace(".", "", $request->harga[$key]),
                 'subtotal' => str_replace(".", "", $request->subtotal[$key]),
             ]);
+            DB::table('barang')
+                ->where('id', $barang_id)
+                ->update(['stok' => ($model->stok - $request->qty[$key]) ]);
         }
     }
 

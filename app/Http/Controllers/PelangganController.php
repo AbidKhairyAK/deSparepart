@@ -29,12 +29,18 @@ class PelangganController extends Controller
     public function api(Request $request)
     {
         $search = $request->get('search');
-        $data = Pelanggan::select(DB::raw('CONCAT(kode," - ",nama) as name, id'));
-        if (!empty($search)) {
-            $data = $data->where('nama', 'like', "%$search%")
-                        ->orWhere('kode', 'like', "%$search%");
+        $id = $request->get('id');
+
+        if ($id) {
+            $data = $this->table->with('kontak_pelanggan')->find($id);
+        } else {
+            $data = $this->table->select(DB::raw('CONCAT(kode," - ",nama) as name, id'));
+            if (!empty($search)) {
+                $data = $data->where('nama', 'like', "%$search%")
+                            ->orWhere('kode', 'like', "%$search%");
+            }
+            $data = $data->get();
         }
-        $data = $data->get();
         return response()->json($data);
     }
 

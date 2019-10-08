@@ -38,7 +38,7 @@
 		<div class="row mb-3">
 			<span class="col-sm-4">Nama Debitur : <b>{{ $parent->nama }}</b></span>
 			<span class="col-sm-4">Kode Debitur : <b>{{ $parent->kode }}</b></span>
-			<span class="col-sm-4">Kontak Debitur : <b>{{ $parent->kontak_pelanggan()->where('tipe', 'hp')->first()->kontak }}</b></span>
+			<span class="col-sm-4">Kontak Debitur : <b>{{ ($kontak = $parent->kontak_pelanggan()->where('tipe', 'hp')->first()) ? $kontak->kontak : '-' }}</b></span>
 		</div>
 		
 		<table class="table table-striped">
