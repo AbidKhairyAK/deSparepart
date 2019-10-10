@@ -17,8 +17,8 @@ class CreatePenjualanTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('customer_id');
-            $table->char('no_faktur', 19);
-            $table->char('no_nota', 9);
+            $table->char('no_faktur', 14)->unique();
+            $table->string('no_po', 30)->nullable();
             $table->enum('pembayaran', ['tunai', 'giro', 'kredit', 'transfer']);
             $table->string('pembayaran_detail', 20)->nullable();
             $table->integer('dibayarkan');

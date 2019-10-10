@@ -69,7 +69,7 @@
 							<td>NO FAKTUR</td><td>:</td><td>{{ $model->no_faktur }}</td>
 						</tr>
 						<tr>
-							<td>NO NOTA</td><td>:</td><td>{{ $model->no_nota }}</td>
+							<td>NO PO</td><td>:</td><td>{{ $model->no_po }}</td>
 						</tr>
 						<tr>
 							<td>TANGGAL</td><td>:</td><td>{{ date('Y-m-d', strtotime($model->created_at)) }}</td>

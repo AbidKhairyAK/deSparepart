@@ -40,6 +40,9 @@ class BarangForm extends Form
                 'label' => 'Nama Barang',
                 'attr' => ['required' => true]
             ])
+            ->add('merk', 'text', [
+                'attr' => ['required' => true]
+            ])
             ->add('stok', 'number', [
                 'label' => 'Stok Sekarang',
                 'attr' => ['required' => true],

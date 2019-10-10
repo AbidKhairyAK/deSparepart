@@ -24,6 +24,7 @@ class BarangTableSeeder extends Seeder
                 'kendaraan_id' => rand(1, 0) ? rand(2, 20) : 1,
                 'part_no' => (rand(1111, 9999) * 10000).(rand(1111, 9999)),
                 'nama' => $faker->sentence(3),
+                'merk' => $faker->word,
                 'stok' => rand(1, 200),
                 'limit' => rand(1, 20),
                 'satuan' => $faker->randomElement(['pcs', 'sachet', 'biji', 'box', 'dus', 'meter', 'centimeter', 'lusin', 'ikat']),

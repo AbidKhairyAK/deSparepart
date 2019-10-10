@@ -30,7 +30,7 @@
 				<tr>
 					<th>#</th>
 					<th>Nomor</th>
-					<th>Customer</th>
+					<th width="180">Customer</th>
 					<th>Tanggal</th>
 					<th>Biaya</th>
 					<th>Status</th>

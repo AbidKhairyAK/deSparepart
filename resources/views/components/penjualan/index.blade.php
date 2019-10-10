@@ -27,7 +27,6 @@
 	        processing: true,
 	        serverSide: true,
 	        ajax: '{{$ajax}}',
-            order: [[1,'asc']],
 	        columns: [
 	            { data: 'id', searchable: false, orderable: false },
             	{ data: 'nomor' },

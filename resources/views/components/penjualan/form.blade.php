@@ -31,7 +31,11 @@
 					<b>NO FAKTUR : </b>
 					<input name="no_faktur" type="text" class="form-control d-inline-block" style="width: auto;" value="{{ $e ? $m->no_faktur : $no_faktur }}" required>
 				</label>
-				<input name="no_nota" type="hidden" value="{{ $e ? $m->no_nota : '' }}">
+
+				<label>
+					<b>NO PO : </b>
+					<input name="no_po" type="text" class="form-control d-inline-block" style="width: auto;" value="{{ $e ? $m->no_po : '' }}">
+				</label>
 
 				<label>
 					<b>TGL TRANSAKSI : {{ $e ? $m->created_at : date('Y-m-d H:i:s') }}</b>
@@ -44,11 +48,10 @@
 					<table class="table border border-secondary">
 						<thead class="thead-dark">
 							<tr>
-								<th>Kode - Nama Barang</th>
-								<th width="100">Qty</th>
-								<th width="100">Diskon %</th>
-								<th width="150">Harga</th>
-								<th width="150">Subtotal</th>
+								<th width="150">Qty</th>
+								<th width="150">Diskon %</th>
+								<th>Harga Satuan</th>
+								<th>Subtotal</th>
 								<th>*</th>
 							</tr>
 						</thead>
@@ -60,7 +63,7 @@
 							@endphp
 							@for($i=0; $i<$l; $i++)
 							<tr class="barang{{ $i+1 }}">
-								<td>
+								<td colspan="4">
 									<select id="barang_id{{ $i+1 }}" name="barang_id[]" class="form-control select-barang barang_id" required>
 										@if($e) 
 											<option selected value="{{ $d[$i]->barang_id }}">
@@ -69,16 +72,19 @@
 										@endif
 									</select>
 								</td>
+								<td style="vertical-align: middle;"><i class="fas fa-times" style="cursor: pointer;" onclick="remove_barang('.barang{{ $i+1 }}')"></i></td>
+							</tr>
+							<tr class="barang{{ $i+1 }}">
 								<td><input id="qty{{ $i+1 }}" name="qty[]" type="number" value="{{ $e ? $d[$i]->qty : 1 }}" class="form-control form-control-sm qty" required></td>
 								<td><input id="diskon{{ $i+1 }}" name="diskon[]" type="number" value="{{ $e ? $d[$i]->diskon : 0 }}" class="form-control form-control-sm diskon" required></td>
 								<td><input id="harga{{ $i+1 }}" name="harga[]" type="text" value="{{ $e ? $d[$i]->harga : 0 }}" class="form-control form-control-sm maskin" readonly required></td>
 								<td><input id="subtotal{{ $i+1 }}" name="subtotal[]" type="text" value="{{ $e ? $d[$i]->subtotal : 0 }}" class="form-control form-control-sm subtotal maskin" readonly required></td>
-								<td><i class="fas fa-times" style="cursor: pointer;" onclick="remove_barang('.barang{{ $i+1 }}')"></i></td>
+								<td></td>
 							</tr>
 							@endfor
 
 							<tr class="last-barang">
-								<td colspan="6">
+								<td colspan="5">
 									<button type="button" id="add-barang" class="btn btn-sm btn-block btn-light"><i class="fas fa-plus"></i> Tambah Baris</button>
 								</td>
 							</tr>
@@ -220,6 +226,11 @@
 @section('style')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css" integrity="sha256-jO7D3fIsAq+jB8Xt3NI5vBf3k4tvtHwzp8ISLQG4UWU=" crossorigin="anonymous" />
+<style type="text/css">
+	.wrapper-barang tr:nth-child(even) td{
+		border-top: 0;
+	}
+</style>
 @endsection
 
 @section('script')
@@ -401,15 +412,18 @@
 	    $('#add-barang').click(function(){
 			$(".last-barang").before(`
 				<tr class="barang${no}">
-					<td>
+					<td colspan="4">
 						<select id="barang_id${no}" name="barang_id[]" class="form-control select-barang barang_id" required>
 						</select>
 					</td>
+					<td><i class="fas fa-times" style="cursor: pointer;" onclick="remove_barang('.barang${no}')"></i></td>
+				</tr>
+				<tr class="barang${no}">
 					<td><input id="qty${no}" name="qty[]" type="number" value="1" class="form-control form-control-sm qty" required></td>
 					<td><input id="diskon${no}" name="diskon[]" type="number" value="0" class="form-control form-control-sm diskon maskin" required></td>
 					<td><input id="harga${no}" name="harga[]" type="text" value="0" class="form-control form-control-sm maskin" readonly></td>
 					<td><input id="subtotal${no}" name="subtotal[]" type="text" value="0" class="form-control form-control-sm subtotal maskin" readonly></td>
-					<td><i class="fas fa-times" style="cursor: pointer;" onclick="remove_barang('.barang${no}')"></i></td>
+					<td></td>
 				</tr>
 			`);
 			no++;

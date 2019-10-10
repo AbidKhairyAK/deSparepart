@@ -48,8 +48,8 @@
 					<span class="col-8">: <b>{{ $model->no_faktur }}</b></span>
 				</div>
 				<div class="row pb-2">
-					<span class="col-4">No Nota</span>
-					<span class="col-8">: <b>{{ $model->no_nota }}</b></span>
+					<span class="col-4">No PO</span>
+					<span class="col-8">: <b>{{ $model->no_po }}</b></span>
 				</div>
 				<div class="row pb-2">
 					<span class="col-4">Jatuh Tempo</span>

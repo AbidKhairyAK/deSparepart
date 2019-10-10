@@ -27,10 +27,6 @@
 				<input type="text" class="form-control d-inline-block" style="width: auto;">
 			</label>
 			<label>
-				<b>EKSPEDISI : </b>
-				<input type="text" class="form-control d-inline-block" style="width: auto;">
-			</label>
-			<label>
 				<b>TGL TRANSAKSI : </b>
 				<input type="date" class="form-control d-inline-block" style="width: auto;">
 			</label>
@@ -40,45 +36,38 @@
 				<table class="table border border-secondary">
 					<thead class="thead-dark">
 						<tr>
-							<th>Kode - Nama Barang</th>
 							<th width="100">Qty</th>
-							<th width="200">Harga</th>
-							<th width="200">Subtotal</th>
+							<th width="100">Diskon %</th>
+							<th width="100">PPN %</th>
+							<th>Harga Satuan</th>
+							<th>Subtotal</th>
+							<th>*</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td>
+							<td colspan="5">
 								<select class="form-control select2">
 									<option></option>
-									<option>A7987 - Pelek Super V-gen</option>
-									<option selected>B9817 - Lampu Depan Sandisk</option>
-									<option>CJKLS - Rantai Toshiba</option>
-									<option>D98HJ - Ban Ultra Kingston</option>
-									<option>E90AS - Setir Mobil Samsung</option>
+									<option>A7987 - Pelek Super - Merk V-gen - pcs</option>
+									<option selected>B9817 - Lampu Depan - Merk Sandisk - pcs</option>
+									<option>CJKLS - Rantai - Merk Toshiba - meter</option>
+									<option>D98HJ - Ban Ultra - Merk Kingston - pcs</option>
+									<option>E90AS - Setir Mobil - Merk Samsung - pcs</option>
 								</select>
 							</td>
+							<td><i class="fas fa-times"></i></td>
+						</tr>
+						<tr>
+							<td><input type="number" value="4" class="form-control form-control-sm"></td>
+							<td><input type="number" value="0" class="form-control form-control-sm"></td>
 							<td><input type="number" value="2" class="form-control form-control-sm"></td>
 							<td><input type="number" value="100.000" class="form-control form-control-sm" readonly></td>
-							<td><input type="number" value="200.000" class="form-control form-control-sm" readonly></td>
-						</tr>
-						<tr>
-							<td>
-								<select class="form-control select2">
-									<option></option>
-									<option>A7987 - Pelek Super V-gen</option>
-									<option>B9817 - Lampu Depan Sandisk</option>
-									<option>CJKLS - Rantai Toshiba</option>
-									<option selected>D98HJ - Ban Ultra Kingston</option>
-									<option>E90AS - Setir Mobil Samsung</option>
-								</select>
-							</td>
-							<td><input type="number" value="8" class="form-control form-control-sm"></td>
-							<td><input type="number" value="50.000" class="form-control form-control-sm" readonly></td>
 							<td><input type="number" value="400.000" class="form-control form-control-sm" readonly></td>
+							<td></td>
 						</tr>
 						<tr>
-							<td>
+							<td colspan="5">
 								<select class="form-control select2">
 									<option></option>
 									<option>A7987 - Pelek Super V-gen</option>
@@ -88,15 +77,21 @@
 									<option>E90AS - Setir Mobil Samsung</option>
 								</select>
 							</td>
+							<td><i class="fas fa-times"></i></td>
+						</tr>
+						<tr>
+							<td><input type="number" value="1" class="form-control form-control-sm"></td>
+							<td><input type="number" value="0" class="form-control form-control-sm"></td>
 							<td><input type="number" value="0" class="form-control form-control-sm"></td>
 							<td><input type="number" value="0" class="form-control form-control-sm" readonly></td>
 							<td><input type="number" value="0" class="form-control form-control-sm" readonly></td>
+							<td></td>
 						</tr>
 						<tr>
-							<td colspan="3">
+							<td colspan="4">
 								<button class="btn btn-sm btn-block btn-light"><i class="fas fa-plus"></i> Tambah Baris</button>
 							</td>
-							<td colspan="1">
+							<td colspan="2">
 								<button class="btn btn-sm btn-block btn-primary"><i class="fas fa-plus"></i> Tambah Barang</button>
 							</td>
 						</tr>
@@ -137,12 +132,16 @@
 						<span class="col-sm-9">0823 8234 0912</span>
 					</div>
 					<div class="row mb-3">
-						<span class="col-sm-3"><b>FAX:</b></span>
+						<span class="col-sm-3"><b>No Telepon:</b></span>
 						<span class="col-sm-9">021 82423</span>
 					</div>
 					<div class="row mb-3">
 						<span class="col-sm-3"><b>Email:</b></span>
 						<span class="col-sm-9">vendur@motor.com</span>
+					</div>
+					<div class="row mb-3">
+						<span class="col-sm-3"><b>Sales:</b></span>
+						<span class="col-sm-9">Raihan Mubarak (0857 2345 8745)</span>
 					</div>
 				</div>
 
@@ -232,6 +231,11 @@
 
 @section('style')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
+<style type="text/css">
+	tbody tr:nth-child(even) td {
+		border-top: 0;
+	}
+</style>
 @endsection
 
 @section('script')

@@ -29,11 +29,12 @@ class BarangController extends Controller
     {
         $search = $request->get('search');
 
-        $data = $this->table->select(DB::raw('CONCAT("(",satuan,") ",nama) as name, id, harga_jual'));
+        $data = $this->table->select(DB::raw("CONCAT(part_no,' - ',nama,' - merk ',merk,' - ',satuan) as name, id, harga_jual"));
 
         if (!empty($search)) {
             $data = $data->where('nama', 'like', "%$search%")
                         ->orWhere('part_no', 'like', "%$search%")
+                        ->orWhere('merk', 'like', "%$search%")
                         ->orWhere('satuan', 'like', "%$search%");
         }
 
@@ -59,7 +60,7 @@ class BarangController extends Controller
         $data = $this->table
                     ->join('kendaraan', 'barang.kendaraan_id', '=', 'kendaraan.id')
                     ->join('komponen', 'barang.komponen_id', '=', 'komponen.id')
-                    ->select(['barang.id', 'komponen_id', 'kendaraan_id', 'part_no', 'barang.nama', 'stok', 'limit', 'satuan', 'harga_beli', 'harga_jual', 'keterangan', 'gambar', 'barang.created_at'])
+                    ->select(['barang.id', 'komponen_id', 'kendaraan_id', 'part_no', 'barang.nama', 'barang.merk', 'stok', 'limit', 'satuan', 'harga_beli', 'harga_jual', 'keterangan', 'gambar', 'barang.created_at'])
                     ->orderBy('created_at', 'desc');
         return DataTables::of($data)
             ->editColumn('id', function($index) {
@@ -76,6 +77,8 @@ class BarangController extends Controller
                 $tag = "<table>
                         <tr>
                             <td>Nama Barang</td><td class='px-2'>:</td><th>{$index->nama}</th>
+                        </tr><tr>
+                            <td>Merk</td><td class='px-2'>:</td><th>{$index->merk}</th>
                         </tr>
                         <tr>
                             <td>Komponen</td><td class='px-2'>:</td><th>{$index->komponen->nama}</th>
@@ -123,7 +126,7 @@ class BarangController extends Controller
                 return $tag;
             })
             ->filterColumn('identitas', function($query, $keyword) {
-                $sql = "CONCAT(barang.nama,'-',komponen.nama,'-',kendaraan.merk)  like ?";
+                $sql = "CONCAT(barang.nama,'-',barang.merk,'-',komponen.nama,'-',kendaraan.merk)  like ?";
                 $query->whereRaw($sql, ["%{$keyword}%"]);
             })
             ->filterColumn('harga', function($query, $keyword) {

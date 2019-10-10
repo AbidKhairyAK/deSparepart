@@ -77,6 +77,11 @@
 					</div>
 
 					<div class="form-group col-sm-12">
+						<label>Tempo Kredit:</label>
+						<input type="text" class="form-control">
+					</div>
+
+					<div class="form-group col-sm-12">
 						<label>Kategori:</label>
 						<select class="form-control">
 							<option></option>
@@ -84,11 +89,6 @@
 							<option>Kategori 2</option>
 							<option>Kategori 3</option>
 						</select>
-					</div>
-
-					<div class="form-group col-sm-12">
-						<label>Logo:</label>
-						<input type="file" class="form-control">
 					</div>
 
 				</div>

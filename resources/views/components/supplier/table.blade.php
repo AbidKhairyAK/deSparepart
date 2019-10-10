@@ -12,11 +12,11 @@
 		<table class="table table-striped">
 			<thead class="thead-dark">
 				<tr>
-					<th>Logo</th>
 					<th>Identitas</th>
 					<th>Alamat</th>
 					<th>Kontak</th>
 					<th>Pajak</th>
+					<th>Tempo Kredit</th>
 					<th>Kategori</th>
 					<th>Aksi</th>
 				</tr>
@@ -24,7 +24,6 @@
 			<tbody>
 				@for($i=0;$i<=2;$i++)
 				<tr>
-					<td><a target="_blank" href="https://s.kaskus.id/r480x480/images/fjb/2015/04/16/jasa_pembuatan_desain_logo_perusahaan_murah_tidak_murahan_1157447_1429123045.JPG"><img width="50" src="https://s.kaskus.id/r480x480/images/fjb/2015/04/16/jasa_pembuatan_desain_logo_perusahaan_murah_tidak_murahan_1157447_1429123045.JPG"></a></td>
 					<td>
 						<div class="d-flex">
 							<span>
@@ -43,7 +42,7 @@
 								<div><b>PMB</b></div>
 								<div><b>PT. Santara</b></div>
 								<div><b>Mardigu Wowiek</b></div>
-								<div><b>Arif Rezky</b></div>
+								<div><b>Arif Rezky<br>(0823 7823 4789)</b></div>
 							</span>
 						</div>
 					</td>
@@ -62,6 +61,7 @@
 						<div><b>NPWP</b> 12KLJ289H</div>
 						<div><b>PKP</b> <span class="badge badge-primary">IYA</span></div>
 					</td>
+					<td>30 Hari</td>
 					<td>Importir</td>
 					<td>
 						<div class="dropdown no-arrow">

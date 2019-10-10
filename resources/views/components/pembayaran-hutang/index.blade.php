@@ -1,11 +1,11 @@
 @extends('app')
 
-@section('title', 'Nota Pelunasan Hutang')
+@section('title', 'Pembayaran Hutang')
 
 @section('content')
 <div id="page-header">
-	<h1 class="h3 mb-1 text-gray-800">Daftar Nota Pelunasan Hutang</h1>
-	<p class="mb-4">Daftar data riwayat nota pelunasan hutang</p>
+	<h1 class="h3 mb-1 text-gray-800">Daftar Pembayaran Hutang</h1>
+	<p class="mb-4">Daftar data riwayat Pembayaran hutang</p>
 </div>
 
 @include('components.pembayaran-hutang.table')

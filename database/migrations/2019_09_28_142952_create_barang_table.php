@@ -20,6 +20,7 @@ class CreateBarangTable extends Migration
             $table->unsignedInteger('kendaraan_id');
             $table->string('part_no', 100)->unique();
             $table->string('nama');
+            $table->string('merk');
             $table->integer('stok');
             $table->enum('satuan', ['pcs', 'sachet', 'biji', 'box', 'dus', 'meter', 'centimeter', 'lusin', 'ikat']);
             $table->smallInteger('limit');

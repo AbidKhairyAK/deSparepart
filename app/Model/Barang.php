@@ -9,7 +9,7 @@ class Barang extends Model
 	protected $table = 'barang';
 
     protected $fillable = [
-    	'id', 'user_id', 'komponen_id', 'kendaraan_id', 'part_no', 'nama', 'stok', 'limit', 'satuan', 'harga_beli', 'harga_jual', 'keterangan', 'gambar'
+    	'id', 'user_id', 'komponen_id', 'kendaraan_id', 'part_no', 'nama', 'merk', 'stok', 'limit', 'satuan', 'harga_beli', 'harga_jual', 'keterangan', 'gambar'
     ];
 
     public function user()

@@ -9,7 +9,7 @@ class Penjualan extends Model
 	protected $table = 'penjualan';
 
     protected $fillable = [
-    	'id', "user_id", "customer_id", "no_faktur", "no_nota", "pembayaran", "pembayaran_detail", "dibayarkan", "hutang", "status_lunas", "status_post", "jatuh_tempo", "total", "keterangan"	
+    	'id', "user_id", "customer_id", "no_faktur", "no_po", "pembayaran", "pembayaran_detail", "dibayarkan", "hutang", "status_lunas", "status_post", "jatuh_tempo", "total", "keterangan"	
     ];
 
     public function user()

@@ -63,7 +63,7 @@ class PenjualanController extends Controller
 
         $data = $this->table
                     ->with(['customer', 'user'])
-                    ->select(['id', "user_id", "customer_id", "no_faktur", "no_nota", "pembayaran", "pembayaran_detail", "dibayarkan", "hutang", "status_lunas", "status_post", "jatuh_tempo", "total", "keterangan", "created_at"])
+                    ->select(['id', "user_id", "customer_id", "no_faktur", "no_po", "pembayaran", "pembayaran_detail", "dibayarkan", "hutang", "status_lunas", "status_post", "jatuh_tempo", "total", "keterangan", "created_at"])
                     ->orderBy('created_at', 'desc');
         return DataTables::of($data)
             ->editColumn('id', function($index) {
@@ -75,10 +75,10 @@ class PenjualanController extends Controller
             ->addColumn('nomor', function ($index) {
                 $tag = "<table>
                         <tr>
-                            <td>No Faktur</td><td class='px-2'>:</td><th>{$index->no_faktur}</th>
+                            <td>Faktur</td><td class='px-2'>:</td><th>{$index->no_faktur}</th>
                         </tr>
                         <tr>
-                            <td>No Nota</td><td class='px-2'>:</td><th>{$index->no_nota}</th>
+                            <td>PO</td><td class='px-2'>:</td><th>{$index->no_po}</th>
                         </tr>
                     </table>
                 ";
@@ -87,10 +87,10 @@ class PenjualanController extends Controller
             ->addColumn('customer', function ($index) {
                 $tag = "<table>
                         <tr>
-                            <td>{$index->customer->kode}</td>
+                            <td>Kode</td><td class='px-2'>:</td><th>{$index->customer->kode}</th>
                         </tr>
                         <tr>
-                            <th width='150'>{$index->customer->nama}</th>
+                            <td>Nama</td><td class='px-2'>:</td><th>{$index->customer->nama}</th>
                         </tr>
                     </table>
                 ";
@@ -101,10 +101,10 @@ class PenjualanController extends Controller
                 $jam_jual = substr($index->created_at, 11);
                 $tag = "<table>
                         <tr>
-                            <td>Tgl Jual</td><td class='px-2'>:</td><th>{$tgl_jual}<br>{$jam_jual}</th>
+                            <td>Penjualan</td><td class='px-2'>:</td><th>{$tgl_jual}<br>{$jam_jual}</th>
                         </tr>
                         <tr>
-                            <td>Tgl Tempo</td><td class='px-2'>:</td><th>{$index->jatuh_tempo}</th>
+                            <td>Tempo</td><td class='px-2'>:</td><th>{$index->jatuh_tempo}</th>
                         </tr>
                     </table>
                 ";
@@ -113,13 +113,13 @@ class PenjualanController extends Controller
             ->addColumn('biaya', function ($index) {
                 $tag = "<table>
                         <tr>
-                            <td>Ttl Harga</td><td class='px-2'>:</td><th>".number_format($index->total, 0, '', '.')."</th>
+                            <td>Harga</td><td class='px-2'>:</td><th>".number_format($index->total, 0, '', '.')."</th>
                         </tr>
                         <tr>
-                            <td>Ttl Bayar</td><td class='px-2'>:</td><th>".number_format($index->dibayarkan, 0, '', '.')."</th>
+                            <td>Dibayar</td><td class='px-2'>:</td><th>".number_format($index->dibayarkan, 0, '', '.')."</th>
                         </tr>
                         <tr>
-                            <td>Ttl Hutang</td><td class='px-2'>:</td><th>".($index->hutang ? number_format($index->hutang, 0, '', '.') : '-')."</th>
+                            <td>Hutang</td><td class='px-2'>:</td><th>".($index->hutang ? number_format($index->hutang, 0, '', '.') : '-')."</th>
                         </tr>
                     </table>
                 ";
@@ -160,7 +160,7 @@ class PenjualanController extends Controller
                 return $tag;
             })
             ->filterColumn('nomor', function($query, $keyword) {
-                $sql = "CONCAT(penjualan.no_faktur,'-',penjualan.no_nota)  like ?";
+                $sql = "CONCAT(penjualan.no_faktur,'-',penjualan.no_po)  like ?";
                 $query->whereRaw($sql, ["%{$keyword}%"]);
             })
             ->filterColumn('tanggal', function($query, $keyword) {
@@ -190,7 +190,10 @@ class PenjualanController extends Controller
 
     public function create()
     {
-        $data['no_faktur'] = '0'.rand(1,9).rand(0,1).'.00'.rand(1,4).'-'.date('y').'.0000'.rand(1000,9999);
+        $prevData = $this->table->where('no_faktur', 'like', "NJA-".date('y/m/')."%")->orderBy('no_faktur', 'desc')->first();
+        $newNo = !is_null($prevData) ? ( intval("1".substr($prevData->no_faktur, 10)) + 1 ) : null;
+        $data['no_faktur'] = "NJA-" . date('y/m/') . (!is_null($prevData) ? substr($newNo, 1) : "0001");
+
         $data['main'] = $this->main;
         $data['title'] = $this->title;
         $data['action'] = route($this->uri.'.store');;
@@ -240,11 +243,7 @@ class PenjualanController extends Controller
 
     public function mappingData($request, $update=false)
     {
-        $prevData = $this->table->where('no_nota', 'like', date('ymd')."%")->orderBy('no_nota', 'desc')->first();
         $prevcustomer = DB::table('customer')->where('kode', 'like', date('ymd')."%")->orderBy('kode', 'desc')->first();
-        $nota = !is_null($prevData) ? (intval($prevData->no_nota) + 1) : date('ymd')."001";
-        $no_nota = $update ? $request->no_nota : $nota;
-        // $tempo = explode("-", $request->jatuh_tempo);
 
         if ($request->p == 'p0') {
             $customer = Customer::create([
@@ -268,7 +267,7 @@ class PenjualanController extends Controller
         $penjualan = [
             "user_id" => auth()->user()->id,
             "no_faktur" => $request->no_faktur,
-            "no_nota" => $no_nota,
+            "no_po" => $request->no_po,
             "customer_id" => $request->p == 'p0' ? $customer->id : $request->customer_id,
             "keterangan" => $request->keterangan,
             "total" => $total,
