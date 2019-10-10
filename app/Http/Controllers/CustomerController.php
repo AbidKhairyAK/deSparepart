@@ -4,17 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Model\Pelanggan;
+use App\Model\Customer;
 use Kris\LaravelFormBuilder\FormBuilder;
 use DataTables;
 use Form;
 
-class PelangganController extends Controller
+class CustomerController extends Controller
 {
 
-    public function __construct(Pelanggan $table)
+    public function __construct(Customer $table)
     {
-        $this->main = 'pelanggan';
+        $this->main = 'customer';
         $this->folder = 'components.'.$this->main;
         $this->uri = $this->main;
         $this->title = title_case($this->main);
@@ -32,7 +32,7 @@ class PelangganController extends Controller
         $id = $request->get('id');
 
         if ($id) {
-            $data = $this->table->with('kontak_pelanggan')->find($id);
+            $data = $this->table->with('kontak_customer')->find($id);
         } else {
             $data = $this->table->select(DB::raw('CONCAT(kode," - ",nama) as name, id'));
             if (!empty($search)) {
@@ -58,7 +58,7 @@ class PelangganController extends Controller
     {
         // if (!$request->ajax()) { return; }
 
-        $data = $this->table->with('kontak_pelanggan')->select(['id', 'kode', 'nama', 'toko', 'alamat', 'kategori', 'status']);
+        $data = $this->table->with('kontak_customer')->select(['id', 'kode', 'nama', 'toko', 'alamat', 'kategori', 'status']);
         return DataTables::of($data)
             ->editColumn('id', function($index) {
                 $tag = '<label class="d-block">';
@@ -89,7 +89,7 @@ class PelangganController extends Controller
             })
             ->addColumn('kontak', function ($index) {
                 $tag = '';
-                foreach ($index->kontak_pelanggan()->get() as $con) {
+                foreach ($index->kontak_customer()->get() as $con) {
                     $tag .= "<div><i class='fas fa-".($con->tipe == 'hp' ? 'mobile-alt' : 'envelope')." mr-1'></i> {$con->kontak}</div>";
                 }
                 return $tag;
@@ -132,7 +132,7 @@ class PelangganController extends Controller
                 return $tag;
             })
             ->filterColumn('identitas', function($query, $keyword) {
-                $sql = "CONCAT(pelanggan.kode,'-',pelanggan.nama,'-',pelanggan.toko)  like ?";
+                $sql = "CONCAT(customer.kode,'-',customer.nama,'-',customer.toko)  like ?";
                 $query->whereRaw($sql, ["%{$keyword}%"]);
             })
             ->rawColumns(['id', 'identitas', 'kontak', 'status', 'action'])
@@ -176,7 +176,7 @@ class PelangganController extends Controller
 
         $tbl = $this->table->create($request->all());
         for ($i=0; $i < count($request->kontak); $i++) { 
-            $tbl->kontak_pelanggan()->create([
+            $tbl->kontak_customer()->create([
                 'tipe' => $request->tipe[$i],
                 'kontak' => $request->kontak[$i],
             ]);
@@ -192,9 +192,9 @@ class PelangganController extends Controller
 
         $tbl = $this->table->findOrFail($id);
         $tbl->update($request->all());
-        $tbl->kontak_pelanggan()->delete();
+        $tbl->kontak_customer()->delete();
         for ($i=0; $i < count($request->kontak); $i++) { 
-            $tbl->kontak_pelanggan()->create([
+            $tbl->kontak_customer()->create([
                 'tipe' => $request->tipe[$i],
                 'kontak' => $request->kontak[$i],
             ]);

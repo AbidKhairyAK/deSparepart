@@ -90,22 +90,22 @@
 					<div class="form-group">
 						<div class="custom-control custom-radio custom-control-inline">
 						    <input type="radio" class="custom-control-input" id="p1" name="p" value="p1" checked>
-						    <label class="custom-control-label" for="p1">Pelanggan Lama</label>
+						    <label class="custom-control-label" for="p1">Customer Lama</label>
 						</div>
 						<div class="custom-control custom-radio custom-control-inline">
 							<input type="radio" class="custom-control-input" id="p0" name="p" value="p0">
-							<label class="custom-control-label" for="p0">Pembeli Baru</label>
+							<label class="custom-control-label" for="p0">Customer Baru</label>
 						</div>
 					</div>
 
 					<div class="p1">
 						<div class="row mb-3">
-							<span class="col-sm-3"><b>Pelanggan:</b></span>
+							<span class="col-sm-3"><b>Customer:</b></span>
 							<span class="col-sm-9">
-								<select name="pelanggan_id" class="p1 form-control select-pelanggan" required>
+								<select name="customer_id" class="p1 form-control select-customer" required>
 									@if($e) 
-										<option value="{{ $m->pelanggan_id }}">
-											{{ $m->pelanggan->kode }} - {{ $m->pelanggan->nama }}
+										<option value="{{ $m->customer_id }}">
+											{{ $m->customer->kode }} - {{ $m->customer->nama }}
 										</option>
 									@endif
 								</select>
@@ -113,34 +113,34 @@
 						</div>
 						<div class="row mb-3">
 							<span class="col-sm-3"><b>Toko:</b></span>
-							<span id="p-toko" class="col-sm-9">-</span>
+							<span id="p-toko" class="col-sm-9">{{ $e ? $m->customer->toko : '-'}}</span>
 						</div>
 						<div class="row mb-3">
 							<span class="col-sm-3"><b>Alamat:</b></span>
-							<span id="p-alamat" class="col-sm-9">-</span>
+							<span id="p-alamat" class="col-sm-9">{{ $e ? $m->customer->alamat : '-'}}</span>
 						</div>
 						<div class="row mb-3">
 							<span class="col-sm-3"><b>Kontak:</b></span>
-							<span id="p-kontak" class="col-sm-9">-</span>
+							<span id="p-kontak" class="col-sm-9">{{ $e ? $m->customer->kontak_customer()->first()->kontak : '-'}}</span>
 						</div>
 					</div>
 
 					<div class="p0">
 						<div class="row mb-3">
 							<span class="col-sm-3"><b>Nama:</b></span>
-							<span class="col-sm-9"><input name="pelanggan_nama" type="text" class="p0 form-control form-control-sm" required></span>
+							<span class="col-sm-9"><input name="customer_nama" type="text" class="p0 form-control form-control-sm" required></span>
 						</div>
 						<div class="row mb-3">
 							<span class="col-sm-3"><b>Toko:</b></span>
-							<span class="col-sm-9"><input name="pelanggan_toko" type="text" class="p0 form-control form-control-sm" required></span>
+							<span class="col-sm-9"><input name="customer_toko" type="text" class="p0 form-control form-control-sm" required></span>
 						</div>
 						<div class="row mb-3">
 							<span class="col-sm-3"><b>Alamat:</b></span>
-							<span class="col-sm-9"><input name="pelanggan_alamat" type="text" class="p0 form-control form-control-sm" required></span>
+							<span class="col-sm-9"><input name="customer_alamat" type="text" class="p0 form-control form-control-sm" required></span>
 						</div>
 						<div class="row mb-3">
 							<span class="col-sm-3"><b>No HP:</b></span>
-							<span class="col-sm-9"><input name="pelanggan_hp" type="text" class="p0 form-control form-control-sm" required></span>
+							<span class="col-sm-9"><input name="customer_hp" type="text" class="p0 form-control form-control-sm" required></span>
 						</div>
 					</div>
 
@@ -165,8 +165,19 @@
 							<option {{ $e && $m->pembayaran == 'tunai' ? 'selected' : ''}} value="tunai">TUNAI</option>
 							<option {{ $e && $m->pembayaran == 'kredit' ? 'selected' : ''}} value="kredit">KREDIT (30 HARI)</option>
 							<option {{ $e && $m->pembayaran == 'giro' ? 'selected' : ''}}  value="giro">GIRO</option>
+							<option {{ $e && $m->pembayaran == 'transfer' ? 'selected' : ''}}  value="transfer">TRANSFER</option>
 						</select>
-					</div><div class="form-group d-flex align-items-center justify-content-between">
+					</div>
+					<div id="pembayaran_giro" class="{{ $e && $m->pembayaran == 'giro' ? 'd-flex' : 'd-none' }} form-group align-items-center justify-content-between">
+						<b>NO GIRO:</b>
+						<input type="text" 
+							name="pembayaran_detail" 
+							class="form-control form-control-lg"
+							style="width: 80%;"
+							value="{{ $e && $m->pembayaran_detail ? $m->pembayaran_detail : '' }}" 
+						>
+					</div>
+					<div class="form-group d-flex align-items-center justify-content-between">
 						<b>DIBAYARKAN:</b>
 						<input id="dibayarkan" name="dibayarkan" type="text" class="form-control form-control-lg maskin" style="width: 80%;" required value="{{ $e ? $m->dibayarkan : '' }}">
 					</div>
@@ -216,17 +227,17 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha256-bqVeqGdJ7h/lYPq6xrPv/YGzMEb6dNxlfiTUHSgRCp8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.13.4/jquery.mask.min.js"></script>
 <script type="text/javascript">
-	function get_pelanggan(index) {
-		var detailPelanggan = [];
-		$.get(`/pelanggan/api?id=${index}`)
+	function get_customer(index) {
+		var detailcustomer = [];
+		$.get(`/customer/api?id=${index}`)
 		.done(function(data) {
-			detailPelanggan['toko'] = data.toko ? data.toko : '-';
-			detailPelanggan['alamat'] = data.alamat ? data.alamat : '-';
-			detailPelanggan['kontak'] = data.kontak_pelanggan.length ? data.kontak_pelanggan[0].kontak : '-';
+			detailcustomer['toko'] = data.toko ? data.toko : '-';
+			detailcustomer['alamat'] = data.alamat ? data.alamat : '-';
+			detailcustomer['kontak'] = data.kontak_customer.length ? data.kontak_customer[0].kontak : '-';
 
-			$('#p-toko').text(detailPelanggan['toko']);
-			$('#p-alamat').text(detailPelanggan['alamat']);
-			$('#p-kontak').text(detailPelanggan['kontak']);
+			$('#p-toko').text(detailcustomer['toko']);
+			$('#p-alamat').text(detailcustomer['alamat']);
+			$('#p-kontak').text(detailcustomer['kontak']);
 		});
 	}
 	function remove_barang(tag) {
@@ -236,7 +247,7 @@
 	}
 	function select2_init() {
 	    $('.select-barang').select2(select_barang).on('select2-open', function() { dropdown() });
-	    $('.select-pelanggan').select2(select_pelanggan).on('select2-open', function() { dropdown() });
+	    $('.select-customer').select2(select_customer).on('select2-open', function() { dropdown() });
 	}
 	function check_p() {
     	var decision = $('input[name=p]:checked').val();
@@ -326,9 +337,9 @@
 	    }
 	  }
 	}
-	var select_pelanggan = {
+	var select_customer = {
 	  ajax: {
-	    url: '{{ route("pelanggan.api") }}',
+	    url: '{{ route("customer.api") }}',
 	    data: function (params) {
 	      return {
 	        search: params.term,
@@ -367,9 +378,15 @@
 				newVal = "{{ date('Y-m-d', strtotime(' + 30 days')) }}";
 			}
 			$('input[name=jatuh_tempo]').val(newVal);
+
+			if (this.value == 'giro') {
+				$('#pembayaran_giro').removeClass('d-none').addClass('d-flex');
+			} else {
+				$('#pembayaran_giro').removeClass('d-flex').addClass('d-none');
+			}
 		});
 
-		$('.select-pelanggan').change(function() { get_pelanggan(this.value) });
+		$('.select-customer').change(function() { get_customer(this.value) });
 
 	    $('.datepicker').datepicker({
 	    	format: 'yyyy-mm-dd',

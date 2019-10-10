@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Factory;
 
-class PemasokTableSeeder extends Seeder
+class SupplierTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -32,7 +32,7 @@ class PemasokTableSeeder extends Seeder
         	];
         }
 
-        DB::table('pemasok')->truncate();
-        DB::table('pemasok')->insert($data);
+        DB::table('supplier')->truncate();
+        DB::table('supplier')->insert($data);
     }
 }

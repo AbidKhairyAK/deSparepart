@@ -28,7 +28,7 @@
 		<table class="table table-striped">
 			<thead class="thead-dark">
 				<tr>
-					<th>Debitur</th>
+					<th>Customer</th>
 					<th>Total Piutang</th>
 					<th>Jatuh Tempo Terdekat</th>
 					<th>Transaksi</th>

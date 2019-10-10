@@ -1,16 +1,16 @@
 @extends('app')
 
-@section('title', 'Form Pemasok')
+@section('title', 'Form Supplier')
 
 @section('content')
 <div id="page-header">
-	<h1 class="h3 mb-1 text-gray-800">Form Pemasok</h1>
-	<p class="mb-4">form yang digunakan untuk input data pemasok</p>
+	<h1 class="h3 mb-1 text-gray-800">Form Supplier</h1>
+	<p class="mb-4">form yang digunakan untuk input data Supplier</p>
 </div>
 
 <div class="card shadow mb-4">
 	<div class="card-header">
-		<h6 class="m-0 font-weight-bold text-secondary">Form Pemasok</h6>
+		<h6 class="m-0 font-weight-bold text-secondary">Form Supplier</h6>
 	</div>
 	<div class="card-body">
 		

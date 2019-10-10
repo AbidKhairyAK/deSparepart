@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Factory;
 
-class PelangganTableSeeder extends Seeder
+class CustomerTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -28,7 +28,7 @@ class PelangganTableSeeder extends Seeder
         	];
         }
 
-        DB::table('pelanggan')->truncate();
-        DB::table('pelanggan')->insert($data);
+        DB::table('customer')->truncate();
+        DB::table('customer')->insert($data);
     }
 }

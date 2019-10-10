@@ -12,7 +12,7 @@
 		<table class="table table-striped">
 			<thead class="thead-dark">
 				<tr>
-					<th>Kreditur</th>
+					<th>Supplier</th>
 					<th>Total Hutang</th>
 					<th>Jatuh Tempo Terdekat</th>
 					<th>Pembelian</th>

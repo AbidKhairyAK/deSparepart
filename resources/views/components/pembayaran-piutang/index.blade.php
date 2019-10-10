@@ -27,11 +27,10 @@
 	        processing: true,
 	        serverSide: true,
 	        ajax: '{{$ajax}}',
-            order: [[1,'asc']],
 	        columns: [
 	            { data: 'id', searchable: false, orderable: false },
             	{ data: 'nomor' },
-            	{ data: 'debitur' },
+            	{ data: 'customer' },
             	{ data: 'tanggal' },
 	            { data: 'piutang' },
 	            { data: 'status' },

@@ -16,10 +16,11 @@ class CreatePenjualanTable extends Migration
         Schema::create('penjualan', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('pelanggan_id');
+            $table->unsignedInteger('customer_id');
             $table->char('no_faktur', 19);
             $table->char('no_nota', 9);
-            $table->enum('pembayaran', ['tunai', 'kredit', 'giro']);
+            $table->enum('pembayaran', ['tunai', 'giro', 'kredit', 'transfer']);
+            $table->string('pembayaran_detail', 20)->nullable();
             $table->integer('dibayarkan');
             $table->integer('hutang')->nullable();
             $table->boolean('status_lunas');

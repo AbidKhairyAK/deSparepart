@@ -27,7 +27,7 @@
 	            { data: 'id', searchable: false, orderable: false },
             	{ data: 'identitas' },
 	            { data: 'alamat' },
-	            { data: 'kontak', name: 'kontak_pelanggan.kontak' },
+	            { data: 'kontak', name: 'kontak_customer.kontak' },
 	            { data: 'kategori' },
 	            { data: 'status' },
 	            { data: 'action', searchable: false, orderable: false }

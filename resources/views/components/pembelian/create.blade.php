@@ -108,11 +108,11 @@
 				<div class="form-group">
 					<div class="custom-control custom-radio custom-control-inline">
 					    <input type="radio" class="custom-control-input" id="p1" name="p" value="p1" checked>
-					    <label class="custom-control-label" for="p1">Pemasok Lama</label>
+					    <label class="custom-control-label" for="p1">Supplier Lama</label>
 					</div>
 					<div class="custom-control custom-radio custom-control-inline">
 						<input type="radio" class="custom-control-input" id="p0" name="p" value="p0">
-						<label class="custom-control-label" for="p0">Pemasok Baru</label>
+						<label class="custom-control-label" for="p0">Supplier Baru</label>
 					</div>
 				</div>
 
@@ -186,12 +186,18 @@
 			<div class="col-md-6">
 				<div class="form-group d-flex align-items-center justify-content-between">
 					<b>PEMBAYARAN:</b>
-					<select class="form-control form-control-lg" style="width: 80%;">
-						<option>TUNAI</option>
-						<option>KREDIT (30 HARI)</option>
-						<option>GIRO</option>
+					<select id="pembayaran" class="form-control form-control-lg" style="width: 80%;">
+						<option value="tunai">TUNAI</option>
+						<option value="kredit">KREDIT (30 HARI)</option>
+						<option value="giro">GIRO</option>
+						<option value="transfer">TRANSFER</option>
 					</select>
-				</div><div class="form-group d-flex align-items-center justify-content-between">
+				</div>
+				<div id="pembayaran_giro" class="form-group d-none align-items-center justify-content-between">
+					<b>NO GIRO:</b>
+					<input type="text" class="form-control form-control-lg" style="width: 80%;">
+				</div>
+				<div class="form-group d-flex align-items-center justify-content-between">
 					<b>DIBAYARKAN:</b>
 					<input type="number" class="form-control form-control-lg" style="width: 80%;">
 				</div>
@@ -201,7 +207,7 @@
 				</div>
 				<div class="form-group d-flex align-items-center justify-content-between">
 					<b>JATUH TEMPO:</b>
-					<input type="date" class="form-control form-control-lg" style="width: 80%;">
+					<input name="jatuh_tempo" type="date" class="form-control form-control-lg" style="width: 80%;">
 				</div>
 			</div>
 
@@ -248,7 +254,21 @@
 	    check_p();
 	    $('input[name=p]').change(function() {
 	    	check_p();
-	    })
+	    });
+
+	    $('#pembayaran').change(function() {
+			var newVal = "";
+			if (this.value == 'kredit') {
+				newVal = "{{ date('Y-m-d', strtotime(' + 30 days')) }}";
+			}
+			$('input[name=jatuh_tempo]').val(newVal);
+
+			if (this.value == 'giro') {
+				$('#pembayaran_giro').removeClass('d-none').addClass('d-flex');
+			} else {
+				$('#pembayaran_giro').removeClass('d-flex').addClass('d-none');
+			}
+		});
 	});
 </script>
 @endsection

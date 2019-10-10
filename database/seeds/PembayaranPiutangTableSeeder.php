@@ -21,15 +21,17 @@ class PembayaranPiutangTableSeeder extends Seeder
             $penjualan = DB::table('penjualan')->where('id', $id)->first();
             $piutang = $penjualan->hutang;
             $bool = $i < 2;
+            $pembayaran = $faker->randomElement(['tunai', 'kredit', 'giro', 'transfer']);
         	$data[] = [
                 "user_id" => rand(1, 4),
         		"penjualan_id" => $id,
-                "no_nota" => "1909282".rand(10, 99),
+                "no_pelunasan" => "BM-19".(substr((100001 + $i), 1)),
                 "piutang" => $piutang,
                 "dibayarkan" => $bool ? $piutang :  ($piutang * 70/100),
                 "sisa" => $bool ? 0 : ($piutang * 30/100),
                 "status_lunas" => $bool,
-                "pembayaran" => $faker->randomElement(['tunai', 'kredit', 'giro']),
+                "pembayaran" => $pembayaran,
+                "pembayaran_detail" => $pembayaran == 'giro' ? rand(111111111, 999999999) : null,
         		"created_at" => now(),
         		"updated_at" => now(),
         	];

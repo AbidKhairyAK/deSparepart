@@ -17,11 +17,12 @@ class CreatePembayaranPiutangTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('penjualan_id');
-            $table->char('no_nota', 9);
+            $table->char('no_pelunasan', 10);
             $table->integer('piutang');
             $table->integer('dibayarkan');
             $table->integer('sisa');
-            $table->enum('pembayaran', ['tunai', 'giro', 'kredit']);
+            $table->enum('pembayaran', ['tunai', 'giro', 'kredit', 'transfer']);
+            $table->string('pembayaran_detail', 20)->nullable();
             $table->string('status_lunas');
             $table->timestamps();
         });

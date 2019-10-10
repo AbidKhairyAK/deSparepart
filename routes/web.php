@@ -25,11 +25,11 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::get('pengguna/{id}/deactivate', 'PenggunaController@deactivate')->name('pengguna.deactivate');
 	Route::resource('pengguna', 'PenggunaController');
 
-	Route::get('pelanggan/api', 'PelangganController@api')->name('pelanggan.api');
-	Route::get('pelanggan/data', 'PelangganController@data')->name('pelanggan.data');
-	Route::get('pelanggan/{id}/activate', 'PelangganController@activate')->name('pelanggan.activate');
-	Route::get('pelanggan/{id}/deactivate', 'PelangganController@deactivate')->name('pelanggan.deactivate');
-	Route::resource('pelanggan', 'PelangganController');
+	Route::get('customer/api', 'CustomerController@api')->name('customer.api');
+	Route::get('customer/data', 'CustomerController@data')->name('customer.data');
+	Route::get('customer/{id}/activate', 'CustomerController@activate')->name('customer.activate');
+	Route::get('customer/{id}/deactivate', 'CustomerController@deactivate')->name('customer.deactivate');
+	Route::resource('customer', 'CustomerController');
 
 	Route::get('hak-akses/data', 'HakAksesController@data')->name('hak-akses.data');
 	Route::resource('/hak-akses', 'HakAksesController');
@@ -66,9 +66,7 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::resource('/pembelian', 'PembelianController');
 	Route::resource('/hutang', 'HutangController');
 	Route::resource('/pembayaran-hutang', 'PembayaranHutangController');
-	Route::resource('/pemasok', 'PemasokController');
-	Route::resource('/pemasok', 'PemasokController');
-	Route::resource('/pelanggan', 'PelangganController');
+	Route::resource('/supplier', 'SupplierController');
 	Route::resource('/barang', 'BarangController');
 	Route::resource('/karyawan', 'KaryawanController');
 	// Route::resource('/pengguna', 'PenggunaController');

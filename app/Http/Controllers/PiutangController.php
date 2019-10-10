@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Model\Penjualan;
-use App\Model\Pelanggan;
+use App\Model\Customer;
 use Kris\LaravelFormBuilder\FormBuilder;
 use DataTables;
 use Form;
@@ -13,7 +13,7 @@ use PDF;
 
 class PiutangController extends Controller
 {
-    public function __construct(Pelanggan $table)
+    public function __construct(Customer $table)
     {
         $this->main = 'piutang';
         $this->folder = 'components.'.$this->main;
@@ -50,7 +50,7 @@ class PiutangController extends Controller
                     })
                     ->orderBy('nama', 'asc');
         return DataTables::of($data)
-            ->addColumn('debitur', function ($index) {
+            ->addColumn('customer', function ($index) {
                 $tag = "<table>
                         <tr>
                             <td>Kode</td><td class='px-2'>:</td><th>{$index->kode}</th>
@@ -96,11 +96,11 @@ class PiutangController extends Controller
                 $tag = " <a href='{$can['detail']['link']}' class='btn btn-info btn-sm {$can['detail']['dis']}' title='detail'><i class='fas fa-eye'></i></a>";
                 return $tag;
             })
-            ->filterColumn('debitur', function($query, $keyword) {
+            ->filterColumn('customer', function($query, $keyword) {
                 $sql = "CONCAT(kode,'-',nama)  like ?";
                 $query->whereRaw($sql, ["%{$keyword}%"]);
             })
-            ->rawColumns(['debitur', 'jatuh_tempo_terdekat', 'action'])
+            ->rawColumns(['customer', 'jatuh_tempo_terdekat', 'action'])
             ->make(true);
     }
 

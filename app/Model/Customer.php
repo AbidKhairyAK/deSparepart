@@ -4,17 +4,17 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Pelanggan extends Model
+class Customer extends Model
 {
-	protected $table = 'pelanggan';
+	protected $table = 'customer';
 
     protected $fillable = [
     	'id', 'kode', 'nama', 'toko', 'alamat', 'kategori', 'status', 'user_id'
     ];
 
-    public function kontak_pelanggan()
+    public function kontak_customer()
     {
-    	return $this->hasMany(KontakPelanggan::class);
+    	return $this->hasMany(KontakCustomer::class);
     }
 
     public function penjualan()

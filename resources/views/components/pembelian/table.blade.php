@@ -16,7 +16,7 @@
 			<thead class="thead-dark">
 				<tr>
 					<th>Nomor</th>
-					<th>Pemasok</th>
+					<th>Supplier</th>
 					<th>Tanggal</th>
 					<th>Biaya</th>
 					<th>Status</th>

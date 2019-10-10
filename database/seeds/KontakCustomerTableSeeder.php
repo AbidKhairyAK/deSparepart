@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Factory;
 
-class KontakPelangganTableSeeder extends Seeder
+class KontakCustomerTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,7 +17,7 @@ class KontakPelangganTableSeeder extends Seeder
 
         for ($i=1; $i < 17; $i++) { 
         	$data[] = [
-        		"pelanggan_id" => ceil($i/2),
+        		"customer_id" => ceil($i/2),
         		"tipe" => ($i%2 == 0) ? 'hp' : 'email',
         		"kontak" => ($i%2 == 0) ? '08'.rand(1111111111, 9999999999) : $faker->freeEmail,
         		"created_at" => now(),
@@ -25,7 +25,7 @@ class KontakPelangganTableSeeder extends Seeder
         	];
         }
 
-        DB::table('kontak_pelanggan')->truncate();
-        DB::table('kontak_pelanggan')->insert($data);
+        DB::table('kontak_customer')->truncate();
+        DB::table('kontak_customer')->insert($data);
     }
 }

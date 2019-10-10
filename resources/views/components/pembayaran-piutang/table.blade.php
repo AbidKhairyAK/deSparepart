@@ -30,7 +30,7 @@
 				<tr>
 					<th>#</th>
 					<th>Nomor</th>
-					<th>Debitur</th>
+					<th width="170">Customer</th>
 					<th>Tanggal</th>
 					<th>Piutang</th>
 					<th>Status</th>

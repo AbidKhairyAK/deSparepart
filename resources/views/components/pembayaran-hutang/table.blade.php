@@ -16,7 +16,7 @@
 			<thead class="thead-dark">
 				<tr>
 					<th>Nomor Pelunasan</th>
-					<th>Kreditur</th>
+					<th>Supplier</th>
 					<th>Tanggal</th>
 					<th>Hutang</th>
 					<th>Status</th>

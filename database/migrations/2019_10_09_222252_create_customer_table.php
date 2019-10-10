@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePemasokTable extends Migration
+class CreateCustomerTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,14 @@ class CreatePemasokTable extends Migration
      */
     public function up()
     {
-        Schema::create('pemasok', function (Blueprint $table) {
+        Schema::create('customer', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('user_id');
             $table->char('kode', 9)->unique(); // 6 angka tanggal, 3 angka urut
-            $table->string('logo', 15)->nullable();
-            $table->string('perusahaan');
-            $table->string('pemilik');
-            $table->string('cp');
+            $table->string('nama');
+            $table->string('toko')->nullable();
             $table->string('alamat');
-            $table->string('npwp');
-            $table->boolean('pkp');
-            $table->string('kategori');
+            $table->enum('kategori', ['bengkel', 'toko', 'umum'])->default('umum');
             $table->boolean('status')->default(1);
             $table->timestamps();
         });
@@ -37,6 +33,6 @@ class CreatePemasokTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pemasok');
+        Schema::dropIfExists('customer');
     }
 }

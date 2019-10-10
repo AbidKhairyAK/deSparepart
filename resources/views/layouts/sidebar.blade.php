@@ -5,7 +5,7 @@
         ['name' => 'Tambah Pembelian', 'link' => '/pembelian/create', 'perm' => 'create-pembelian'],
         ['name' => 'Daftar Pembelian', 'link' => '/pembelian', 'perm' => 'index-pembelian'],
         ['name' => 'Daftar Hutang', 'link' => '/hutang', 'perm' => 'index-hutang'],
-        ['name' => 'Daftar Pemasok', 'link' => '/pemasok', 'perm' => 'index-pemasok'],
+        ['name' => 'Daftar Supplier', 'link' => '/supplier', 'perm' => 'index-supplier'],
       ],
     ],
     [
@@ -13,7 +13,7 @@
         ['name' => 'Tambah Penjualan', 'link' => '/penjualan/create', 'perm' => 'create-penjualan'],
         ['name' => 'Daftar Penjualan', 'link' => '/penjualan', 'perm' => 'index-penjualan'],
         ['name' => 'Daftar Piutang', 'link' => '/piutang', 'perm' => 'index-piutang'],
-        ['name' => 'Daftar Pelanggan', 'link' => '/pelanggan', 'perm' => 'index-pelanggan'],
+        ['name' => 'Daftar Customer', 'link' => '/customer', 'perm' => 'index-customer'],
       ],
     ],
     [

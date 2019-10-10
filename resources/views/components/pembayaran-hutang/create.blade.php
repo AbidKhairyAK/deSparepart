@@ -82,10 +82,7 @@
 									</table>
 								</div>
 								<div class="col-sm-4">
-									<b>Kreditur:</b> PT. Kinetik Super
-								</div>
-								<div class="col-sm-4">
-									<b>Kreditur:</b> PT. Kinetik Super
+									<b>Supplier:</b> PT. Kinetik Super
 								</div>
 								<div class="col-sm-4">
 									<b>Pembayaran:</b> GIRO
@@ -105,11 +102,14 @@
 					</div>
 					<div class="form-group col-sm-3">
 						<label>Pembayaran</label>
-						<select class="form-control">
-							<option>TUNAI</option>
-							<option>KREDIT</option>
-							<option>GIRO</option>
+						<select name="pembayaran" class="form-control">
+							<option value="tunai">TUNAI</option>
+							<option value="kredit">KREDIT (30 HARI)</option>
+							<option value="giro">GIRO</option>
+							<option value="transfer">TRANSFER</option>
 						</select>
+						<br>
+						<input id="pembayaran_giro" type="text" class="d-none form-control" placeholder="No Giro...">
 					</div>
 					<div class="form-group col-sm-3">
 						<label>Sisa Hutang</label>
@@ -128,4 +128,18 @@
 
 	</div>
 </div>
+@endsection
+
+@section('script')
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('select[name=pembayaran]').change(function() {
+			if (this.value == 'giro') {
+				$('#pembayaran_giro').removeClass('d-none').addClass('d-block');
+			} else {
+				$('#pembayaran_giro').removeClass('d-block').addClass('d-none');
+			}
+		})
+	})
+</script>
 @endsection

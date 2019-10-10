@@ -19,13 +19,18 @@
 				<div class="col-sm-8">
 					<div class="row">
 
-						<div class="form-group col-sm-12">
-							<label>Cari No Faktur Penjualan:</label>
-							<select type="text" name="penjualan_id" class="form-control" placeholder="Cari...">
+						<div class="form-group col-sm-6">
+							<label>No Faktur Penjualan:</label>
+							<select name="penjualan_id" class="form-control" placeholder="Cari...">
 								@if(isset($m))
 								<option value="{{ $m->id }}">{{ $m->no_faktur }}</option>
 								@endif
 							</select>
+						</div>
+
+						<div class="form-group col-sm-6">
+							<label>No Pelunasan:</label>
+							<input type="text" name="no_pelunasan" class="form-control" value="{{ $no_pelunasan }}">
 						</div>
 
 						<div id="vue-wrapper" class="col-sm-12">
@@ -34,15 +39,7 @@
 									<label>Detail Transaksi:</label>
 									<div class="p-2 border border-secondary">
 										<div class="row">
-											<div class="col-sm-4">
-												<b>No Faktur:</b> @{{ penjualan.no_faktur }}
-											</div>
-											<div class="col-sm-5">
-												<b>Tanggal Transaksi:</b> @{{ penjualan.created_at }}
-											</div>
-											<div class="col-sm-3">
-												<b>Jatuh Tempo:</b> @{{ penjualan.jatuh_tempo }}
-											</div>
+											
 											<div class="col-sm-12">
 												<table class="table table-bordered table-sm my-3">
 													<thead>
@@ -75,14 +72,27 @@
 													</tfoot>
 												</table>
 											</div>
-											<div class="col-sm-4">
-												<b>Debitur:</b> @{{ penjualan.pelanggan.nama }}
+
+											<div class="col-sm-4 pb-2">
+												<b>No Faktur:</b> @{{ penjualan.no_faktur }}
 											</div>
-											<div class="col-sm-4">
-												<b>Dibayarkan:</b> @{{ penjualan.dibayarkan | nf }}
+											<div class="col-sm-4 pb-2">
+												<b>No PO:</b> @{{ penjualan.no_po }}
 											</div>
-											<div class="col-sm-4">
+											<div class="col-sm-4 pb-2">
 												<b>Pembayaran:</b> @{{ penjualan.pembayaran.toUpperCase() }}
+											</div>
+											<div class="col-sm-4 pb-2">
+												<b>Customer:</b> @{{ penjualan.customer.nama }}
+											</div>
+											<div class="col-sm-4 pb-2">
+												<b>Tanggal Transaksi:</b> @{{ penjualan.created_at.substr(0, 10) }}
+											</div>
+											<div class="col-sm-4 pb-2">
+												<b>Jatuh Tempo:</b> @{{ penjualan.jatuh_tempo }}
+											</div>
+											<div class="col-sm-4 pb-2">
+												<b>Dibayarkan:</b> Rp @{{ penjualan.dibayarkan | nf }}
 											</div>
 
 										</div>
@@ -99,11 +109,14 @@
 								</div>
 								<div class="form-group col-sm-2">
 									<label>Pembayaran</label>
-									<select name="pembayaran" class="form-control">
+									<select v-model="pembayaran" name="pembayaran" class="form-control">
 										<option value="tunai">TUNAI</option>
 										<option value="kredit">KREDIT</option>
 										<option value="giro">GIRO</option>
+										<option value="transfer">TRANSFER</option>
 									</select>
+									<br>
+									<input v-if="pembayaran == 'giro'" name="pembayaran_detail" type="text" class="form-control" placeholder="No Giro..." required>
 								</div>
 								<div class="form-group col-sm-2">
 									<label>Kembalian</label>
@@ -147,6 +160,7 @@
 		data: {
 			penjualan: false,
 			dibayarkan: null,
+			pembayaran: null,
 		},
 		computed: {
 			kembalian() {
@@ -180,6 +194,9 @@
 			},
 			lel(val) {
 				alert(val);
+			},
+			pembayaran() {
+
 			}
 		},
 		filters: {

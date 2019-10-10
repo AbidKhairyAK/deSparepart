@@ -1,9 +1,9 @@
 <div class="card shadow mb-4">
 	<div class="card-header py-3 d-flex justify-content-between align-items-center">
-		<h6 class="m-0 font-weight-bold text-secondary">Tabel Daftar Pemasok</h6>
+		<h6 class="m-0 font-weight-bold text-secondary">Tabel Daftar Supplier</h6>
 		<div>
-			<a href="{{ url('pemasok/create') }}" class="btn btn-sm btn-primary">
-				<i class="fas fa-plus"></i> <b>Tambah Pemasok</b>
+			<a href="{{ url('supplier/create') }}" class="btn btn-sm btn-primary">
+				<i class="fas fa-plus"></i> <b>Tambah Supplier</b>
 			</a>
 		</div>
 	</div>

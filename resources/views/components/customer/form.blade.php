@@ -37,7 +37,7 @@
 				<div id="multi-contact" class="col-sm-12">
 
 					@if(isset($tbl))
-						@foreach($tbl->kontak_pelanggan as $con)
+						@foreach($tbl->kontak_customer as $con)
 							<div class="row">
 								<div class="form-group col-sm-3">
 									<select class="form-control" name="tipe[]" required>

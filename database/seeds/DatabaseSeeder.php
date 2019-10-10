@@ -18,10 +18,10 @@ class DatabaseSeeder extends Seeder
         $this->call(PermissionsTableSeeder::class);
         $this->call(PermissionRoleTableSeeder::class);
         $this->call(UsersTableSeeder::class);
-        $this->call(PelangganTableSeeder::class);
-        $this->call(PemasokTableSeeder::class);
-        $this->call(KontakPelangganTableSeeder::class);
-        $this->call(KontakPemasokTableSeeder::class);
+        $this->call(CustomerTableSeeder::class);
+        $this->call(SupplierTableSeeder::class);
+        $this->call(KontakCustomerTableSeeder::class);
+        $this->call(KontakSupplierTableSeeder::class);
         $this->call(KomponenTableSeeder::class);
         $this->call(KendaraanTableSeeder::class);
         $this->call(BarangTableSeeder::class);

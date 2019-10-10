@@ -25,7 +25,7 @@
 	        ajax: '{{$ajax}}',
             order: [[1,'asc']],
 	        columns: [
-            	{ data: 'debitur' },
+            	{ data: 'customer' },
             	{ data: 'total_piutang' },
             	{ data: 'jatuh_tempo_terdekat' },
 	            { data: 'transaksi' },

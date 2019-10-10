@@ -31,7 +31,7 @@
 	        columns: [
 	            { data: 'id', searchable: false, orderable: false },
             	{ data: 'nomor' },
-            	{ data: 'pembeli', name: 'pelanggan.nama'},
+            	{ data: 'customer', name: 'customer.nama'},
             	{ data: 'tanggal' },
 	            { data: 'biaya' },
 	            { data: 'status' },

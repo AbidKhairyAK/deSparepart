@@ -30,12 +30,10 @@
 				<tr>
 					<th>#</th>
 					<th>Nomor</th>
-					<th>Pembeli</th>
+					<th>Customer</th>
 					<th>Tanggal</th>
 					<th>Biaya</th>
-					<!-- <th>Kasir</th> -->
 					<th>Status</th>
-					<!-- <th>Pembayaran</th> -->
 					<th>Aksi</th>
 				</tr>
 			</thead>

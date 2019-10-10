@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateKontakPelangganTable extends Migration
+class CreateKontakSupplierTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateKontakPelangganTable extends Migration
      */
     public function up()
     {
-        Schema::create('kontak_pelanggan', function (Blueprint $table) {
+        Schema::create('kontak_supplier', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('pelanggan_id');
+            $table->unsignedBigInteger('supplier_id');
             $table->enum('tipe', ['hp', 'telepon', 'fax', 'email', 'web', 'sosmed']);
             $table->string('kontak');
             $table->timestamps();
@@ -29,6 +29,6 @@ class CreateKontakPelangganTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('kontak_pelanggan');
+        Schema::dropIfExists('kontak_supplier');
     }
 }

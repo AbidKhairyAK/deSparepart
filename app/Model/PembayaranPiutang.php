@@ -9,7 +9,7 @@ class PembayaranPiutang extends Model
 	protected $table = 'pembayaran_piutang';
 
     protected $fillable = [
-    	'id', "penjualan_id", "user_id", "no_nota", "piutang", "dibayarkan", "sisa", "status_lunas"
+    	'id', "penjualan_id", "user_id", "no_pelunasan", "piutang", "dibayarkan", "pembayaran", "pembayaran_detail", "sisa", "status_lunas"
 	];
 
     public function penjualan()

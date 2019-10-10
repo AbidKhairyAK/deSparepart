@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePelangganTable extends Migration
+class CreateSupplierTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,18 @@ class CreatePelangganTable extends Migration
      */
     public function up()
     {
-        Schema::create('pelanggan', function (Blueprint $table) {
+        Schema::create('supplier', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('user_id');
             $table->char('kode', 9)->unique(); // 6 angka tanggal, 3 angka urut
-            $table->string('nama');
-            $table->string('toko')->nullable();
+            $table->string('logo', 15)->nullable();
+            $table->string('perusahaan');
+            $table->string('pemilik');
+            $table->string('cp');
             $table->string('alamat');
-            $table->enum('kategori', ['bengkel', 'toko', 'umum'])->default('umum');
+            $table->string('npwp');
+            $table->boolean('pkp');
+            $table->string('kategori');
             $table->boolean('status')->default(1);
             $table->timestamps();
         });
@@ -33,6 +37,6 @@ class CreatePelangganTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pelanggan');
+        Schema::dropIfExists('supplier');
     }
 }

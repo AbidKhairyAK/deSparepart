@@ -5,7 +5,7 @@ namespace App\Forms;
 use Kris\LaravelFormBuilder\Form;
 use App\Model\Role;
 
-class PemasokForm extends Form
+class SupplierForm extends Form
 {
     public function buildForm()
     {

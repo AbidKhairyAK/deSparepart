@@ -5,11 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Model\PembayaranPiutang;
-use App\Model\Pelanggan;
-use Kris\LaravelFormBuilder\FormBuilder;
 use DataTables;
 use Form;
-use PDF;
 
 class PembayaranPiutangController extends Controller
 {
@@ -56,25 +53,25 @@ class PembayaranPiutangController extends Controller
             ->addColumn('nomor', function ($index) {
                 $tag = "<table>
                         <tr>
-                            <td>No Faktur</td><td class='px-2'>:</td><th>{$index->penjualan->no_faktur}</th>
+                            <td>Faktur</td><td class='px-2'>:</td><th>{$index->penjualan->no_faktur}</th>
                         </tr>
                         <tr>
-                            <td>Nota Penjualan</td><td class='px-2'>:</td><th>{$index->penjualan->no_nota}</th>
+                            <td>PO</td><td class='px-2'>:</td><th>{$index->penjualan->no_po}</th>
                         </tr>
                         <tr>
-                            <td>Nota Pelunasan</td><td class='px-2'>:</td><th>{$index->no_nota}</th>
+                            <td>Pelunasan</td><td class='px-2'>:</td><th>{$index->no_pelunasan}</th>
                         </tr>
                     </table>
                 ";
                 return $tag;
             })
-            ->addColumn('debitur', function ($index) {
+            ->addColumn('customer', function ($index) {
                 $tag = "<table>
                         <tr>
-                            <td>Nama</td><td class='px-2'>:</td><th>{$index->penjualan->pelanggan->kode}</th>
+                            <td>Kode</td><td class='px-2'>:</td><th>{$index->penjualan->customer->kode}</th>
                         </tr>
                         <tr>
-                            <td>Nama</td><td class='px-2'>:</td><th>{$index->penjualan->pelanggan->nama}</th>
+                            <td>Nama</td><td class='px-2'>:</td><th>{$index->penjualan->customer->nama}</th>
                         </tr>
                     </table>
                 ";
@@ -83,13 +80,13 @@ class PembayaranPiutangController extends Controller
             ->addColumn('tanggal', function ($index) {
                 $tag = "<table>
                         <tr>
-                            <td>Tgl Jual</td><td class='px-2'>:</td><th>".substr($index->penjualan->created_at, 0, 10)."</th>
+                            <td>Penjualan</td><td class='px-2'>:</td><th>".substr($index->penjualan->created_at, 0, 10)."</th>
                         </tr>
                         <tr>
-                            <td>Tgl Tempo</td><td class='px-2'>:</td><th>{$index->penjualan->jatuh_tempo}</th>
+                            <td>Tempo</td><td class='px-2'>:</td><th>{$index->penjualan->jatuh_tempo}</th>
                         </tr>
                         <tr>
-                            <td>Tgl Pelunasan</td><td class='px-2'>:</td><th>".substr($index->created_at, 0, 10)."</th>
+                            <td>Pelunasan</td><td class='px-2'>:</td><th>".substr($index->created_at, 0, 10)."</th>
                         </tr>
                     </table>
                 ";
@@ -98,7 +95,7 @@ class PembayaranPiutangController extends Controller
             ->addColumn('piutang', function ($index) {
                 $tag = "<table>
                         <tr>
-                            <td>Ttl Piutang</td><td class='px-2'>:</td><th>".number_format($index->piutang, 0, '', '.')."</th>
+                            <td>Piutang</td><td class='px-2'>:</td><th>".number_format($index->piutang, 0, '', '.')."</th>
                         </tr>
                         <tr>
                             <td>Dibayarkan</td><td class='px-2'>:</td><th>".number_format($index->dibayarkan, 0, '', '.')."</th>
@@ -132,7 +129,7 @@ class PembayaranPiutangController extends Controller
                 $tag .= Form::close();
                 return $tag;
             })
-            ->rawColumns(['id', 'nomor', 'tanggal', 'debitur', 'piutang', 'action'])
+            ->rawColumns(['id', 'nomor', 'tanggal', 'customer', 'piutang', 'action'])
             ->make(true);
     }
 
@@ -151,6 +148,11 @@ class PembayaranPiutangController extends Controller
         if ($id) {
             $data['m'] = DB::table('penjualan')->select('no_faktur', 'id')->where('id', $id)->first();
         }
+
+        $prevData = $this->table->where('no_pelunasan', 'like', 'BM-'.date('y')."%")->orderBy('no_pelunasan', 'desc')->first();
+        $newNo = !is_null($prevData) ? ( intval("1".substr($prevData->no_pelunasan, 5)) + 1 ) : null;
+        $data['no_pelunasan'] = "BM-" . date('y') . (!is_null($prevData) ? substr($newNo, 1) : "00001");
+
         $data['no_faktur'] = '0'.rand(1,9).rand(0,1).'.00'.rand(1,4).'-'.date('y').'.0000'.rand(1000,9999);
         $data['main'] = $this->main;
         $data['title'] = $this->title;
@@ -166,10 +168,8 @@ class PembayaranPiutangController extends Controller
 
     public function store(Request $request)
     {
-        $prevData = $this->table->where('no_nota', 'like', date('ymd')."%")->orderBy('no_nota', 'desc')->first();
         $request->merge([
             'user_id' => auth()->user()->id,
-            'no_nota' => !is_null($prevData) ? (intval($prevData->no_nota) + 1) : date('ymd')."001",
             'status_lunas' => $request->sisa == 0,
             'piutang' => str_replace('.', '', $request->piutang),
             'sisa' => str_replace('.', '', $request->sisa),

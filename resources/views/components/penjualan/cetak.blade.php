@@ -60,7 +60,7 @@
 		<tr>
 			<td>
 				<p><b>PERUSAHAAN ANDA</b><br>Jl. Alamat Anda, Kota Anda</p>
-				<p>Kepada Yth.<br>{{ $model->pelanggan->nama }}</p>
+				<p>Kepada Yth.<br>{{ $model->customer->nama }}</p>
 			</td>
 			<td class="right-head">
 				<p>

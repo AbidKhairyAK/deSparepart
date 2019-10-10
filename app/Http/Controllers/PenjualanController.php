@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Model\Penjualan;
-use App\Model\Pelanggan;
+use App\Model\Customer;
 use Kris\LaravelFormBuilder\FormBuilder;
 use DataTables;
 use Form;
@@ -40,7 +40,7 @@ class PenjualanController extends Controller
         if ($type=='select') {
             $data = $data->select('no_faktur', 'id')->get();
         } else if ($type=='full' && !empty($id)){
-            $data = $data->with(['pelanggan', 'penjualan_detail', 'pembayaran_piutang'])->where('id', $id)->first();
+            $data = $data->with(['customer', 'penjualan_detail', 'pembayaran_piutang'])->where('id', $id)->first();
         }
 
         return response()->json($data);
@@ -62,8 +62,8 @@ class PenjualanController extends Controller
         if (!$request->ajax()) { return; }
 
         $data = $this->table
-                    ->with(['pelanggan', 'user'])
-                    ->select(['id', "user_id", "pelanggan_id", "no_faktur", "no_nota", "pembayaran", "dibayarkan", "hutang", "status_lunas", "status_post", "jatuh_tempo", "total", "keterangan", "created_at"])
+                    ->with(['customer', 'user'])
+                    ->select(['id', "user_id", "customer_id", "no_faktur", "no_nota", "pembayaran", "pembayaran_detail", "dibayarkan", "hutang", "status_lunas", "status_post", "jatuh_tempo", "total", "keterangan", "created_at"])
                     ->orderBy('created_at', 'desc');
         return DataTables::of($data)
             ->editColumn('id', function($index) {
@@ -84,13 +84,13 @@ class PenjualanController extends Controller
                 ";
                 return $tag;
             })
-            ->addColumn('pembeli', function ($index) {
+            ->addColumn('customer', function ($index) {
                 $tag = "<table>
                         <tr>
-                            <td>{$index->pelanggan->kode}</td>
+                            <td>{$index->customer->kode}</td>
                         </tr>
                         <tr>
-                            <th width='150'>{$index->pelanggan->nama}</th>
+                            <th width='150'>{$index->customer->nama}</th>
                         </tr>
                     </table>
                 ";
@@ -175,7 +175,7 @@ class PenjualanController extends Controller
                 $sql = "CONCAT(penjualan.status_lunas,'-',penjualan.status_post)  like ?";
                 $query->whereRaw($sql, ["%{$keyword}%"]);
             })
-            ->rawColumns(['id', 'nomor', 'tanggal', 'pembeli', 'biaya', 'status', 'action'])
+            ->rawColumns(['id', 'nomor', 'tanggal', 'customer', 'biaya', 'status', 'action'])
             ->make(true);
     }
 
@@ -241,27 +241,26 @@ class PenjualanController extends Controller
     public function mappingData($request, $update=false)
     {
         $prevData = $this->table->where('no_nota', 'like', date('ymd')."%")->orderBy('no_nota', 'desc')->first();
-        $prevPelanggan = DB::table('pelanggan')->where('kode', 'like', date('ymd')."%")->orderBy('kode', 'desc')->first();
+        $prevcustomer = DB::table('customer')->where('kode', 'like', date('ymd')."%")->orderBy('kode', 'desc')->first();
         $nota = !is_null($prevData) ? (intval($prevData->no_nota) + 1) : date('ymd')."001";
         $no_nota = $update ? $request->no_nota : $nota;
         // $tempo = explode("-", $request->jatuh_tempo);
 
         if ($request->p == 'p0') {
-            $pelanggan = Pelanggan::create([
+            $customer = Customer::create([
                 'user_id' => auth()->user()->id,
-                'kode' => !is_null($prevPelanggan) ? (intval($prevPelanggan->kode) + 1) : date('ymd')."001",
-                'nama' => $request->pelanggan_nama,
-                'toko' => $request->pelanggan_toko,
-                'alamat' => $request->pelanggan_alamat,
+                'kode' => !is_null($prevcustomer) ? (intval($prevcustomer->kode) + 1) : date('ymd')."001",
+                'nama' => $request->customer_nama,
+                'toko' => $request->customer_toko,
+                'alamat' => $request->customer_alamat,
             ]);
-            DB::table('kontak_pelanggan')->insert([
-                'pelanggan_id' => $pelanggan->id,
+            DB::table('kontak_customer')->insert([
+                'customer_id' => $customer->id,
                 'tipe' => 'hp',
-                'kontak' => $request->pelanggan_hp,
+                'kontak' => $request->customer_hp,
             ]);
         }
         $total = str_replace(".", "", $request->total);
-        $pembayaran = str_replace(".", "", $request->pembayaran);
         $dibayarkan = str_replace(".", "", $request->dibayarkan);
         $bayar = intval($dibayarkan) - intval($total);
         $hutang = str_replace(".", "", $request->hutang);
@@ -270,10 +269,11 @@ class PenjualanController extends Controller
             "user_id" => auth()->user()->id,
             "no_faktur" => $request->no_faktur,
             "no_nota" => $no_nota,
-            "pelanggan_id" => $request->p == 'p0' ? $pelanggan->id : $request->pelanggan_id,
+            "customer_id" => $request->p == 'p0' ? $customer->id : $request->customer_id,
             "keterangan" => $request->keterangan,
             "total" => $total,
-            "pembayaran" => $pembayaran,
+            "pembayaran" => $request->pembayaran,
+            "pembayaran_detail" => $request->pembayaran_detail,
             "dibayarkan" => $bayar > 0 ? $total : $dibayarkan,
             "hutang" => $hutang,
             "jatuh_tempo" => $request->jatuh_tempo,

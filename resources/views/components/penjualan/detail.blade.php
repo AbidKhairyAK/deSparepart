@@ -67,7 +67,7 @@
 			<div class="col-sm-4">
 				<div class="row pb-2">
 					<span class="col-4">Pembayaran</span>
-					<span class="col-8">: <b>{{ $model->pembayaran }}</b></span>
+					<span class="col-8">: <b>{{ strtoupper($model->pembayaran) }}{{ $model->pembayaran_detail ? ' - '.$model->pembayaran_detail : '' }}</b></span>
 				</div>
 				<div class="row pb-2">
 					<span class="col-4">Total</span>
@@ -88,8 +88,8 @@
 			</div>
 			<div class="col-sm-4">
 				<div class="row pb-2">
-					<span class="col-4">Pembeli</span>
-					<span class="col-8">: <b>{{ $model->pelanggan->kode }} - {{ $model->pelanggan->nama }}</b></span>
+					<span class="col-4">Customer</span>
+					<span class="col-8">: <b>{{ $model->customer->kode }} - {{ $model->customer->nama }}</b></span>
 				</div>
 				<div class="row pb-2">
 					<span class="col-4">Kasir</span>

@@ -9,7 +9,7 @@ class Penjualan extends Model
 	protected $table = 'penjualan';
 
     protected $fillable = [
-    	'id', "user_id", "pelanggan_id", "no_faktur", "no_nota", "pembayaran", "dibayarkan", "hutang", "status_lunas", "status_post", "jatuh_tempo", "total", "keterangan"	
+    	'id', "user_id", "customer_id", "no_faktur", "no_nota", "pembayaran", "pembayaran_detail", "dibayarkan", "hutang", "status_lunas", "status_post", "jatuh_tempo", "total", "keterangan"	
     ];
 
     public function user()
@@ -17,9 +17,9 @@ class Penjualan extends Model
     	return $this->belongsTo(User::class);
     }
 
-    public function pelanggan()
+    public function customer()
     {
-        return $this->belongsTo(Pelanggan::class);
+        return $this->belongsTo(Customer::class);
     }
 
     public function penjualan_detail()

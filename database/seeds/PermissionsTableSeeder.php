@@ -12,7 +12,7 @@ class PermissionsTableSeeder extends Seeder
      */
     public function run()
     {
-    	$menus = ['Pembelian', 'Hutang', 'Pemasok', 'Penjualan', 'Piutang', 'Pelanggan', 'Pembayaran Piutang', 'Pembayaran Hutang', 'Pembayaran Piutang', 'Barang', 'Karyawan', 'Pengguna', 'Kendaraan', 'Komponen', 'Jabatan', 'Enkripsi', 'Hak Akses', 'Backup Restore'];
+    	$menus = ['Pembelian', 'Hutang', 'Supplier', 'Penjualan', 'Piutang', 'Customer', 'Pembayaran Piutang', 'Pembayaran Hutang', 'Pembayaran Piutang', 'Barang', 'Karyawan', 'Pengguna', 'Kendaraan', 'Komponen', 'Jabatan', 'Enkripsi', 'Hak Akses', 'Backup'];
     	$actions = ["Index", "Create", "Detail", "Edit", "Delete"];
     	$specials = ['Beranda', 'Laporan Penjualan', 'Laporan Pembelian', 'Laporan Kinerja Karyawan', 'Laporan Laba Rugi'];
 

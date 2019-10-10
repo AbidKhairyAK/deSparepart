@@ -40,8 +40,8 @@
 				<div class="row">
 
 					<div class="form-group col-sm-3">
-						<span>Nota Pelunasan:</span>
-						<p><b>{{ $model->no_nota }}</b></p>
+						<span>No Pelunasan:</span>
+						<p><b>{{ $model->no_pelunasan }}</b></p>
 					</div>
 					<div class="form-group col-sm-3">
 						<span>Tgl Pelunasan:</span>
@@ -70,19 +70,14 @@
 					</div>
 					<div class="form-group col-sm-3">
 						<span>Pembayaran:</span>
-						<p><b>{{ strtoupper($model->pembayaran) }}</b></p>
+						<p><b>{{ strtoupper($model->pembayaran) }}<br>{{ $model->pembayaran_detail ?: '' }}</b></p>
 					</div>
 
 					<div class="form-group col-sm-12">
 						<label>Detail Transaksi:</label>
 						<div class="p-2 border border-secondary">
 							<div class="row">
-								<div class="col-sm-6">
-									<b>No Faktur:</b> {{ $model->penjualan->no_faktur }}
-								</div>
-								<div class="col-sm-6">
-									<b>Tanggal Transaksi:</b> {{ $model->penjualan->created_at }}
-								</div>
+
 								<div class="col-sm-12">
 									<table class="table table-bordered table-sm my-3">
 										<thead>
@@ -117,14 +112,24 @@
 										</tfoot>
 									</table>
 								</div>
-								<div class="col-sm-4">
-									<b>Debitur:</b> {{ $model->penjualan->pelanggan->nama }}
+
+								<div class="col-sm-4 pb-2">
+									<b>No Faktur:</b> {{ $model->penjualan->no_faktur }}
 								</div>
-								<div class="col-sm-4">
-									<b>Jatuh Tempo:</b> {{ $model->penjualan->jatuh_tempo }}
+								<div class="col-sm-4 pb-2">
+									<b>No PO:</b> {{ $model->penjualan->no_po }}
 								</div>
-								<div class="col-sm-4">
+								<div class="col-sm-4 pb-2">
 									<b>Pembayaran:</b> {{ strtoupper($model->penjualan->pembayaran) }}
+								</div>
+								<div class="col-sm-4 pb-2">
+									<b>Customer:</b> {{ $model->penjualan->customer->nama }}
+								</div>
+								<div class="col-sm-4 pb-2">
+									<b>Tanggal Transaksi:</b> {{ substr($model->penjualan->created_at, 0, 10) }}
+								</div>
+								<div class="col-sm-4 pb-2">
+									<b>Jatuh Tempo:</b> {{ $model->penjualan->jatuh_tempo }}
 								</div>
 
 							</div>
