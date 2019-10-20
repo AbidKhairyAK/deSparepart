@@ -190,9 +190,10 @@ class PenjualanController extends Controller
 
     public function create()
     {
-        $prevData = $this->table->where('no_faktur', 'like', "NJA-".date('y/m/')."%")->orderBy('no_faktur', 'desc')->first();
-        $newNo = !is_null($prevData) ? ( intval("1".substr($prevData->no_faktur, 10)) + 1 ) : null;
-        $data['no_faktur'] = "NJA-" . date('y/m/') . (!is_null($prevData) ? substr($newNo, 1) : "0001");
+        // terakhir tadi malem disini
+        $prevData = $this->table->max('no_faktur');
+        $newNo = (!is_null($prevData) && substr($prevData, 10) != 99999) ? ( intval("1".substr($prevData, 10)) + 1 ) : null;
+        $data['no_faktur'] = "NJA-" . date('y/m/') . (!is_null($newNo) ? substr($newNo, 1) : "00001");
 
         $data['main'] = $this->main;
         $data['title'] = $this->title;
@@ -296,6 +297,7 @@ class PenjualanController extends Controller
                 'part_no' => $model->part_no,
                 'nama' => $model->nama,
                 'qty' => $request->qty[$key],
+                'satuan' => $model->satuan,
                 'diskon' => $request->diskon[$key],
                 'harga' => str_replace(".", "", $request->harga[$key]),
                 'subtotal' => str_replace(".", "", $request->subtotal[$key]),
@@ -311,6 +313,6 @@ class PenjualanController extends Controller
         $data['model'] = $this->table->find($id);
         
         // return view($this->folder.'.cetak',$data);
-        return PDF::setOptions(['orientation' => 'landscape'])->loadView($this->folder.'.cetak',$data)->setPaper('a4', 'landscape')->stream();
+        return PDF::setOptions(['orientation' => 'landscape'])->loadView($this->folder.'.cetak',$data)->setPaper('letter', 'landscape')->stream();
     }
 }

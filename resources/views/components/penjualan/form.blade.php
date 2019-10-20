@@ -276,7 +276,7 @@
     }
     function count_pay() {
     	$('.barang_id, .qty, .diskon').change(function() {
-    		var id = $(this).attr('id').substr(-1);
+    		var id = $(this).attr('id').replace(/barang_id|qty|diskon/gi, "");
     		var barang_id = $('#barang_id'+id).val();
     		var qty = $('#qty'+id).val();
     		var diskon = $('#diskon'+id).val();
@@ -408,8 +408,9 @@
 	    	check_p();
 	    });
 
-	    var no = 2;
 	    $('#add-barang').click(function(){
+	    	var no = parseInt($('.wrapper-barang tr:nth-last-child(2)').attr('class').replace('barang', "")) + 1;
+
 			$(".last-barang").before(`
 				<tr class="barang${no}">
 					<td colspan="4">
@@ -426,7 +427,6 @@
 					<td></td>
 				</tr>
 			`);
-			no++;
 	    	select2_init();
 	    	count_pay();
 			maskin();

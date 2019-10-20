@@ -10,7 +10,7 @@ class BarangForm extends Form
 {
     public function buildForm()
     {
-        $t = ['pcs', 'sachet', 'biji', 'box', 'dus', 'meter', 'centimeter', 'lusin', 'ikat'];
+        $t = ['pcs', 'sachet', 'biji', 'box', 'dus', 'meter', 'cm', 'lusin', 'ikat'];
         foreach ($t as $value) {
             $tipe[$value] = $value;
         }

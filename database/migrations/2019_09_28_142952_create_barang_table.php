@@ -22,7 +22,7 @@ class CreateBarangTable extends Migration
             $table->string('nama');
             $table->string('merk');
             $table->integer('stok');
-            $table->enum('satuan', ['pcs', 'sachet', 'biji', 'box', 'dus', 'meter', 'centimeter', 'lusin', 'ikat']);
+            $table->enum('satuan', ['pcs', 'sachet', 'biji', 'box', 'dus', 'meter', 'cm', 'lusin', 'ikat']);
             $table->smallInteger('limit');
             $table->integer('harga_beli');
             $table->integer('harga_jual');

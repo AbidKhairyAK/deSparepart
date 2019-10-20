@@ -15,17 +15,18 @@ class PenjualanDetailTableSeeder extends Seeder
     {
         $faker = Factory::create('id_ID');
 
-        for ($i=1; $i <= 94; $i++) { 
+        for ($i=1; $i <= 2999; $i++) { 
             $qty = rand(1, 15);
         	$diskon = $faker->boolean(20) ? rand(10, 70) : 0;
         	$tbl = DB::table('barang')->find(rand(1, 19));
 
         	$data[] = [
-        		"penjualan_id" => ceil($i/5),
+        		"penjualan_id" => ceil($i/15),
         		"barang_id" => $tbl->id,
         		"part_no" => $tbl->part_no,
         		"nama" => $tbl->nama,
         		"qty" => $qty,
+                "satuan" => $tbl->satuan,
                 "harga" => $tbl->harga_jual,
         		"diskon" => $diskon,
         		"subtotal" => ($tbl->harga_jual - ($tbl->harga_jual * $diskon / 100)) * $qty,
