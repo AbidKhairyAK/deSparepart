@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use App\Model\PenjualanDetail;
+use App\Model\ReturPenjualanDetail;
 use Faker\Factory;
 
 class ReturPenjualanTableSeeder extends Seeder
@@ -16,19 +16,20 @@ class ReturPenjualanTableSeeder extends Seeder
     {
         $faker = Factory::create();
 
-        for ($i=1; $i <= 100; $i++) { 
-            $id = (ceil($i/2) * 10) + ($i%2);
-            $p = PenjualanDetail::find($id);
-            $qty = rand(1, $p->qty);
+        DB::statement("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
+        
+        $p = ReturPenjualanDetail::select(DB::raw('SUM(biaya) as total, penjualan_detail_id'))->groupBy('retur_penjualan_id')->get();
 
-            $data[$i] = [
+        foreach ($p as $key => $pd) {
+            $pembayaran = $faker->randomElement(['tunai', 'giro', 'kredit', 'transfer']);
+            $data[] = [
                 "user_id" => 1,
-                "penjualan_id" => $p->penjualan->id,
-                "penjualan_detail_id" => $id,
-                "qty" => $qty,
-                "biaya" => $p->harga * $qty,
-                "pembayaran" => $p->penjualan->pembayaran,
-                "keterangan" => $faker->sentence(),
+                "penjualan_id" => $pd->penjualan_detail->penjualan_id,
+                "pembayaran_piutang_id" => null,
+                "pembayaran" => $pembayaran,
+                'pembayaran_detail' => $pembayaran == 'giro' ? $faker->isbn13 : null,
+                "dilunaskan" => 0,
+                "dikembalikan" => $pd->total,
                 "created_at" => now(),
                 "updated_at" => now(),
             ];

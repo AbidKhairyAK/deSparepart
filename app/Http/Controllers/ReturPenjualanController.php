@@ -4,14 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Model\Penjualan;
 use App\Model\ReturPenjualan;
+use App\Model\ReturPenjualanDetail;
 use App\Model\PembayaranPiutang;
+use App\Model\Barang;
 use DataTables;
 use Form;
 
 class ReturPenjualanController extends Controller
 {
-
     public function __construct(ReturPenjualan $table)
     {
         $this->main = 'retur-penjualan';
@@ -30,84 +32,44 @@ class ReturPenjualanController extends Controller
     {
         $data['main'] = $this->main;
         $data['title'] = $this->title;
-        $data['type'] = $request->get('type') ?: 'barang';
         $data['create'] = route($this->uri.'.create');
         $data['url'] = route($this->uri.'.index');
         return view($this->folder.'.index',$data);
     }
 
-    public function data(Request $request, $type)
+    public function data(Request $request)
     {
         // if (!$request->ajax()) { return; }
 
-        DB::statement("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
+        $data = ReturPenjualan::join('penjualan', 'penjualan.id', '=', 'retur_penjualan.penjualan_id')
+            ->join('retur_penjualan_detail', 'retur_penjualan_detail.retur_penjualan_id', '=', 'retur_penjualan.id')
+            ->select(DB::raw('SUM(retur_penjualan_detail.biaya) as biaya, COUNT(retur_penjualan_detail.retur_penjualan_id) as barang, penjualan.no_faktur, retur_penjualan.id, retur_penjualan.created_at, retur_penjualan.dikembalikan, retur_penjualan.dilunaskan, retur_penjualan.pembayaran'))
+            ->groupBy('retur_penjualan_detail.retur_penjualan_id');
 
-        if ($type == 'barang') {
-            $data = $this->table->with('penjualan_detail.barang')
-                ->join('penjualan_detail', 'retur_penjualan.penjualan_detail_id', '=', 'penjualan_detail.id')
-                ->join('penjualan', 'retur_penjualan.penjualan_id', '=', 'penjualan.id')
-                ->select(['retur_penjualan.id', 'retur_penjualan.penjualan_id', 'penjualan_detail_id', 'retur_penjualan.qty', 'retur_penjualan.biaya', 'retur_penjualan.pembayaran', 'retur_penjualan.created_at'])
-                ->orderBy('retur_penjualan.created_at', 'desc');
-
-            $table = DataTables::of($data)
-                ->addColumn('identitas', function ($index) {
-                    $tag = "<table>
-                            <tr>
-                                <td>No Faktur</td><td class='px-2'>:</td><th>{$index->penjualan->no_faktur}</th>
-                            </tr>
-                            <tr>
-                                <td>Part No</td><td class='px-2'>:</td><th>{$index->penjualan_detail->part_no}</th>
-                            </tr>
-                            <tr>
-                                <td>Nama Barang</td><td class='px-2'>:</td><th>{$index->penjualan_detail->nama}</th>
-                            </tr>
-                        </table>
-                    ";
-                    return $tag;
-                })
-                ->editColumn('qty', function ($index) {
-                    return $index->qty." ".$index->penjualan_detail->satuan;
-                })
-                ->filterColumn('identitas', function($query, $keyword) {
-                    $sql = "CONCAT(penjualan.no_faktur,'-',penjualan_detail.part_no,'-',penjualan_detail.nama)  like ?";
-                    $query->whereRaw($sql, ["%{$keyword}%"]);
-                })
-                ->filterColumn('qty', function($query, $keyword) {
-                    $sql = "CONCAT(retur_penjualan.qty,'-',penjualan_detail.satuan)  like ?";
-                    $query->whereRaw($sql, ["%{$keyword}%"]);
-                });
-        }
-        elseif ($type == 'penjualan') {
-            $data = $this->table
-                ->join('penjualan', 'retur_penjualan.penjualan_id', '=', 'penjualan.id')
-                ->select(DB::raw('retur_penjualan.id, sum(biaya) as biaya, count(penjualan_id) as jumlah, penjualan_id, penjualan.total'))
-                ->groupBy('penjualan_id')
-                ->orderBy('retur_penjualan.created_at', 'desc');
-
-            $table = DataTables::of($data)
-                ->addColumn('barang', function ($index) {
-                    return $index->jumlah." jenis";
-                })
-                ->editColumn('total', function($index) {
-                    return number_format($index->total, 0, '', '.');
-                })
-                ->addColumn('no_faktur', function($index) {
-                    return $index->penjualan->no_faktur;
-                })
-                ->filterColumn('no_faktur', function($query, $keyword) {
-                    $sql = "penjualan.no_faktur like ?";
-                    $query->whereRaw($sql, ["%{$keyword}%"]);
-                });
-        }
-
-        $table = $table->editColumn('id', function($index) {
+        $table = DataTables::of($data)
+            ->editColumn('id', function($index) {
                 $tag = '<label class="d-block">';
                 $tag .= '<input type="checkbox" class="checkbox" name="id[]" value="'.$index->id.'" onclick="test()"/>';
                 $tag .= '</label>';
                 return $tag;
             })
-            ->editColumn('biaya', function($index) {
-                return number_format($index->biaya, 0, '', '.');
+            ->addColumn('no_faktur', function($index) {
+                return $index->no_faktur;
+            })
+            ->addColumn('barang', function ($index) {
+                return $index->barang." jenis";
+            })
+            ->addColumn('biaya', function ($index) {
+                $tag = "<table>
+                        <tr>
+                            <td>Dikembalikan</td><td class='px-2'>:</td><th>".number_format($index->dikembalikan, 0, '', '.')."</th>
+                        </tr>
+                        <tr>
+                            <td>Dilunaskan</td><td class='px-2'>:</td><th>".number_format($index->dilunaskan, 0, '', '.')."</th>
+                        </tr>
+                    </table>
+                ";
+                return $tag;
             })
             ->addColumn('action', function ($index) {
                 $user = auth()->user();
@@ -132,11 +94,14 @@ class ReturPenjualanController extends Controller
                 $tag .= Form::close();
                 return $tag;
             })
-            ->rawColumns(['id', 'barang', 'identitas', 'action'])
+            ->filterColumn('no_faktur', function($query, $keyword) {
+                $sql = "penjualan.no_faktur like ?";
+                $query->whereRaw($sql, ["%{$keyword}%"]);
+            })
+            ->rawColumns(['id', 'biaya', 'action'])
             ->make(true);
 
         return $table;
-
     }
 
     public function create(Request $request)
@@ -159,48 +124,58 @@ class ReturPenjualanController extends Controller
 
     public function edit($id)
     {
-        $data['main'] = $this->main;
-        $data['title'] = $this->title;
-        $data['m'] = $this->table->find($id);
-        $data['url'] = route($this->uri.'.index');
-        return view($this->folder.'.form', $data);
+        //
     }
 
     public function store(Request $request)
     {
-        $l = $request->qty;
+        if ($request->no_pelunasan) {
+            $pp = PembayaranPiutang::create([
+                'user_id' => auth()->user()->id,
+                'penjualan_id' => $request->penjualan_id,
+                'no_pelunasan' => $request->no_pelunasan,
+                'piutang' => str_replace('.', '', $request->piutang),
+                'dibayarkan' => str_replace('.', '', $request->dilunaskan),
+                'sisa' => str_replace('.', '', $request->sisa),
+                'pembayaran' => $request->pembayaran,
+                'pembayaran_detail' => $request->pembayaran_detail,
+                'status_lunas' => $request->sisa == 0,
+            ]);
 
-        foreach ($l as $key => $value) {
-            if ($value > 0) {
-                $data[] = [
-                    'user_id' => auth()->user()->id,
-                    'penjualan_id' => $request->penjualan_id,
-                    'penjualan_detail_id' => $key,
-                    'qty' => $value,
-                    'biaya' => $request->biaya[$key],
-                    'pembayaran' => $request->pembayaran,
-                    'keterangan' => $request->keterangan[$key],
-                ];
+            if ($request->sisa == 0) {
+                Penjualan::where('id', $request->penjualan_id)->update([
+                    'status_lunas' => '1',
+                ]);
             }
         }
 
-        dd($data);
-        // $request->merge([
-        //     'user_id' => auth()->user()->id,
-        //     'status_lunas' => $request->sisa == 0,
-        //     'piutang' => str_replace('.', '', $request->piutang),
-        //     'sisa' => str_replace('.', '', $request->sisa),
-        //     'dibayarkan' => $request->sisa == 0 ? str_replace('.', '', $request->piutang) : str_replace('.', '', $request->dibayarkan)
-        // ]);
-        // if ($request->sisa == 0) {
-        //     DB::table('penjualan')->where('id', $request->penjualan_id)->update([
-        //         'status_lunas' => '1',
-        //     ]);
-        // }
+        $rp = ReturPenjualan::create([
+            'user_id' => auth()->user()->id,
+            'penjualan_id' => $request->penjualan_id,
+            'pembayaran_piutang_id' => isset($pp) ? $pp->id : null,
+            'pembayaran' => $request->pembayaran,
+            'pembayaran_detail' => $request->pembayaran_detail,
+            'dilunaskan' => $request->dilunaskan>0 ? str_replace('.', '', $request->dilunaskan) : null,
+            'dikembalikan' => $request->dikembalikan>0 ? str_replace('.', '', $request->dikembalikan) : null,
+        ]);
 
-        // $this->table->create($request->all());
+        $rpd = $request->qty;
+        foreach ($rpd as $key => $value) {
+            if ($value > 0) {
+                ReturPenjualanDetail::create([
+                    'user_id' => auth()->user()->id,
+                    'retur_penjualan_id' => $rp->id,
+                    'penjualan_detail_id' => $key,
+                    'qty' => $value,
+                    'biaya' => $request->biaya[$key],
+                    'keterangan' => $request->keterangan[$key],
+                ]);
 
-        // return redirect($this->uri);
+                Barang::find($request->barang_id[$key])->increment('stok', $value);
+            }
+        }
+
+        return redirect($this->uri);
     }
 
     public function update(Request $request, $id)

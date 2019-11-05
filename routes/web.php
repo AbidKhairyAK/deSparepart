@@ -59,7 +59,7 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::get('/pembayaran-piutang/data', 'PembayaranPiutangController@data')->name('pembayaran-piutang.data');
 	Route::resource('/pembayaran-piutang', 'PembayaranPiutangController');
 
-	Route::get('retur-penjualan/data/{type}', 'ReturPenjualanController@data')->name('retur-penjualan.data');
+	Route::get('retur-penjualan/data', 'ReturPenjualanController@data')->name('retur-penjualan.data');
 	Route::resource('/retur-penjualan', 'ReturPenjualanController');
 
 	// testing routes

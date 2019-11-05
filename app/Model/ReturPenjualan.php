@@ -9,16 +9,26 @@ class ReturPenjualan extends Model
 	protected $table = 'retur_penjualan';
 
     protected $fillable = [
-    	'id', "penjualan_id", "penjualan_detail_id", "qty", "biaya", "pembayaran", "keterangan"
+    	'id', "user_id", "penjualan_id", "pembayaran_piutang_id", "dilunaskan", "dikembalikan", "pembayaran"
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function penjualan()
     {
-    	return $this->belongsTo(Penjualan::class);
+        return $this->belongsTo(Penjualan::class);
     }
 
-    public function penjualan_detail()
+    public function pembayaran_piutang()
     {
-        return $this->belongsTo(PenjualanDetail::class);
+        return $this->belongsTo(PembayaranPiutang::class);
+    }
+
+    public function retur_penjualan_detail()
+    {
+    	return $this->hasMany(ReturPenjualanDetail::class);
     }
 }

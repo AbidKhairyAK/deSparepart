@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Model\Penjualan;
+use Illuminate\Support\Facades\DB;
 
 class BerandaController extends Controller
 {

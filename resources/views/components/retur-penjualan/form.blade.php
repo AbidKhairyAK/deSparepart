@@ -53,6 +53,7 @@
 												<td class="text-right">@{{ detail.qty }} @{{ detail.satuan }}</td>
 												<td>
 													<input type="number" :name="'qty['+detail.id+']'" v-model="retur[detail.id]" @input="getBiaya(detail.id)" placeholder="0" class="form-control form-control-sm w-100 qty" min="0" :max="detail.qty">
+													<input type="hidden" :name="'barang_id['+detail.id+']'" :value="detail.barang_id">
 												</td>
 												<td>
 													<input type="text" :name="'biaya['+detail.id+']'" :value="biaya[detail.id] | nf" placeholder="0" class="form-control form-control-sm w-100" readonly>

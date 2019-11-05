@@ -18,29 +18,18 @@
 	    table = $('.table').DataTable({
 	        processing: true,
 	        serverSide: true,
-	        ajax: '{{ route($main.".data", $type) }}',
+	        ajax: '{{ route($main.".data") }}',
             order: [[1,'asc']],
 			
-			@if($type == 'barang')
-	        columns: [
-	            { data: 'id', searchable: false, orderable: false },
-            	{ data: 'identitas' },
-	            { data: 'qty' },
-	            { data: 'biaya' },
-	            { data: 'pembayaran' },
-	            { data: 'created_at' },
-	            { data: 'action', searchable: false, orderable: false }
-	        ],
-	        @elseif($type == 'penjualan')
 	        columns: [
 	            { data: 'id', searchable: false, orderable: false },
             	{ data: 'no_faktur' },
 	            { data: 'barang' },
 	            { data: 'biaya' },
-	            { data: 'total' },
+	            { data: 'pembayaran' },
+	            { data: 'created_at' },
 	            { data: 'action', searchable: false, orderable: false }
 	        ],
-	        @endif
 	    });
 	});
 </script>
