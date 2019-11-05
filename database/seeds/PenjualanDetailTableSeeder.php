@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Factory;
+use App\Model\Barang;
 
 class PenjualanDetailTableSeeder extends Seeder
 {
@@ -18,7 +19,7 @@ class PenjualanDetailTableSeeder extends Seeder
         for ($i=1; $i <= 2999; $i++) { 
             $qty = rand(1, 15);
         	$diskon = $faker->boolean(20) ? rand(10, 70) : 0;
-        	$tbl = DB::table('barang')->find(rand(1, 19));
+        	$tbl = Barang::find(rand(1, 19));
 
         	$data[] = [
         		"penjualan_id" => ceil($i/15),
@@ -26,7 +27,7 @@ class PenjualanDetailTableSeeder extends Seeder
         		"part_no" => $tbl->part_no,
         		"nama" => $tbl->nama,
         		"qty" => $qty,
-                "satuan" => $tbl->satuan,
+                "satuan" => $tbl->satuan->nama,
                 "harga" => $tbl->harga_jual,
         		"diskon" => $diskon,
         		"subtotal" => ($tbl->harga_jual - ($tbl->harga_jual * $diskon / 100)) * $qty,

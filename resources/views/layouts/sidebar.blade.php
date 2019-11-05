@@ -14,6 +14,7 @@
         ['name' => 'Daftar Penjualan', 'link' => '/penjualan', 'perm' => 'index-penjualan'],
         ['name' => 'Daftar Piutang', 'link' => '/piutang', 'perm' => 'index-piutang'],
         ['name' => 'Daftar Customer', 'link' => '/customer', 'perm' => 'index-customer'],
+        ['name' => 'Daftar Retur Penjualan', 'link' => '/retur-penjualan', 'perm' => 'index-retur-penjualan'],
       ],
     ],
     [

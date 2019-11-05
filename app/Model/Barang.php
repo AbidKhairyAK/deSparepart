@@ -9,7 +9,7 @@ class Barang extends Model
 	protected $table = 'barang';
 
     protected $fillable = [
-    	'id', 'user_id', 'komponen_id', 'kendaraan_id', 'part_no', 'nama', 'merk', 'stok', 'limit', 'satuan', 'harga_beli', 'harga_jual', 'keterangan', 'gambar'
+    	'id', 'user_id', 'komponen_id', 'kendaraan_id', 'part_no', 'nama', 'merk', 'stok', 'limit', 'satuan_id', 'harga_beli', 'harga_jual', 'keterangan', 'gambar'
     ];
 
     public function user()
@@ -19,7 +19,12 @@ class Barang extends Model
 
     public function komponen()
     {
-    	return $this->belongsTo(Komponen::class);
+        return $this->belongsTo(Komponen::class);
+    }
+
+    public function satuan()
+    {
+    	return $this->belongsTo(Satuan::class);
     }
 
     public function kendaraan()

@@ -3,10 +3,6 @@
 @section('title', 'Form Pembayaran Hutang')
 
 @section('content')
-<div id="page-header">
-	<h1 class="h3 mb-1 text-gray-800">Form Pembayaran Hutang</h1>
-	<p class="mb-4">form yang digunakan untuk input data pembayaran hutang</p>
-</div>
 
 <div class="card shadow mb-4">
 	<div class="card-header">

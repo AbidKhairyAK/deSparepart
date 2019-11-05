@@ -1,0 +1,8 @@
+retur
+- id
+- penjualan_id
+- penjualan_detail_id
+- jumlah
+- biaya
+- pembayaran
+- keterangan

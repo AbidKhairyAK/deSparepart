@@ -21,7 +21,7 @@ class PermissionRoleTableSeeder extends Seeder
         	[],
         	['Jabatan', 'Enkripsi', 'Hak Akses', 'Backup', 'Karyawan', 'Pengguna', 'Beranda', 'Laporan Penjualan', 'Laporan Pembelian', 'Laporan Kinerja Karyawan', 'Laporan Laba Rugi'],
         	['Jabatan', 'Enkripsi', 'Hak Akses', 'Backup', 'Karyawan', 'Pengguna', 'Kendaraan', 'Komponen', 'Barang', 'Beranda', 'Laporan Penjualan', 'Laporan Pembelian', 'Laporan Kinerja Karyawan', 'Laporan Laba Rugi'],
-        	['Jabatan', 'Enkripsi', 'Hak Akses', 'Backup', 'Karyawan', 'Pengguna', 'Pembelian', 'Hutang', 'Supplier', 'Penjualan', 'Piutang', 'Customer', 'Pembayaran Piutang', 'Pembayaran Hutang', 'Pembayaran Piutang', 'Karyawan', 'Pengguna', 'Beranda', 'Laporan Penjualan', 'Laporan Pembelian', 'Laporan Kinerja Karyawan', 'Laporan Laba Rugi'],
+        	['Jabatan', 'Enkripsi', 'Hak Akses', 'Backup', 'Karyawan', 'Pengguna', 'Pembelian', 'Hutang', 'Supplier', 'Penjualan', 'Piutang', 'Customer', 'Pembayaran Piutang', 'Pembayaran Hutang', 'Pembayaran Piutang', 'Karyawan', 'Pengguna', 'Beranda', 'Laporan Penjualan', 'Laporan Pembelian', 'Laporan Kinerja Karyawan', 'Laporan Laba Rugi', 'Retur Penjualan', 'Retur Pembelian'],
         ];
 
     	$excp = [[]];

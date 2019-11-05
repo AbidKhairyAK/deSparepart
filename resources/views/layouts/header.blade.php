@@ -6,8 +6,6 @@
     <i class="fa fa-bars"></i>
   </button>
 
-  <!-- Brand Name -->
-  <h5 class="m-0 px-5 py-1 bg-secondary text-white rounded shadow-sm"><b style="text-shadow: 0 0 5px #333">PERUSAHAAN ANDA</b></h5>
 
   <!-- Topbar Navbar -->
   <ul class="navbar-nav ml-auto">

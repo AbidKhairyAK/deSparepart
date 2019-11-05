@@ -3,10 +3,6 @@
 @section('title', "Form $title")
 
 @section('content')
-<div id="page-header">
-	<h1 class="h3 mb-1 text-gray-800">Form {{ $title }}</h1>
-	<p class="mb-4">form yang digunakan untuk input data {{ $title }}</p>
-</div>
 
 <div class="card shadow mb-4">
 	<div class="card-header">

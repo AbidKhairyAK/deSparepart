@@ -3,11 +3,6 @@
 @section('title', 'Pembelian Barang')
 
 @section('content')
-<div id="page-header">
-	<h1 class="h3 mb-1 text-gray-800">Pembelian Barang</h1>
-	<p class="mb-4">form untuk mendata Pembelian barang</p>
-</div>
-
 <div class="card shadow mb-4">
 	<div class="card-header py-3 d-flex justify-content-between align-items-center">
 		<h6 class="m-0 font-weight-bold text-secondary">Form Pembelian Barang</h6>

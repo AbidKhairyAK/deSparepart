@@ -31,7 +31,7 @@ class PenjualanController extends Controller
     {
         $search = $request->get('search');
         $id = $request->get('id');
-        $data = $this->table->where('status_lunas', '0');
+        $data = $this->table;
 
         if (!empty($search)) {
             $data = $data->where('no_faktur', 'like', "%$search%");
@@ -254,11 +254,13 @@ class PenjualanController extends Controller
                 'toko' => $request->customer_toko,
                 'alamat' => $request->customer_alamat,
             ]);
-            DB::table('kontak_customer')->insert([
-                'customer_id' => $customer->id,
-                'tipe' => 'hp',
-                'kontak' => $request->customer_hp,
-            ]);
+            if ($request->customer_hp) {
+                DB::table('kontak_customer')->insert([
+                    'customer_id' => $customer->id,
+                    'tipe' => 'hp',
+                    'kontak' => $request->customer_hp,
+                ]);
+            }
         }
         $total = str_replace(".", "", $request->total);
         $dibayarkan = str_replace(".", "", $request->dibayarkan);
@@ -313,6 +315,6 @@ class PenjualanController extends Controller
         $data['model'] = $this->table->find($id);
         
         // return view($this->folder.'.cetak',$data);
-        return PDF::setOptions(['orientation' => 'landscape'])->loadView($this->folder.'.cetak',$data)->setPaper('letter', 'landscape')->stream();
+        return PDF::setOptions(['orientation' => 'landscape'])->loadView($this->folder.'.cetak',$data)->setPaper([0, 0, 720, 792], 'landscape')->stream();
     }
 }

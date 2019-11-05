@@ -22,12 +22,12 @@ class BarangTableSeeder extends Seeder
                 'user_id' => rand(1, 4),
                 'komponen_id' => rand(1, 20),
                 'kendaraan_id' => rand(1, 0) ? rand(2, 20) : 1,
+                'satuan_id' => rand(1,3),
                 'part_no' => (rand(1111, 9999) * 10000).(rand(1111, 9999)),
                 'nama' => $faker->sentence(2),
                 'merk' => $faker->word,
                 'stok' => rand(1, 200),
                 'limit' => rand(1, 20),
-                'satuan' => $faker->randomElement(['pcs', 'sachet', 'biji', 'box', 'dus', 'meter', 'cm', 'lusin', 'ikat']),
                 'harga_beli' => $hrg_beli,
                 'harga_jual' => $hrg_jual,
                 'keterangan' => $faker->sentence(),
@@ -36,6 +36,7 @@ class BarangTableSeeder extends Seeder
         		'updated_at' => now(),
         	];
         }
+        
         DB::table('barang')->truncate();
         DB::table('barang')->insert($data);
     }

@@ -5,10 +5,6 @@
 @section('title', 'Penjualan Barang')
 
 @section('content')
-<div id="page-header">
-	<h1 class="h3 mb-1 text-gray-800">Penjualan Barang</h1>
-	<p class="mb-4">form untuk mendata penjualan barang</p>
-</div>
 
 <div class="card shadow mb-4">
 	<div class="card-header py-3 d-flex justify-content-between align-items-center">
@@ -51,7 +47,7 @@
 								<th width="150">Qty</th>
 								<th width="150">Diskon %</th>
 								<th>Harga Satuan</th>
-								<th>Subtotal</th>
+								<th>Jumlah</th>
 								<th>*</th>
 							</tr>
 						</thead>
@@ -75,7 +71,7 @@
 								<td style="vertical-align: middle;"><i class="fas fa-times" style="cursor: pointer;" onclick="remove_barang('.barang{{ $i+1 }}')"></i></td>
 							</tr>
 							<tr class="barang{{ $i+1 }}">
-								<td><input id="qty{{ $i+1 }}" name="qty[]" type="number" value="{{ $e ? $d[$i]->qty : 1 }}" class="form-control form-control-sm qty" required></td>
+								<td><input id="qty{{ $i+1 }}" name="qty[]" type="number" value="{{ $e ? $d[$i]->qty : null }}" class="form-control form-control-sm qty" required></td>
 								<td><input id="diskon{{ $i+1 }}" name="diskon[]" type="number" value="{{ $e ? $d[$i]->diskon : 0 }}" class="form-control form-control-sm diskon" required></td>
 								<td><input id="harga{{ $i+1 }}" name="harga[]" type="text" value="{{ $e ? $d[$i]->harga : 0 }}" class="form-control form-control-sm maskin" readonly required></td>
 								<td><input id="subtotal{{ $i+1 }}" name="subtotal[]" type="text" value="{{ $e ? $d[$i]->subtotal : 0 }}" class="form-control form-control-sm subtotal maskin" readonly required></td>
@@ -118,10 +114,6 @@
 							</span>
 						</div>
 						<div class="row mb-3">
-							<span class="col-sm-3"><b>Toko:</b></span>
-							<span id="p-toko" class="col-sm-9">{{ $e ? $m->customer->toko : '-'}}</span>
-						</div>
-						<div class="row mb-3">
 							<span class="col-sm-3"><b>Alamat:</b></span>
 							<span id="p-alamat" class="col-sm-9">{{ $e ? $m->customer->alamat : '-'}}</span>
 						</div>
@@ -137,16 +129,12 @@
 							<span class="col-sm-9"><input name="customer_nama" type="text" class="p0 form-control form-control-sm" required></span>
 						</div>
 						<div class="row mb-3">
-							<span class="col-sm-3"><b>Toko:</b></span>
-							<span class="col-sm-9"><input name="customer_toko" type="text" class="p0 form-control form-control-sm" required></span>
-						</div>
-						<div class="row mb-3">
 							<span class="col-sm-3"><b>Alamat:</b></span>
-							<span class="col-sm-9"><input name="customer_alamat" type="text" class="p0 form-control form-control-sm" required></span>
+							<span class="col-sm-9"><input name="customer_alamat" type="text" class="p0 form-control form-control-sm"></span>
 						</div>
 						<div class="row mb-3">
 							<span class="col-sm-3"><b>No HP:</b></span>
-							<span class="col-sm-9"><input name="customer_hp" type="text" class="p0 form-control form-control-sm" required></span>
+							<span class="col-sm-9"><input name="customer_hp" type="text" class="p0 form-control form-control-sm"></span>
 						</div>
 					</div>
 
@@ -185,7 +173,7 @@
 					</div>
 					<div class="form-group d-flex align-items-center justify-content-between">
 						<b>DIBAYARKAN:</b>
-						<input id="dibayarkan" name="dibayarkan" type="text" class="form-control form-control-lg maskin" style="width: 80%;" required value="{{ $e ? $m->dibayarkan : '' }}">
+						<input id="dibayarkan" name="dibayarkan" type="text" class="form-control form-control-lg maskin" style="width: 80%;" value="{{ $e ? $m->dibayarkan : '' }}" >
 					</div>
 					<div class="form-group d-flex align-items-center justify-content-between">
 						<b>KEMBALIAN:</b>
@@ -242,11 +230,9 @@
 		var detailcustomer = [];
 		$.get(`/customer/api?id=${index}`)
 		.done(function(data) {
-			detailcustomer['toko'] = data.toko ? data.toko : '-';
 			detailcustomer['alamat'] = data.alamat ? data.alamat : '-';
-			detailcustomer['kontak'] = data.kontak_customer.length ? data.kontak_customer[0].kontak : '-';
+			detailcustomer['kontak'] = data.kontak_customer.length ? data.kontak_customer.find(function(v) { return v.tipe == 'hp';	}).kontak : '-';
 
-			$('#p-toko').text(detailcustomer['toko']);
 			$('#p-alamat').text(detailcustomer['alamat']);
 			$('#p-kontak').text(detailcustomer['kontak']);
 		});
@@ -319,6 +305,12 @@
 		$('#total').val(total);
 		$('.maskin').trigger('input');
     }
+    function check_form(e, self) {
+    	e.preventDefault();
+    	$('#dibayarkan').val(0);
+    	payin();
+    	self.submit();
+    }
 	
 	var listHarga = [];
 	$.get('{{ route("barang.api") }}')
@@ -376,7 +368,13 @@
 
 		$('#draft').click(function() {
 			$('input[name=publish]').val('0');
-			$('#form-penjualan').submit();
+			$('#form-penjualan').submit(function(e) {
+				check_form(e, this);
+			});
+		});
+
+		$('#form-penjualan').submit(function(e) {
+			check_form(e, this);
 		});
 		
 		$('#dibayarkan').keyup(function() {
@@ -420,7 +418,7 @@
 					<td><i class="fas fa-times" style="cursor: pointer;" onclick="remove_barang('.barang${no}')"></i></td>
 				</tr>
 				<tr class="barang${no}">
-					<td><input id="qty${no}" name="qty[]" type="number" value="1" class="form-control form-control-sm qty" required></td>
+					<td><input id="qty${no}" name="qty[]" type="number" class="form-control form-control-sm qty" required></td>
 					<td><input id="diskon${no}" name="diskon[]" type="number" value="0" class="form-control form-control-sm diskon maskin" required></td>
 					<td><input id="harga${no}" name="harga[]" type="text" value="0" class="form-control form-control-sm maskin" readonly></td>
 					<td><input id="subtotal${no}" name="subtotal[]" type="text" value="0" class="form-control form-control-sm subtotal maskin" readonly></td>

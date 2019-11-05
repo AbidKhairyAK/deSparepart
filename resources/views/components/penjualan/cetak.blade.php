@@ -8,16 +8,17 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<style type="text/css">
 		body {
-			font-size: 20px;
+			font-size: 21px;
 			font-family: 'Inconsolata', monospace;
 		}
 		.list-barang {
-			font-size: 16px;
+			font-size: 19px;
 			width: 100%;
 			border: 1px dashed black;
 		}
 		.list-barang thead tr td {
 			border-bottom: 1px dashed black;
+			text-align: center;
 		}
 		.list-barang tfoot tr td {
 			border-top: 1px dashed black;
@@ -26,12 +27,13 @@
 			position: absolute;
 			z-index: 1;
 			background: white;
-			height: 40px;width: 105%;
+			height: 40px;width: 103%;
 			transform: translate(-20px);
+			padding: 10px 0 0 10px;
 		}
 		.list-barang tr td {
 			border-left: 1px dashed black;
-			padding: 2px 10px 0;
+			padding: 0px 10px 0;
 		}
 		.list-barang tr:last-child td {
 			padding-bottom: 2px;
@@ -53,25 +55,46 @@
 		}
 		.head {
 			width: 100%;
+			position: relative;
+			top: -15px;
+		}
+		.left-head p {
+			line-height: 25px;
+			position: relative;
+			top: -20px;
+		}
+		.right-head td {
+			line-height: 20px;
 		}
 		td.right-head:last-child {
 			width: 30%;
 		}
 		.footer {
 			width: 100%;
-			margin-top: 20px;
+			margin-top: 30px;
 		}
 		.footer tr:first-child td {
-			padding-bottom: 50px;
+			padding-bottom: 120px;
 		}
 		.page {
 			display: block;
 			position: absolute;
-			top: -10px; right: 0;
+			top: -25px; right: 0;
 			font-size: 16px;
 		}
 		.page-break {
 		    page-break-after: always;
+		}
+		span {
+			display: block;
+			transform: scaleX(0.85);
+			transform-origin: left;
+		}
+		span.r {
+			transform-origin: right;
+		}
+		span.c {
+			transform-origin: 50% 50%;
 		}
 	</style>
 </head>
@@ -88,35 +111,48 @@
 	<div class="container">
 		<p class="page">Hal: {{ $p+1 }}/{{ $page_count }}</p>
 
-		<h2>FAKTUR PENJUALAN</h2>
+		<h2><span class="c">FAKTUR PENJUALAN</span></h2>
 
 		<table class="head">
 			<tr>
-				<td>
-					<p><b>PERUSAHAAN ANDA</b><br>Jl. Alamat Anda, Kota Anda</p>
-					<p>Kepada Yth.<br>{{ $model->customer->nama }}</p>
+				<td class="left-head">
+					<p><span><b>PERUSAHAAN ANDA</b><br>Jl. Alamat Anda, Kota Anda</span></p>
+					<p><span>Kepada Yth.<br>{{ $model->customer->nama }}</span></p>
 				</td>
 				<td class="right-head">
 					<p>
 						<table>
 							<tr>
-								<td>NO FAKTUR</td><td>:</td><td>{{ $model->no_faktur }}</td>
+								<td><span>NO FAKTUR</td>
+								<td><span>:</span></td>
+								<td><span>{{ $model->no_faktur }}</span></td>
 							</tr>
 							<tr>
-								<td>TANGGAL</td><td>:</td><td>{{ date('Y-m-d', strtotime($model->created_at)) }}</td>
+								<td><span>TANGGAL</td>
+								<td><span>:</span></td>
+								<td><span>{{ date('Y-m-d', strtotime($model->created_at)) }}</span></td>
 							</tr>
-
+							<tr><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td></tr>
 							<tr>
-								<td>NO PO</td><td>:</td><td>{{ $model->no_po }}</td>
+								<td><span>NO PO</span></td>
+								<td><span>:</span></td>
+								<td><span>{{ $model->no_po }}</span></td>
 							</tr>
 							<tr>
-								<td>TGL PO</td><td>:</td><td></td>
+								<td><span>TGL PO</span></td>
+								<td><span>:</span></td>
+								<td></td>
 							</tr>
 							<tr>
-								<td>JT TEMPO</td><td>:</td><td>{{ $model->jatuh_tempo }}</td>
+								<td><span>JT TEMPO</span></td>
+								<td><span>:</span></td>
+								<td><span>{{ $model->jatuh_tempo }}</span></td>
 							</tr>
 							<tr>
-								<td>NO MOBIL</td><td>:</td><td></td>
+								<td><span>NO MOBIL</span></td>
+								<td><span>:</span></td>
+								<td></td>
 							</tr>
 						</table>
 					</p>
@@ -127,26 +163,26 @@
 		<table class="list-barang">
 			<thead>
 				<tr>
-					<td width="10"><b>#</b></td>
-					<td width="70"><b>PART NO</b></td>
-					<td><b>NAMA BARANG</b></td>
-					<td width="60"><b>QTY</b></td>
-					<td width="50"><b>DISKON</b></td>
-					<td width="60"><b>HARGA</b></td>
-					<td width="90"><b>SUBTOTAL</b></td>
+					<td width="5"><span class="c">NO</span></td>
+					<td width="80"><span class="c">PART NO</span></td>
+					<td width="220"><span class="c">NAMA BARANG</span></td>
+					<td><span class="c">QTY</span></td>
+					<td><span class="c">HARGA</span></td>
+					<td width="50"><span class="c">DISKON</span></td>
+					<td><span class="c">JUMLAH</span></td>
 				</tr>
 			</thead>
 			<tbody>
 				@php $no = isset($no) ? $no : 1; @endphp
 				@foreach($model->penjualan_detail()->offset($p * 10)->limit(10)->get() as $detail)
 				<tr>
-					<td>{{ $no++ }}</td>
-					<td>{{ $detail->part_no }}</td>
-					<td>{{ $detail->nama }}</td>
-					<td>{{ $detail->qty }} {{ $detail->satuan }}</td>
-					<td>{{ $detail->diskon }}%</td>
-					<td>{{ number_format($detail->harga, 0, '', '.')}}</td>
-					<td>{{ number_format($detail->subtotal, 0, '', '.')}}</td>
+					<td><span>{{ $no++ }}</span></td>
+					<td><span>{{ $detail->part_no }}</span></td>
+					<td><span>{{ $detail->nama }}</span></td>
+					<td><span class="r">{{ $detail->qty }} {{ $detail->satuan }}</span></td>
+					<td><span class="r">{{ number_format($detail->harga, 0, '', '.')}}</span></td>
+					<td><span class="r">{{ $detail->diskon }}%</span></td>
+					<td><span class="r">{{ number_format($detail->subtotal, 0, '', '.')}}</span></td>
 				</tr>
 				@endforeach
 				
@@ -170,10 +206,10 @@
 			<tfoot>
 				<tr>
 					<td colspan="5">
-						<div></div>
+						<div class="terbilang"><span>TERBILANG: FITUR "TERBILANG" BELUM BEKERJA DENGAN OPTIMAL</span></div>
 					</td>
-					<td><b>TOTAL</b></td>
-					<td>{{ number_format($model->total, 0, '', '.')}}</td>
+					<td style="text-align: center;"><span class="c">TOTAL</span></td>
+					<td><span class="r">{{ number_format($model->total, 0, '', '.')}}</span></td>
 				</tr>
 			</tfoot>
 			@endif
@@ -182,20 +218,20 @@
 		@if(($p+1) == $page_count)
 		<table class="footer">
 			<tr>
-				<td>DITERIMA OLEH</td>
-				<td>DIPERIKSA OLEH</td>
-				<td>DIBUAT OLEH</td>
-				<td><b>HORMAT KAMI,</b></td>
+				<td><span>DITERIMA OLEH:</span></td>
+				<td><span>DIPERIKSA OLEH:</span></td>
+				<td><span>DIBUAT OLEH:</span></td>
+				<td><span>HORMAT KAMI,</span></td>
 			</tr>
 			<tr>
-				<td>(............)</td>
-				<td>(............)</td>
-				<td>(............)</td>
-				<td>(............)</td>
+				<td><span>(............)</span></td>
+				<td><span>(............)</span></td>
+				<td><span>(............)</span></td>
+				<td><span>(............)</span></td>
 			</tr>
 		</table>
 		@else
-		<p>(BERSAMBUNG)</p>
+		<p><span>(BERSAMBUNG)</span></p>
 		@endif
 
 	</div>

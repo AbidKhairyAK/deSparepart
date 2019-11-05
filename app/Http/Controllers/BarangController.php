@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Model\Barang;
+use App\Model\Satuan;
 use Kris\LaravelFormBuilder\FormBuilder;
 use DataTables;
 use Form;
@@ -60,7 +61,7 @@ class BarangController extends Controller
         $data = $this->table
                     ->join('kendaraan', 'barang.kendaraan_id', '=', 'kendaraan.id')
                     ->join('komponen', 'barang.komponen_id', '=', 'komponen.id')
-                    ->select(['barang.id', 'komponen_id', 'kendaraan_id', 'part_no', 'barang.nama', 'barang.merk', 'stok', 'limit', 'satuan', 'harga_beli', 'harga_jual', 'keterangan', 'gambar', 'barang.created_at'])
+                    ->select(['barang.id', 'komponen_id', 'kendaraan_id', 'satuan_id', 'part_no', 'barang.nama', 'barang.merk', 'stok', 'limit', 'harga_beli', 'harga_jual', 'keterangan', 'gambar', 'barang.created_at'])
                     ->orderBy('created_at', 'desc');
         return DataTables::of($data)
             ->editColumn('id', function($index) {
@@ -69,9 +70,19 @@ class BarangController extends Controller
                 $tag .= '</label>';
                 return $tag;
             })
+            ->addColumn('satuan', function($index) {
+                return $index->satuan->nama;
+            })
             ->editColumn('gambar', function($index) {
                 $gambar = (!empty($index->gambar) && file_exists(public_path('img/'.$index->gambar))) ? $index->gambar : 'default.png';
                 return "<a href='/img/{$gambar}' target='_blank'><img src='/img/{$gambar}' width='50'/></a>";
+            })
+            ->editColumn('stok', function($index) {
+                $color = '';
+                if ($index->stok <= 0) { $color = 'text-danger'; }
+                elseif ($index->stok <= $index->limit) { $color = 'text-warning'; }
+
+                return "<span class='{$color}'>{$index->stok}</span>";
             })
             ->addColumn('identitas', function ($index) {
                 $tag = "<table>
@@ -133,7 +144,7 @@ class BarangController extends Controller
                 $sql = "CONCAT(barang.harga_jual,'-',barang.harga_beli)  like ?";
                 $query->whereRaw($sql, ["%{$keyword}%"]);
             })
-            ->rawColumns(['id', 'gambar', 'harga', 'identitas', 'action'])
+            ->rawColumns(['id', 'gambar', 'harga', 'stok', 'identitas', 'action'])
             ->make(true);
     }
 
@@ -170,6 +181,12 @@ class BarangController extends Controller
     {
         $request->merge([ 'user_id' => auth()->user()->id ]);
 
+        $check_satuan = Satuan::where('id', $request->satuan_id)->exists();
+        if (!$check_satuan) {
+            $satuan = Satuan::create(['nama' => $request->satuan_id]);
+            $request->merge([ 'satuan_id' => $satuan->id ]);
+        }
+
         if ($gambar = $request->file('image')) {
             $namaGambar = $this->uploadImage($gambar);
             $request->merge([ 'gambar' => $namaGambar ]);
@@ -183,6 +200,12 @@ class BarangController extends Controller
     {
         $request->merge([ 'user_id' => auth()->user()->id ]);
 
+        $check_satuan = Satuan::where('id', $request->satuan_id)->exists();
+        if (!$check_satuan) {
+            $satuan = Satuan::create(['nama' => $request->satuan_id]);
+            $request->merge([ 'satuan_id' => $satuan->id ]);
+        }
+        
         if ($gambar = $request->file('image')) {
             $namaGambar = $this->uploadImage($gambar, $request->oldImg);
             $request->merge([ 'gambar' => $namaGambar ]);

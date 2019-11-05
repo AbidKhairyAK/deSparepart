@@ -3,10 +3,6 @@
 @section('title', $title)
 
 @section('content')
-<div id="page-header">
-	<h1 class="h3 mb-1 text-gray-800">Detail {{ $title }}</h1>
-	<p class="mb-4">Detail data {{ $title }}</p>
-</div>
 
 <div class="card shadow mb-4">
 	<div class="card-header py-3 d-flex justify-content-between align-items-center">

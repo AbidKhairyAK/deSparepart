@@ -3,10 +3,6 @@
 @section('title', "Form $title")
 
 @section('content')
-<div id="page-header">
-	<h1 class="h3 mb-1 text-gray-800">Form {{ $title }}</h1>
-	<p class="mb-4">form yang digunakan untuk input data {{ $title }}</p>
-</div>
 
 <div class="card shadow mb-4">
 	<div class="card-header">
@@ -91,6 +87,29 @@
 	$('#kendaraan_id').select2({
 	  ajax: {
 	    url: '{{ route("kendaraan.api") }}',
+	    data: function (params) {
+	      return {
+	        search: params.term,
+	      }
+	    },
+	    processResults: function (data) {
+	      return {
+	        results: $.map(data, function (item) {
+                return {
+                    text: item.name,
+                    id: item.id
+                }
+            })
+	      };
+	    }
+	  }
+	})
+	.on('select2-open', function() { dropdown() });
+
+	$('#satuan_id').select2({
+		tags: true,
+	  ajax: {
+	    url: '{{ route("satuan.api") }}',
 	    data: function (params) {
 	      return {
 	        search: params.term,

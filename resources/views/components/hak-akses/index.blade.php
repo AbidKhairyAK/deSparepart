@@ -3,11 +3,6 @@
 @section('title', $title)
 
 @section('content')
-<div id="page-header">
-	<h1 class="h3 mb-1 text-gray-800">Daftar {{ $title }}</h1>
-	<p class="mb-4">Daftar data {{ $title }}</p>
-</div>
-
 @include('components.'.$main.'.table')
 @include('layouts.multi')
 

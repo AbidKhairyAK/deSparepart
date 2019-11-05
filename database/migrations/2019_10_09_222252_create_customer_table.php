@@ -19,7 +19,7 @@ class CreateCustomerTable extends Migration
             $table->char('kode', 9)->unique(); // 6 angka tanggal, 3 angka urut
             $table->string('nama');
             $table->string('toko')->nullable();
-            $table->string('alamat');
+            $table->string('alamat')->nullable();
             $table->enum('kategori', ['bengkel', 'toko', 'umum'])->default('umum');
             $table->boolean('status')->default(1);
             $table->timestamps();

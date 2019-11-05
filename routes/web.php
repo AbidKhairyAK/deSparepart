@@ -42,6 +42,8 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::get('kendaraan/data', 'KendaraanController@data')->name('kendaraan.data');
 	Route::resource('/kendaraan', 'KendaraanController');
 
+	Route::get('satuan/api', 'SatuanController@api')->name('satuan.api');
+
 	Route::get('barang/api', 'BarangController@api')->name('barang.api');
 	Route::get('barang/data', 'BarangController@data')->name('barang.data');
 	Route::resource('/barang', 'BarangController');
@@ -56,6 +58,9 @@ Route::group(['middleware' => ['auth']], function () {
 
 	Route::get('/pembayaran-piutang/data', 'PembayaranPiutangController@data')->name('pembayaran-piutang.data');
 	Route::resource('/pembayaran-piutang', 'PembayaranPiutangController');
+
+	Route::get('retur-penjualan/data/{type}', 'ReturPenjualanController@data')->name('retur-penjualan.data');
+	Route::resource('/retur-penjualan', 'ReturPenjualanController');
 
 	// testing routes
 	Route::get('/beranda', 'BerandaController@index')->name('beranda.index');

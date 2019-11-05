@@ -24,10 +24,12 @@ class DatabaseSeeder extends Seeder
         $this->call(KontakSupplierTableSeeder::class);
         $this->call(KomponenTableSeeder::class);
         $this->call(KendaraanTableSeeder::class);
+        $this->call(SatuanTableSeeder::class);
         $this->call(BarangTableSeeder::class);
         $this->call(PenjualanDetailTableSeeder::class);
         $this->call(PenjualanTableSeeder::class);
         $this->call(PembayaranPiutangTableSeeder::class);
+        $this->call(ReturPenjualanTableSeeder::class);
 
     	DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

@@ -10,10 +10,6 @@ class BarangForm extends Form
 {
     public function buildForm()
     {
-        $t = ['pcs', 'sachet', 'biji', 'box', 'dus', 'meter', 'cm', 'lusin', 'ikat'];
-        foreach ($t as $value) {
-            $tipe[$value] = $value;
-        }
         $m = $this->getModel();
         $this
             ->add('part_no', 'text', [
@@ -54,8 +50,9 @@ class BarangForm extends Form
                 'wrapper' => ['class' => 'form-group col-sm-4'],
                 'value' => $m ? $m->limit : 0,
             ])
-            ->add('satuan', 'choice', [
-                'choices' => $tipe,
+            ->add('satuan_id', 'choice', [
+                'label' => 'Satuan',
+                'choices' => $m ? [$m->satuan->id => $m->satuan->nama] : [],
                 'wrapper' => ['class' => 'form-group col-sm-4'],
                 'attr' => ['required' => true],
                 'empty_value' => ' ',
@@ -73,7 +70,7 @@ class BarangForm extends Form
                 'wrapper' => ['class' => 'form-group col-sm-6'],
             ])
             ->add('keterangan', 'textarea', [
-                'attr' => ['required' => true, 'rows' => 4],
+                'attr' => ['rows' => 4],
             ]);
     }
 }
