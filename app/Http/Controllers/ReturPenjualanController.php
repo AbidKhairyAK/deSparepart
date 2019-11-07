@@ -46,6 +46,7 @@ class ReturPenjualanController extends Controller
             ->select(DB::raw('SUM(retur_penjualan_detail.biaya) as biaya, COUNT(retur_penjualan_detail.retur_penjualan_id) as barang, penjualan.no_faktur, retur_penjualan.id, retur_penjualan.created_at, retur_penjualan.dikembalikan, retur_penjualan.dilunaskan, retur_penjualan.pembayaran'))
             ->groupBy('retur_penjualan_detail.retur_penjualan_id');
 
+
         $table = DataTables::of($data)
             ->editColumn('id', function($index) {
                 $tag = '<label class="d-block">';
@@ -88,7 +89,7 @@ class ReturPenjualanController extends Controller
                     ],
                 ];
                 $tag = Form::open(array("url" => $can['delete']['link'], "method" => "DELETE"));
-                $tag .= "<a href='{$can['edit']['link']}' class='btn btn-primary btn-sm {$can['edit']['dis']}' title='edit'><i class='fas fa-edit'></i></a>";
+                // $tag .= "<a href='{$can['edit']['link']}' class='btn btn-primary btn-sm {$can['edit']['dis']}' title='edit'><i class='fas fa-edit'></i></a>";
                 $tag .= " <a href='{$can['detail']['link']}' class='btn btn-info btn-sm {$can['detail']['dis']}' title='detail'><i class='fas fa-eye'></i></a>";
                 $tag .= " <button {$can['delete']['dis']} type='submit' onclick='return confirm(`apa anda yakin?`)' class='btn btn-danger btn-sm' title='hapus'><i class='fas fa-trash'></i></button>";
                 $tag .= Form::close();
@@ -124,7 +125,7 @@ class ReturPenjualanController extends Controller
 
     public function edit($id)
     {
-        // Lanjut Disini
+        // Lanjut Disini    
     }
 
     public function store(Request $request)
