@@ -278,20 +278,20 @@
     	});
     }
     function payin() {
-    		var dibayarkan = parseInt($('#dibayarkan').cleanVal());
-    		var total = parseInt($('#total').cleanVal());
+		var dibayarkan = parseInt($('#dibayarkan').cleanVal());
+		var total = parseInt($('#total').cleanVal());
 
-    		if (dibayarkan > total) {
-    			var kembalian = dibayarkan - total;
-    			var hutang = 0;
-    		} else {
-    			var kembalian = 0;
-    			var hutang = total - dibayarkan;
-    		}
+		if (dibayarkan > total) {
+			var kembalian = dibayarkan - total;
+			var hutang = 0;
+		} else {
+			var kembalian = 0;
+			var hutang = total - dibayarkan;
+		}
 
-    		$('#hutang').val(hutang);
-    		$('#kembalian').val(kembalian);
-    		$('.maskin').trigger('input');
+		$('#hutang').val(hutang);
+		$('#kembalian').val(kembalian);
+		$('.maskin').trigger('input');
     }
     function maskin() {
 		$('.maskin').mask('0.000.000.000.000.000', {reverse: true});
@@ -307,7 +307,7 @@
     }
     function check_form(e, self) {
     	e.preventDefault();
-    	$('#dibayarkan').val(0);
+    	// $('#dibayarkan').val(0);
     	payin();
     	self.submit();
     }

@@ -124,7 +124,7 @@ class ReturPenjualanController extends Controller
 
     public function edit($id)
     {
-        //
+        // Lanjut Disini
     }
 
     public function store(Request $request)

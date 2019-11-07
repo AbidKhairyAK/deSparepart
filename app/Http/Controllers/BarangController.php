@@ -30,13 +30,15 @@ class BarangController extends Controller
     {
         $search = $request->get('search');
 
-        $data = $this->table->select(DB::raw("CONCAT(part_no,' - ',nama,' - merk ',merk,' - ',satuan) as name, id, harga_jual"));
+        $data = DB::table('barang')
+            ->rightJoin('satuan', 'satuan.id', '=', 'barang.satuan_id')
+            ->select(DB::raw("CONCAT(part_no,' - ',barang.nama,' - merk ',merk,' - ',satuan.nama) as name, barang.id, harga_jual"));
 
         if (!empty($search)) {
-            $data = $data->where('nama', 'like', "%$search%")
+            $data = $data->where('barang.nama', 'like', "%$search%")
                         ->orWhere('part_no', 'like', "%$search%")
                         ->orWhere('merk', 'like', "%$search%")
-                        ->orWhere('satuan', 'like', "%$search%");
+                        ->orWhere('satuan.nama', 'like', "%$search%");
         }
 
         $data = $data->get();

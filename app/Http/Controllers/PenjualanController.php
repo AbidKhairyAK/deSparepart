@@ -30,11 +30,16 @@ class PenjualanController extends Controller
     public function api(Request $request, $type=false)
     {
         $search = $request->get('search');
+        $piutang = $request->get('piutang');
         $id = $request->get('id');
+
         $data = $this->table;
 
         if (!empty($search)) {
             $data = $data->where('no_faktur', 'like', "%$search%");
+        }
+        if (!empty($piutang)) {
+            $data = $data->where('status_lunas', 0);
         }
 
         if ($type=='select') {
@@ -289,10 +294,20 @@ class PenjualanController extends Controller
     public function detailPenjualan($request, $id, $update=false)
     {
         if ($update) {
-            DB::table('penjualan_detail')->where('penjualan_id', $id)->delete();
+            $pds = DB::table('penjualan_detail')->where('penjualan_id', $id);
+            foreach ($pds->get() as $pd) {
+                $cur = DB::table('barang')->where('id', $pd->barang_id)->first();
+                DB::table('barang')->where('id', $pd->barang_id)->update(['stok' => ($cur->stok + $pd->qty)]);
+            }
+            $pds->delete();
         }
         foreach ($request->barang_id as $key => $barang_id) {
-            $model = DB::table('barang')->where('id', $barang_id)->first();
+           
+            $model = DB::table('barang')
+                    ->join('satuan', 'satuan.id', '=', 'barang.satuan_id')
+                    ->select('part_no', 'barang.nama', 'satuan.nama as satuan', 'stok')
+                    ->where('barang.id', $barang_id)->first();
+
             DB::table('penjualan_detail')->insert([
                 'penjualan_id' => $id,
                 'barang_id' => $barang_id,

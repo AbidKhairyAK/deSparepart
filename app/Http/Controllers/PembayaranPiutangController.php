@@ -118,12 +118,17 @@ class PembayaranPiutangController extends Controller
                         'link' => $user->can('delete-'.$this->main) ? route($this->uri.'.destroy',$index->id) : '#',
                         'dis' => $user->can('delete-'.$this->main) ? '' : 'disabled',
                     ],
+                    'edit'  => [
+                        'link' => $user->can('edit-'.$this->main) ? route($this->uri.'.edit',$index->id) : '#',
+                        'dis' => $user->can('edit-'.$this->main) ? '' : 'disabled',
+                    ],
                     'detail'  => [
                         'link' => $user->can('detail-'.$this->main) ? route($this->uri.'.show',$index->id) : '#',
                         'dis' => $user->can('detail-'.$this->main) ? '' : 'disabled',
                     ],
                 ];
                 $tag = Form::open(array("url" => $can['delete']['link'], "method" => "DELETE"));
+                $tag .= " <a href='{$can['edit']['link']}' class='btn btn-primary btn-sm {$can['edit']['dis']}' title='edit'><i class='fas fa-edit'></i></a>";
                 $tag .= " <a href='{$can['detail']['link']}' class='btn btn-info btn-sm {$can['detail']['dis']}' title='detail'><i class='fas fa-eye'></i></a>";
                 $tag .= " <button {$can['delete']['dis']} type='submit' onclick='return confirm(`apa anda yakin?`)' class='btn btn-danger btn-sm' title='hapus'><i class='fas fa-trash'></i></button>";
                 $tag .= Form::close();
@@ -152,18 +157,24 @@ class PembayaranPiutangController extends Controller
         $prevData = $this->table->where('no_pelunasan', 'like', 'BM-'.date('y')."%")->orderBy('no_pelunasan', 'desc')->first();
         $newNo = !is_null($prevData) ? ( intval("1".substr($prevData->no_pelunasan, 5)) + 1 ) : null;
         $data['no_pelunasan'] = "BM-" . date('y') . (!is_null($prevData) ? substr($newNo, 1) : "00001");
-
-        $data['no_faktur'] = '0'.rand(1,9).rand(0,1).'.00'.rand(1,4).'-'.date('y').'.0000'.rand(1000,9999);
+        
         $data['main'] = $this->main;
         $data['title'] = $this->title;
-        $data['action'] = route($this->uri.'.store');;
+        $data['action'] = route($this->uri.'.store');
         $data['url'] = route($this->uri.'.index');
         return view($this->folder.'.form', $data);
     }
 
     public function edit($id)
     {
-        return redirect()->back();
+        $data['model'] = DB::table('pembayaran_piutang')->where('id', $id)->first();;
+        $data['m'] = DB::table('penjualan')->select('no_faktur', 'id')->where('id', $data['model']->penjualan_id)->first();
+
+        $data['main'] = $this->main;
+        $data['title'] = $this->title;
+        $data['action'] = route($this->uri.'.update', $id);
+        $data['url'] = route($this->uri.'.index');
+        return view($this->folder.'.form', $data);
     }
 
     public function store(Request $request)
@@ -188,7 +199,21 @@ class PembayaranPiutangController extends Controller
 
     public function update(Request $request, $id)
     {
-        return redirect()->back();
+        $request->merge([
+            'user_id' => auth()->user()->id,
+            'status_lunas' => $request->sisa == 0,
+            'piutang' => str_replace('.', '', $request->piutang),
+            'sisa' => str_replace('.', '', $request->sisa),
+            'dibayarkan' => $request->sisa == 0 ? str_replace('.', '', $request->piutang) : str_replace('.', '', $request->dibayarkan)
+        ]);
+        
+        DB::table('penjualan')->where('id', $request->penjualan_id)->update([
+            'status_lunas' => $request->sisa == 0,
+        ]);
+
+        $this->table->find($id)->update($request->all());
+
+        return redirect($this->uri);
     }
     
     public function destroy($id)

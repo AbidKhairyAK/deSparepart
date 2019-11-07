@@ -2,6 +2,8 @@
 
 @section('title', 'Form '.$title)
 
+@php $e = isset($model); @endphp
+
 @section('content')
 
 <div class="card shadow mb-4">
@@ -11,11 +13,14 @@
 	<div class="card-body">
 		<form action="{{ $action }}" method="post">
 			@csrf
+			@if($e)
+			@method('PUT')
+			@endif
 			<div class="row">
 				<div class="col-sm-8">
 					<div class="row">
 
-						<div class="form-group col-sm-6">
+						<div class="form-group col-sm-6 {{ $e ? 'd-none' : 'd-block' }} ">
 							<label>No Faktur Penjualan:</label>
 							<select name="penjualan_id" class="form-control" placeholder="Cari...">
 								@if(isset($m))
@@ -23,10 +28,14 @@
 								@endif
 							</select>
 						</div>
+						<div class="form-group col-sm-6 {{ $e ? 'd-block' : 'd-none' }} ">
+							<label>No Faktur Penjualan:</label>
+							<p><b>{{ isset($m) ? $m->no_faktur : '' }}</b></p>
+						</div>
 
 						<div class="form-group col-sm-6">
 							<label>No Pelunasan:</label>
-							<input type="text" name="no_pelunasan" class="form-control" value="{{ $no_pelunasan }}">
+							<input type="text" name="no_pelunasan" class="form-control" value="{{ $e ? $model->no_pelunasan : $no_pelunasan }}">
 						</div>
 
 						<div id="vue-wrapper" class="col-sm-12">
@@ -101,7 +110,7 @@
 								</div>
 								<div class="form-group col-sm-3">
 									<label>Dibayarkan</label>
-									<input name="dibayarkan" v-mask v-model="dibayarkan" type="text" class="form-control">
+									<input id="dibayarkan" name="dibayarkan" v-mask v-model="dibayarkan" type="text" class="form-control">
 								</div>
 								<div class="form-group col-sm-2">
 									<label>Pembayaran</label>
@@ -112,7 +121,7 @@
 										<option value="transfer">TRANSFER</option>
 									</select>
 									<br>
-									<input v-if="pembayaran == 'giro'" name="pembayaran_detail" type="text" class="form-control" placeholder="No Giro..." required>
+									<input v-if="pembayaran == 'giro'" name="pembayaran_detail" type="text" class="form-control" placeholder="No Giro..." value="{{ $e ? $model->pembayaran_detail : '' }}">
 								</div>
 								<div class="form-group col-sm-2">
 									<label>Kembalian</label>
@@ -174,6 +183,10 @@
 				return '0';
 			},
 			piutang() {
+				@if($e)
+				return `{{ $model->piutang }}`;
+				@endif
+
 				var x = this.penjualan.pembayaran_piutang;
 				if (x.length > 0) {
 					return x[x.length - 1].sisa;
@@ -188,12 +201,6 @@
 					self.penjualan = res.data;
 				});
 			},
-			lel(val) {
-				alert(val);
-			},
-			pembayaran() {
-
-			}
 		},
 		filters: {
 		  	nf(x) {
@@ -206,14 +213,26 @@
 				update: function(el) {
 					var val = el.value.toString().replace(/\./g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 					el.value = val;
-				}
+				},
+				inserted: function(el) {
+					var val = el.value.toString().replace(/\./g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+					el.value = val;
+				},
 			}
+		},
+		mounted() {
+			@if($e)
+			this.dibayarkan = `{{ $model->dibayarkan }}`;
+			// this.dibayarkan = {{ $model->dibayarkan }};
+			this.pembayaran = `{{ $model->pembayaran }}`;
+
+			@endif
 		}
 	});
 
 	$('select[name=penjualan_id]').select2({
 	  ajax: {
-	    url: '{{ url("penjualan/api/select") }}',
+	    url: '{{ url("penjualan/api/select?piutang=true") }}',
 	    data: function (params) {
 	      return {
 	        search: params.term,
@@ -237,7 +256,8 @@
 	});
 
 	@if(isset($m))
-	vm.getData({{ $m->id }});
+	vm.getData(`{{ $m->id }}`);
+
 	@endif
 </script>
 @endsection
