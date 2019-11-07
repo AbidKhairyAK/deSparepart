@@ -44,7 +44,8 @@ class ReturPenjualanController extends Controller
         $data = ReturPenjualan::join('penjualan', 'penjualan.id', '=', 'retur_penjualan.penjualan_id')
             ->join('retur_penjualan_detail', 'retur_penjualan_detail.retur_penjualan_id', '=', 'retur_penjualan.id')
             ->select(DB::raw('SUM(retur_penjualan_detail.biaya) as biaya, COUNT(retur_penjualan_detail.retur_penjualan_id) as barang, penjualan.no_faktur, retur_penjualan.id, retur_penjualan.created_at, retur_penjualan.dikembalikan, retur_penjualan.dilunaskan, retur_penjualan.pembayaran'))
-            ->groupBy('retur_penjualan_detail.retur_penjualan_id');
+            ->groupBy('retur_penjualan_detail.retur_penjualan_id')
+            ->orderBy('retur_penjualan.created_at', 'desc');
 
 
         $table = DataTables::of($data)
@@ -168,7 +169,7 @@ class ReturPenjualanController extends Controller
                     'retur_penjualan_id' => $rp->id,
                     'penjualan_detail_id' => $key,
                     'qty' => $value,
-                    'biaya' => $request->biaya[$key],
+                    'biaya' => str_replace('.', '', $request->biaya[$key]),
                     'keterangan' => $request->keterangan[$key],
                 ]);
 
@@ -181,7 +182,7 @@ class ReturPenjualanController extends Controller
 
     public function update(Request $request, $id)
     {
-        
+
     }
 
     public function destroy($id)
