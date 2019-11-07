@@ -90,7 +90,7 @@ class ReturPenjualanController extends Controller
                 ];
                 $tag = Form::open(array("url" => $can['delete']['link'], "method" => "DELETE"));
                 // $tag .= "<a href='{$can['edit']['link']}' class='btn btn-primary btn-sm {$can['edit']['dis']}' title='edit'><i class='fas fa-edit'></i></a>";
-                $tag .= " <a href='{$can['detail']['link']}' class='btn btn-info btn-sm {$can['detail']['dis']}' title='detail'><i class='fas fa-eye'></i></a>";
+                // $tag .= " <a href='{$can['detail']['link']}' class='btn btn-info btn-sm {$can['detail']['dis']}' title='detail'><i class='fas fa-eye'></i></a>";
                 $tag .= " <button {$can['delete']['dis']} type='submit' onclick='return confirm(`apa anda yakin?`)' class='btn btn-danger btn-sm' title='hapus'><i class='fas fa-trash'></i></button>";
                 $tag .= Form::close();
                 return $tag;
@@ -181,32 +181,7 @@ class ReturPenjualanController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->merge([
-            'user_id' => auth()->user()->id,
-        ]);
-
-        $tbl = $this->table->findOrFail($id);
-        $tbl->update($request->all());
-        $tbl->kontak_customer()->delete();
-        for ($i=0; $i < count($request->kontak); $i++) { 
-            $tbl->kontak_customer()->create([
-                'tipe' => $request->tipe[$i],
-                'kontak' => $request->kontak[$i],
-            ]);
-        }
-        return redirect($this->uri);
-    }
-
-    public function deactivate($id)
-    {
-        $this->table->findOrFail($id)->update(['status' => 0]);
-        return redirect($this->uri);
-    }
-
-    public function activate($id)
-    {
-        $this->table->findOrFail($id)->update(['status' => 1]);
-        return redirect($this->uri);
+        
     }
 
     public function destroy($id)
