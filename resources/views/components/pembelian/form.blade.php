@@ -2,16 +2,16 @@
 
 @php $e = isset($m); @endphp
 
-@section('title', 'Penjualan Barang')
+@section('title', 'Pembelian Barang')
 
 @section('content')
 
 <div class="card shadow mb-4">
 	<div class="card-header py-3 d-flex justify-content-between align-items-center">
-		<h6 class="m-0 font-weight-bold text-secondary">Form Penjualan Barang</h6>
+		<h6 class="m-0 font-weight-bold text-secondary">Form Pembelian Barang</h6>
 		<div>
-			<a href="{{ url('penjualan') }}" class="btn btn-sm btn-primary">
-				<i class="fas fa-clipboard-list"></i> <b>Daftar Penjualan</b>
+			<a href="{{ url('pembelian') }}" class="btn btn-sm btn-primary">
+				<i class="fas fa-clipboard-list"></i> <b>Daftar Pembelian</b>
 			</a>
 			<a href="{{ url('barang') }}" class="btn btn-sm btn-warning">
 				<i class="fas fa-cubes"></i> <b>Daftar Barang</b>
@@ -19,13 +19,13 @@
 		</div>
 	</div>
 	<div class="card-body">
-		<form id="form-penjualan" action="{{ $action }}" method="post">
+		<form id="form-pembelian" action="{{ $action }}" method="post">
 			@csrf {{ $e ? method_field('PUT') : '' }}
 
 			<div class="d-flex justify-content-between mb-3">
 				<label>
 					<b>NO FAKTUR : </b>
-					<input name="no_faktur" type="text" class="form-control d-inline-block" style="width: auto;" value="{{ $e ? $m->no_faktur : $no_faktur }}" required>
+					<input name="no_faktur" type="text" class="form-control d-inline-block" style="width: auto;" value="{{ $e ? $m->no_faktur : '' }}" required>
 				</label>
 
 				<label>
@@ -45,7 +45,8 @@
 						<thead class="thead-dark">
 							<tr>
 								<th width="150">Qty</th>
-								<th width="150">Diskon %</th>
+								<th width="120">Diskon %</th>
+								<th width="120">PPN %</th>
 								<th>Harga Satuan</th>
 								<th>Jumlah</th>
 								<th>*</th>
@@ -54,12 +55,12 @@
 						<tbody class="wrapper-barang">
 
 							@php
-								$d = $e ? $m->penjualan_detail()->get() : [];
+								$d = $e ? $m->pembelian_detail()->get() : [];
 								$l = $e ? count($d) : 1;
 							@endphp
 							@for($i=0; $i<$l; $i++)
 							<tr class="barang{{ $i+1 }}">
-								<td colspan="4">
+								<td colspan="5">
 									<select id="barang_id{{ $i+1 }}" name="barang_id[]" class="form-control select-barang barang_id" required>
 										@if($e) 
 											<option selected value="{{ $d[$i]->barang_id }}">
@@ -73,6 +74,7 @@
 							<tr class="barang{{ $i+1 }}">
 								<td><input id="qty{{ $i+1 }}" name="qty[]" type="number" value="{{ $e ? $d[$i]->qty : null }}" class="form-control form-control-sm qty" required></td>
 								<td><input id="diskon{{ $i+1 }}" name="diskon[]" type="number" value="{{ $e ? $d[$i]->diskon : 0 }}" class="form-control form-control-sm diskon" required></td>
+								<td><input id="ppn{{ $i+1 }}" name="ppn[]" type="number" value="{{ $e ? $d[$i]->ppn : 0 }}" class="form-control form-control-sm ppn" required></td>
 								<td><input id="harga{{ $i+1 }}" name="harga[]" type="text" value="{{ $e ? $d[$i]->harga : 0 }}" class="form-control form-control-sm maskin" readonly required></td>
 								<td><input id="subtotal{{ $i+1 }}" name="subtotal[]" type="text" value="{{ $e ? $d[$i]->subtotal : 0 }}" class="form-control form-control-sm subtotal maskin" readonly required></td>
 								<td></td>
@@ -80,7 +82,7 @@
 							@endfor
 
 							<tr class="last-barang">
-								<td colspan="5">
+								<td colspan="6">
 									<button type="button" id="add-barang" class="btn btn-sm btn-block btn-light"><i class="fas fa-plus"></i> Tambah Baris</button>
 								</td>
 							</tr>
@@ -89,55 +91,26 @@
 				</div>
 
 				<div class="col-md-4">
-					<div class="form-group">
-						<div class="custom-control custom-radio custom-control-inline">
-						    <input type="radio" class="custom-control-input" id="p1" name="p" value="p1" checked>
-						    <label class="custom-control-label" for="p1">Customer Lama</label>
-						</div>
-						<div class="custom-control custom-radio custom-control-inline">
-							<input type="radio" class="custom-control-input" id="p0" name="p" value="p0">
-							<label class="custom-control-label" for="p0">Customer Baru</label>
-						</div>
+					<div class="row mb-3">
+						<span class="col-sm-3"><b>Supplier:</b></span>
+						<span class="col-sm-9">
+							<select name="supplier_id" class="p1 form-control select-supplier" required>
+								@if($e) 
+									<option value="{{ $m->supplier_id }}">
+										{{ $m->supplier->kode }} - {{ $m->supplier->perusahaan }}
+									</option>
+								@endif
+							</select>
+						</span>
 					</div>
-
-					<div class="p1">
-						<div class="row mb-3">
-							<span class="col-sm-3"><b>Customer:</b></span>
-							<span class="col-sm-9">
-								<select name="customer_id" class="p1 form-control select-customer" required>
-									@if($e) 
-										<option value="{{ $m->customer_id }}">
-											{{ $m->customer->kode }} - {{ $m->customer->nama }}
-										</option>
-									@endif
-								</select>
-							</span>
-						</div>
-						<div class="row mb-3">
-							<span class="col-sm-3"><b>Alamat:</b></span>
-							<span id="p-alamat" class="col-sm-9">{{ $e ? $m->customer->alamat : '-'}}</span>
-						</div>
-						<div class="row mb-3">
-							<span class="col-sm-3"><b>Kontak:</b></span>
-							<span id="p-kontak" class="col-sm-9">{{ $e ? $m->customer->kontak_customer()->first()->kontak : '-'}}</span>
-						</div>
+					<div class="row mb-3">
+						<span class="col-sm-3"><b>Alamat:</b></span>
+						<span id="p-alamat" class="col-sm-9">{{ $e ? $m->supplier->alamat : '-'}}</span>
 					</div>
-
-					<div class="p0">
-						<div class="row mb-3">
-							<span class="col-sm-3"><b>Nama:</b></span>
-							<span class="col-sm-9"><input name="customer_nama" type="text" class="p0 form-control form-control-sm" required></span>
-						</div>
-						<div class="row mb-3">
-							<span class="col-sm-3"><b>Alamat:</b></span>
-							<span class="col-sm-9"><input name="customer_alamat" type="text" class="p0 form-control form-control-sm"></span>
-						</div>
-						<div class="row mb-3">
-							<span class="col-sm-3"><b>No HP:</b></span>
-							<span class="col-sm-9"><input name="customer_hp" type="text" class="p0 form-control form-control-sm"></span>
-						</div>
+					<div class="row mb-3">
+						<span class="col-sm-3"><b>Kontak:</b></span>
+						<span id="p-kontak" class="col-sm-9">{{ $e ? $m->supplier->kontak_supplier()->first()->kontak : '-'}}</span>
 					</div>
-
 				</div>
 
 				<div class="col-md-12"><hr></div>
@@ -175,7 +148,7 @@
 						<b>DIBAYARKAN:</b>
 						<input id="dibayarkan" name="dibayarkan" type="text" class="form-control form-control-lg maskin" style="width: 80%;" value="{{ $e ? $m->dibayarkan : '' }}" >
 					</div>
-					<div class="form-group d-flex align-items-center justify-content-between">
+					<div class="form-group d-none">
 						<b>KEMBALIAN:</b>
 						<input id="kembalian" type="text" class="form-control form-control-lg maskin" style="width: 80%;" readonly value="{{ $e && !($m->hutang > 0) ? $m->dibayarkan - $m->total : 0 }}">
 					</div>
@@ -198,7 +171,7 @@
 							<i class="fas fa-archive"></i> Draft
 						</button>
 						<button class="px-5 btn btn-primary">
-							<i class="fas fa-save"></i> Simpan - Publish {{ !$e ? '- Cetak' : '' }}
+							<i class="fas fa-save"></i> Simpan - Publish
 						</button>
 					</div>
 				</div>
@@ -226,15 +199,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha256-bqVeqGdJ7h/lYPq6xrPv/YGzMEb6dNxlfiTUHSgRCp8=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.13.4/jquery.mask.min.js"></script>
 <script type="text/javascript">
-	function get_customer(index) {
-		var detailcustomer = [];
-		$.get(`/customer/api?id=${index}`)
+	function get_supplier(index) {
+		var detailsupplier = [];
+		$.get(`/supplier/api?id=${index}`)
 		.done(function(data) {
-			detailcustomer['alamat'] = data.alamat ? data.alamat : '-';
-			detailcustomer['kontak'] = data.kontak_customer.length ? data.kontak_customer.find(function(v) { return v.tipe == 'hp';	}).kontak : '-';
+			detailsupplier['alamat'] = data.alamat ? data.alamat : '-';
+			detailsupplier['kontak'] = data.kontak_supplier.length ? data.kontak_supplier.find(function(v) { return v.tipe == 'hp';	}).kontak : '-';
 
-			$('#p-alamat').text(detailcustomer['alamat']);
-			$('#p-kontak').text(detailcustomer['kontak']);
+			$('#p-alamat').text(detailsupplier['alamat']);
+			$('#p-kontak').text(detailsupplier['kontak']);
 		});
 	}
 	function remove_barang(tag) {
@@ -244,30 +217,18 @@
 	}
 	function select2_init() {
 	    $('.select-barang').select2(select_barang).on('select2-open', function() { dropdown() });
-	    $('.select-customer').select2(select_customer).on('select2-open', function() { dropdown() });
+	    $('.select-supplier').select2(select_supplier).on('select2-open', function() { dropdown() });
 	}
-	function check_p() {
-    	var decision = $('input[name=p]:checked').val();
-    	if (decision == "p0") {
-    		$('.p1').hide();
-    		$('select.p1').attr('disabled', 'true');
-    		$('.p0').show();
-    		$('input.p0').removeAttr('disabled');
-    	} else {
-    		$('.p1').show();
-    		$('select.p1').removeAttr('disabled');
-    		$('.p0').hide();
-    		$('input.p0').attr('disabled', 'true');
-    	}
-    }
     function count_pay() {
-    	$('.barang_id, .qty, .diskon').change(function() {
-    		var id = $(this).attr('id').replace(/barang_id|qty|diskon/gi, "");
+    	$('.barang_id, .qty, .diskon, .ppn').change(function() {
+    		var id = $(this).attr('id').replace(/barang_id|qty|diskon|ppn/gi, "");
     		var barang_id = $('#barang_id'+id).val();
     		var qty = $('#qty'+id).val();
     		var diskon = $('#diskon'+id).val();
+    		var ppn = $('#ppn'+id).val();
     		var harga = listHarga[barang_id];
-    		var harga_diskon = harga - (harga * diskon / 100);
+    		var harga_ppn = harga + (harga * ppn / 100);
+    		var harga_diskon = harga_ppn - (harga_ppn * diskon / 100);
     		var subtotal = harga_diskon * qty;
 
     		$('#harga'+id).val(harga_diskon);
@@ -316,7 +277,7 @@
 	$.get('{{ route("barang.api") }}')
 	.done(function(data) {
 		$.map(data, function(item) {
-			listHarga[item.id] = item.harga_jual;
+			listHarga[item.id] = item.harga_beli;
 		});
 	});
 
@@ -340,9 +301,9 @@
 	    }
 	  }
 	}
-	var select_customer = {
+	var select_supplier = {
 	  ajax: {
-	    url: '{{ route("customer.api") }}',
+	    url: '{{ route("supplier.api") }}',
 	    data: function (params) {
 	      return {
 	        search: params.term,
@@ -368,10 +329,10 @@
 
 		$('#draft').click(function() {
 			$('input[name=publish]').val('0');
-			$('#form-penjualan').submit();
+			$('#form-pembelian').submit();
 		});
 
-		$('#form-penjualan').submit(function(e) {
+		$('#form-pembelian').submit(function(e) {
 			check_form(e, this);
 		});
 		
@@ -393,15 +354,10 @@
 			}
 		});
 
-		$('.select-customer').change(function() { get_customer(this.value) });
+		$('.select-supplier').change(function() { get_supplier(this.value) });
 
 	    $('.datepicker').datepicker({
 	    	format: 'yyyy-mm-dd',
-	    });
-
-	    check_p();
-	    $('input[name=p]').change(function() {
-	    	check_p();
 	    });
 
 	    $('#add-barang').click(function(){
@@ -409,7 +365,7 @@
 
 			$(".last-barang").before(`
 				<tr class="barang${no}">
-					<td colspan="4">
+					<td colspan="5">
 						<select id="barang_id${no}" name="barang_id[]" class="form-control select-barang barang_id" required>
 						</select>
 					</td>
@@ -418,6 +374,7 @@
 				<tr class="barang${no}">
 					<td><input id="qty${no}" name="qty[]" type="number" class="form-control form-control-sm qty" required></td>
 					<td><input id="diskon${no}" name="diskon[]" type="number" value="0" class="form-control form-control-sm diskon maskin" required></td>
+					<td><input id="ppn${no}" name="ppn[]" type="number" value="0" class="form-control form-control-sm ppn maskin" required></td>
 					<td><input id="harga${no}" name="harga[]" type="text" value="0" class="form-control form-control-sm maskin" readonly></td>
 					<td><input id="subtotal${no}" name="subtotal[]" type="text" value="0" class="form-control form-control-sm subtotal maskin" readonly></td>
 					<td></td>

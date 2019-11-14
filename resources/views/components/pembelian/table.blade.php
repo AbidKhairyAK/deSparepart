@@ -1,13 +1,26 @@
 <div class="card shadow mb-4">
 	<div class="card-header py-3 d-flex justify-content-between align-items-center">
-		<h6 class="m-0 font-weight-bold text-secondary">Tabel Daftar Pembelian</h6>
+		<h6 class="m-0 font-weight-bold text-secondary">Tabel Daftar {{ $title }}</h6>
 		<div>
-			<a href="{{ url('pembelian/create') }}" class="btn btn-sm btn-primary">
-				<i class="fas fa-plus"></i> <b>Tambah Pembelian</b>
+			@if(auth()->user()->can('create-'.$main))
+			<a href="{{ route($main.'.create') }}" class="btn btn-sm btn-primary">
+				<i class="fas fa-plus"></i> <b>Tambah {{ $title }}</b>
 			</a>
-			<a href="{{ url('hutang') }}" class="btn btn-sm btn-warning">
-				<i class="fas fa-coins"></i> <b>Daftar Hutang</b>
+			@else
+			<a href="#" class="btn btn-sm btn-primary disabled">
+				<i class="fas fa-plus"></i> <b>Tambah {{ $title }}</b>
 			</a>
+			@endif
+
+			@if(auth()->user()->can('index-hutang'))
+			<a href="{{ route('hutang.index') }}" class="btn btn-sm btn-warning">
+				<i class="fas fa-list"></i> <b>Daftar Hutang</b>
+			</a>
+			@else
+			<a href="#" class="btn btn-sm btn-warning disabled">
+				<i class="fas fa-list"></i> <b>Daftar Hutang</b>
+			</a>
+			@endif
 		</div>
 	</div>
 	<div class="card-body">
@@ -15,90 +28,16 @@
 		<table class="table table-striped">
 			<thead class="thead-dark">
 				<tr>
-					<th>No Faktur</th>
-					<th>Supplier</th>
+					<th>#</th>
+					<th>Nomor</th>
+					<th width="180">Supplier</th>
 					<th>Tanggal</th>
 					<th>Biaya</th>
 					<th>Status</th>
-					<th>Pembayaran</th>
 					<th>Aksi</th>
 				</tr>
 			</thead>
-			<tbody>
-				@for($i=0;$i<=2;$i++)
-				<tr>
-					<td>KPK-19/01/0001</td>
-					<td>
-						<div class="d-flex">
-							<span>
-								<div>Kode</div>
-								<div>Perusahaan</div>
-								<div>Pemilik</div>
-							</span>
-							<span class="px-2">
-								<div>:</div>
-								<div>:</div>
-								<div>:</div>
-								<div>:</div>
-							</span>
-							<span>
-								<div><b>PMB</b></div>
-								<div><b>PT. Santara</b></div>
-								<div><b>Mardigu Wowiek</b></div>
-							</span>
-						</div>
-					</td>
-					<td>
-						<div class="d-flex">
-							<span>
-								<div>Pembelian</div>
-								<div>Tempo</div>
-							</span>
-							<span class="px-2">
-								<div>:</div>
-								<div>:</div>
-							</span>
-							<span>
-								<div><b>2019-03-12</b></div>
-								<div><b>2019-04-12</b></div>
-							</span>
-						</div>
-					</td>
-					<td>
-						<div class="d-flex">
-							<span>
-								<div>Harga</div>
-								<div>Dibayar</div>
-								<div>Hutang</div>
-							</span>
-							<span class="px-2">
-								<div>:</div>
-								<div>:</div>
-							</span>
-							<span>
-								<div><b>Rp 20.000.000</b></div>
-								<div><b>Rp 18.000.000</b></div>
-								<div><b>Rp 2.000.000</b></div>
-							</span>
-						</div>
-					</td>
-					<td>Belum Lunas<br><span class="badge badge-primary">Publish</span></td>
-					<td>TUNAI</td>
-					<td>
-						<div class="dropdown no-arrow">
-							<button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
-								<i class="fas fa-cogs"></i>
-							</button>
-							<div class="dropdown-menu dropdown-menu-right shadow">
-								<a class="dropdown-item" href="#">Retur</a>
-								<a class="dropdown-item" href="#">Detail</a>
-								<a class="dropdown-item" href="#">Hapus</a>
-							</div>
-						</div>
-					</td>
-				</tr>
-				@endfor
-			</tbody>
+			<tbody></tbody>
 		</table>
 	</div>
 </div>

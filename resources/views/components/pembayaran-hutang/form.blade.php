@@ -19,15 +19,15 @@
 					<div class="row">
 
 						<div class="form-group col-sm-6 {{ $e ? 'd-none' : 'd-block' }} ">
-							<label>No Faktur Penjualan:</label>
-							<select name="penjualan_id" class="form-control" placeholder="Cari..." required>
+							<label>No Faktur Pembelian:</label>
+							<select name="pembelian_id" class="form-control" placeholder="Cari..." required>
 								@if(isset($m))
 								<option value="{{ $m->id }}">{{ $m->no_faktur }}</option>
 								@endif
 							</select>
 						</div>
 						<div class="form-group col-sm-6 {{ $e ? 'd-block' : 'd-none' }} ">
-							<label>No Faktur Penjualan:</label>
+							<label>No Faktur Pembelian:</label>
 							<p><b>{{ isset($m) ? $m->no_faktur : '' }}</b></p>
 						</div>
 
@@ -37,7 +37,7 @@
 						</div>
 
 						<div id="vue-wrapper" class="col-sm-12">
-							<div  v-if="penjualan" class="row">
+							<div  v-if="pembelian" class="row">
 								<div class="form-group col-sm-12">
 									<label>Detail Transaksi:</label>
 									<div class="p-2 border border-secondary">
@@ -52,17 +52,19 @@
 															<th>Nama Barang</th>
 															<th>Qty</th>
 															<th>Diskon</th>
+															<th>PPN</th>
 															<th>Harga</th>
 															<th>Subtotal</th>
 														</tr>
 													</thead>
 													<tbody>
-														<tr v-for="(detail, key) in penjualan.penjualan_detail" :key="key">
+														<tr v-for="(detail, key) in pembelian.pembelian_detail" :key="key">
 															<td>@{{ key + 1 }}</td>
 															<td>@{{ detail.part_no }}</td>
 															<td>@{{ detail.nama }}</td>
 															<td class="text-right">@{{ detail.qty }}</td>
 															<td class="text-right">@{{ detail.diskon }}%</td>
+															<td class="text-right">@{{ detail.ppn }}%</td>
 															<td class="text-right">@{{ detail.harga | nf }}</td>
 															<td class="text-right">@{{ detail.subtotal | nf }}</td>
 														</tr>
@@ -70,32 +72,32 @@
 													<tfoot>
 														<tr>
 															<th colspan="6">TOTAL :</th>
-															<th class="text-right">@{{ penjualan.total | nf }}</th>
+															<th class="text-right">@{{ pembelian.total | nf }}</th>
 														</tr>
 													</tfoot>
 												</table>
 											</div>
 
 											<div class="col-sm-4 pb-2">
-												<b>No Faktur:</b> @{{ penjualan.no_faktur }}
+												<b>No Faktur:</b> @{{ pembelian.no_faktur }}
 											</div>
 											<div class="col-sm-4 pb-2">
-												<b>No PO:</b> @{{ penjualan.no_po }}
+												<b>No PO:</b> @{{ pembelian.no_po }}
 											</div>
 											<div class="col-sm-4 pb-2">
-												<b>Pembayaran:</b> @{{ penjualan.pembayaran.toUpperCase() }}
+												<b>Pembayaran:</b> @{{ pembelian.pembayaran.toUpperCase() }}
 											</div>
 											<div class="col-sm-4 pb-2">
-												<b>Customer:</b> @{{ penjualan.customer.nama }}
+												<b>Supplier:</b> @{{ pembelian.supplier.nama }}
 											</div>
 											<div class="col-sm-4 pb-2">
-												<b>Tanggal Transaksi:</b> @{{ penjualan.created_at.substr(0, 10) }}
+												<b>Tanggal Transaksi:</b> @{{ pembelian.created_at.substr(0, 10) }}
 											</div>
 											<div class="col-sm-4 pb-2">
-												<b>Jatuh Tempo:</b> @{{ penjualan.jatuh_tempo }}
+												<b>Jatuh Tempo:</b> @{{ pembelian.jatuh_tempo }}
 											</div>
 											<div class="col-sm-4 pb-2">
-												<b>Dibayarkan:</b> Rp @{{ penjualan.dibayarkan | nf }}
+												<b>Dibayarkan:</b> Rp @{{ pembelian.dibayarkan | nf }}
 											</div>
 
 										</div>
@@ -103,8 +105,8 @@
 								</div>
 
 								<div class="form-group col-sm-3">
-									<label>Piutang</label>
-									<input name="piutang" type="text" class="form-control" :value="piutang | nf" readonly>
+									<label>Hutang</label>
+									<input name="hutang" type="text" class="form-control" :value="hutang | nf" readonly>
 								</div>
 								<div class="form-group col-sm-3">
 									<label>Dibayarkan</label>
@@ -126,7 +128,7 @@
 									<input :value="kembalian | nf" type="text" class="form-control" readonly>
 								</div>
 								<div class="form-group col-sm-2">
-									<label>Sisa Piutang</label>
+									<label>Sisa hutang</label>
 									<input name="sisa" :value="sisa | nf" type="text" class="form-control" readonly>
 								</div>
 							</div>
@@ -161,42 +163,42 @@
 	var vm = new Vue({
 		el: '#vue-wrapper',
 		data: {
-			penjualan: false,
+			pembelian: false,
 			dibayarkan: null,
 			pembayaran: null,
 		},
 		computed: {
 			kembalian() {
 				if (this.dibayarkan) {
-					var res = this.dibayarkan.replace(/\./g, '') - this.piutang;
+					var res = this.dibayarkan.replace(/\./g, '') - this.hutang;
 					if (res > 0) return res;
 				}
 				return '0';
 			},
 			sisa() {
 				if (this.dibayarkan) {
-					var res = this.piutang - this.dibayarkan.replace(/\./g, '');
+					var res = this.hutang - this.dibayarkan.replace(/\./g, '');
 					if (res > 0) return res;
 				}
 				return '0';
 			},
-			piutang() {
+			hutang() {
 				@if($e)
-				return `{{ $model->piutang }}`;
+				return `{{ $model->hutang }}`;
 				@endif
 
-				var x = this.penjualan.pembayaran_piutang;
+				var x = this.pembelian.pembayaran_hutang;
 				if (x.length > 0) {
 					return x[x.length - 1].sisa;
 				}
-				return this.penjualan.hutang;
+				return this.pembelian.hutang;
 			}
 		},
 		methods: {
 			getData(id){
 				var self = this;
-				axios.get(`/penjualan/api/full?id=${id}`).then(function(res) {
-					self.penjualan = res.data;
+				axios.get(`/pembelian/api/full?id=${id}`).then(function(res) {
+					self.pembelian = res.data;
 				});
 			},
 		},
@@ -226,9 +228,9 @@
 		}
 	});
 
-	$('select[name=penjualan_id]').select2({
+	$('select[name=pembelian_id]').select2({
 	  ajax: {
-	    url: '{{ url("penjualan/api/select?piutang=true") }}',
+	    url: '{{ url("pembelian/api/select?hutang=true") }}',
 	    data: function (params) {
 	      return {
 	        search: params.term,

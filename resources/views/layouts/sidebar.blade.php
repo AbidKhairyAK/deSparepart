@@ -6,6 +6,7 @@
         ['name' => 'Daftar Pembelian', 'link' => '/pembelian', 'perm' => 'index-pembelian'],
         ['name' => 'Daftar Hutang', 'link' => '/hutang', 'perm' => 'index-hutang'],
         ['name' => 'Daftar Supplier', 'link' => '/supplier', 'perm' => 'index-supplier'],
+        ['name' => 'Daftar Retur Pembelian', 'link' => '/retur-pembelian', 'perm' => 'index-retur-pembelian'],
       ],
     ],
     [

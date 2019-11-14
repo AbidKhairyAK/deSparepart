@@ -17,13 +17,13 @@ class CreateSupplierTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('user_id');
             $table->char('kode', 9)->unique(); // 6 angka tanggal, 3 angka urut
-            $table->string('logo', 15)->nullable();
             $table->string('perusahaan');
-            $table->string('pemilik');
-            $table->string('cp');
-            $table->string('alamat');
-            $table->string('npwp');
-            $table->boolean('pkp');
+            $table->string('pemilik')->nullable();
+            $table->string('cp')->nullable();
+            $table->string('alamat')->nullable();
+            $table->string('npwp')->nullable();
+            $table->boolean('pkp')->default(0);
+            $table->unsignedTinyInteger('tempo_kredit')->default(0);
             $table->string('kategori');
             $table->boolean('status')->default(1);
             $table->timestamps();

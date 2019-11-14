@@ -11,7 +11,6 @@ use Form;
 
 class CustomerController extends Controller
 {
-
     public function __construct(Customer $table)
     {
         $this->main = 'customer';
@@ -119,7 +118,7 @@ class CustomerController extends Controller
                 ];
                 $tag = Form::open(array("url" => $can['delete']['link'], "method" => "DELETE"));
                 $tag .= "<a href='{$can['edit']['link1']}' class='btn btn-primary btn-sm {$can['edit']['dis']}' title='edit'><i class='fas fa-edit'></i></a>";
-                $tag .= " <a href='{$can['detail']['link']}' class='btn btn-info btn-sm {$can['detail']['dis']}' title='detail'><i class='fas fa-eye'></i></a>";
+                // $tag .= " <a href='{$can['detail']['link']}' class='btn btn-info btn-sm {$can['detail']['dis']}' title='detail'><i class='fas fa-eye'></i></a>";
 
                 if ($index->status) {
                     $tag .= " <a href='{$can['edit']['link2']}' class='btn btn-warning btn-sm {$can['edit']['dis']}' title='nonaktifkan'><i class='fas fa-power-off'></i></a>";

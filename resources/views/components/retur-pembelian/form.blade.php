@@ -19,8 +19,8 @@
 					<div class="row">
 
 						<div class="form-group col-sm-12" id="no_faktur">
-							<label>No Faktur Penjualan:</label>
-							<select name="penjualan_id" class="form-control" placeholder="Cari..." required>
+							<label>No Faktur pembelian:</label>
+							<select name="pembelian_id" class="form-control" placeholder="Cari..." required>
 								@if(isset($m))
 								<option value="{{ $m->id }}">{{ $m->no_faktur }}</option>
 								@endif
@@ -28,11 +28,11 @@
 						</div>
 
 						<div id="vue-wrapper" class="col-sm-12">
-							<div v-if="penjualan" class="row">
+							<div v-if="pembelian" class="row">
 
 								<div class="form-group col-sm-12" id="preview">
-									<label>No Faktur Penjualan:</label>
-									<p><b>@{{ penjualan.no_faktur }}</b></p>
+									<label>No Faktur pembelian:</label>
+									<p><b>@{{ pembelian.no_faktur }}</b></p>
 								</div>
 
 								<div class="form-group col-sm-12">
@@ -49,7 +49,7 @@
 											</tr>
 										</thead>
 										<tbody>
-											<tr v-for="(detail, key) in penjualan.penjualan_detail" :key="key">
+											<tr v-for="(detail, key) in pembelian.pembelian_detail" :key="key">
 												<td>@{{ key + 1 }}</td>
 												<td>@{{ detail.part_no }}</td>
 												<td>@{{ detail.nama }}</td>
@@ -86,14 +86,14 @@
 
 								<div class="form-group col-sm-3">
 									<label>No Pelunasan</label>
-									<input name="no_pelunasan" :value="piutang ? '{{ $no_pelunasan }}' : ''" type="text" class="form-control" readonly>
+									<input name="no_pelunasan" :value="hutang ? '{{ $no_pelunasan }}' : ''" type="text" class="form-control" readonly>
 								</div>
 								<div class="form-group col-sm-3">
-									<label>Piutang</label>
-									<input name="piutang" :value="piutang | nf" type="text" class="form-control" readonly>
+									<label>hutang</label>
+									<input name="hutang" :value="hutang | nf" type="text" class="form-control" readonly>
 								</div>
 								<div class="form-group col-sm-3">
-									<label>Sisa Piutang</label>
+									<label>Sisa hutang</label>
 									<input name="sisa" :value="sisa | nf" type="text" class="form-control" readonly>
 								</div>
 								<div class="form-group col-sm-3">
@@ -137,7 +137,7 @@
 	var vm = new Vue({
 		el: '#vue-wrapper',
 		data: {
-			penjualan: false,
+			pembelian: false,
 			pembayaran: null,
 			total: null,
 			retur: [],
@@ -148,43 +148,43 @@
 			sisa() {
 				var res = null;
 
-				if (this.total && this.piutang) { res = this.piutang - this.total; }
+				if (this.total && this.hutang) { res = this.hutang - this.total; }
 				
-				if (res == null)		{ return this.piutang; } 
+				if (res == null)		{ return this.hutang; } 
 				else if(res > 0)		{ return res; } 
 				else 								{ return '0'; }
 			},
-			piutang() {
-				var x = this.penjualan.pembayaran_piutang;
+			hutang() {
+				var x = this.pembelian.pembayaran_hutang;
 
 				@if($e) 
 					if (x.length > 1) {
 						return x[x.length - 2].sisa;
 					} else {
-						return this.penjualan.hutang;
+						return this.pembelian.hutang;
 					}
 				@endif
 
 				if (x.length > 0) {
 					return x[x.length - 1].sisa;
 				}
-				return this.penjualan.hutang;
+				return this.pembelian.hutang;
 			},
 			dilunaskan() {
-				if (this.total > this.piutang) 						{ return this.piutang; } 
-				else if (this.piutang - this.total > 0) 	{ return this.total; } 
+				if (this.total > this.hutang) 						{ return this.hutang; } 
+				else if (this.hutang - this.total > 0) 	{ return this.total; } 
 				else 																			{ return '0'; }
 			},
 			dikembalikan() {
-				var b = this.total - this.piutang; 
+				var b = this.total - this.hutang; 
 				return (b > 0) ? b : '0';
 			}
 		},
 		methods: {
 			getData(id){
 				var self = this;
-				axios.get(`/penjualan/api/full?id=${id}`).then(function(res) {
-					self.penjualan = res.data;
+				axios.get(`/pembelian/api/full?id=${id}`).then(function(res) {
+					self.pembelian = res.data;
 				});
 			},
 			getTotal() {
@@ -199,7 +199,7 @@
 				this.total =  res;
 			},
 			getBiaya(id) {
-				var harga = this.penjualan.penjualan_detail.filter(function(d) {
+				var harga = this.pembelian.pembelian_detail.filter(function(d) {
 					return d.id == id;
 				})[0].harga;
 
@@ -217,20 +217,20 @@
 			@if($e)
 				this.total = `{{ $model->dikembalikan + $model->dilunaskan }}`
 				this.pembayaran = `{{ $model->pembayaran }}`;
-				console.log('{{ $model->penjualan->no_faktur }}')
-				@foreach($model->retur_penjualan_detail()->get() as $d)
-					this.retur[{{ $d->penjualan_detail_id }}] = '{{ $d->qty }}';
-					this.biaya[{{ $d->penjualan_detail_id }}] = '{{ $d->biaya }}';
-					this.keterangan[{{ $d->penjualan_detail_id }}] = '{{ $d->keterangan }}';
+				console.log('{{ $model->pembelian->no_faktur }}')
+				@foreach($model->retur_pembelian_detail()->get() as $d)
+					this.retur[{{ $d->pembelian_detail_id }}] = '{{ $d->qty }}';
+					this.biaya[{{ $d->pembelian_detail_id }}] = '{{ $d->biaya }}';
+					this.keterangan[{{ $d->pembelian_detail_id }}] = '{{ $d->keterangan }}';
 				@endforeach
 			@endif
 		}
 	});
 
-	$('select[name=penjualan_id]').select2({
+	$('select[name=pembelian_id]').select2({
 	  // minimumInputLength: 3,
 	  ajax: {
-	    url: '{{ url("penjualan/api/select") }}',
+	    url: '{{ url("pembelian/api/select") }}',
 	    data: function (params) {
 	      return {
 	        search: params.term,
@@ -270,7 +270,7 @@
 
 	@if(isset($m))
 	vm.getData('{{ $m->id }}');
-	$('select[name=penjualan_id]').trigger('change');
+	$('select[name=pembelian_id]').trigger('change');
 	@endif
 </script>
 @endsection

@@ -31,6 +31,12 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::get('customer/{id}/deactivate', 'CustomerController@deactivate')->name('customer.deactivate');
 	Route::resource('customer', 'CustomerController');
 
+	Route::get('supplier/api', 'SupplierController@api')->name('supplier.api');
+	Route::get('supplier/data', 'SupplierController@data')->name('supplier.data');
+	Route::get('supplier/{id}/activate', 'SupplierController@activate')->name('supplier.activate');
+	Route::get('supplier/{id}/deactivate', 'SupplierController@deactivate')->name('supplier.deactivate');
+	Route::resource('supplier', 'SupplierController');
+
 	Route::get('hak-akses/data', 'HakAksesController@data')->name('hak-akses.data');
 	Route::resource('/hak-akses', 'HakAksesController');
 
@@ -53,14 +59,27 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::get('penjualan/data', 'PenjualanController@data')->name('penjualan.data');
 	Route::resource('/penjualan', 'PenjualanController');
 
+	Route::get('pembelian/api/{type?}', 'PembelianController@api')->name('pembelian.api');
+	Route::get('pembelian/data', 'PembelianController@data')->name('pembelian.data');
+	Route::resource('/pembelian', 'PembelianController');
+
 	Route::get('piutang/data', 'PiutangController@data')->name('piutang.data');
 	Route::resource('/piutang', 'PiutangController');
+
+	Route::get('hutang/data', 'HutangController@data')->name('hutang.data');
+	Route::resource('/hutang', 'HutangController');
 
 	Route::get('/pembayaran-piutang/data', 'PembayaranPiutangController@data')->name('pembayaran-piutang.data');
 	Route::resource('/pembayaran-piutang', 'PembayaranPiutangController');
 
+	Route::get('/pembayaran-hutang/data', 'PembayaranHutangController@data')->name('pembayaran-hutang.data');
+	Route::resource('/pembayaran-hutang', 'PembayaranHutangController');
+
 	Route::get('retur-penjualan/data', 'ReturPenjualanController@data')->name('retur-penjualan.data');
 	Route::resource('/retur-penjualan', 'ReturPenjualanController');
+
+	Route::get('retur-pembelian/data', 'ReturPembelianController@data')->name('retur-pembelian.data');
+	Route::resource('/retur-pembelian', 'ReturPembelianController');
 
 	// testing routes
 	Route::get('/beranda', 'BerandaController@index')->name('beranda.index');
@@ -68,11 +87,6 @@ Route::group(['middleware' => ['auth']], function () {
 
 	Route::get('/barang/multiedit', 'BarangController@multiedit');
 
-	Route::resource('/pembelian', 'PembelianController');
-	Route::resource('/hutang', 'HutangController');
-	Route::resource('/pembayaran-hutang', 'PembayaranHutangController');
-	Route::resource('/supplier', 'SupplierController');
-	Route::resource('/barang', 'BarangController');
 	Route::resource('/karyawan', 'KaryawanController');
 	// Route::resource('/pengguna', 'PenggunaController');
 	Route::resource('/penjual', 'PenjualController');

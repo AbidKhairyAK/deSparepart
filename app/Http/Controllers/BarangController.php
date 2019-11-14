@@ -32,7 +32,7 @@ class BarangController extends Controller
 
         $data = DB::table('barang')
             ->rightJoin('satuan', 'satuan.id', '=', 'barang.satuan_id')
-            ->select(DB::raw("CONCAT(part_no,' - ',barang.nama,' - merk ',merk,' - ',satuan.nama) as name, barang.id, harga_jual"));
+            ->select(DB::raw("CONCAT(part_no,' - ',barang.nama,' - merk ',merk,' - ',satuan.nama) as name, barang.id, harga_jual, harga_beli"));
 
         if (!empty($search)) {
             $data = $data->where('barang.nama', 'like', "%$search%")

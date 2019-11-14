@@ -26,7 +26,7 @@ class SupplierTableSeeder extends Seeder
                 "npwp" => rand(11, 99).'.'.rand(111, 999).'.'.rand(111, 999).'.'.rand(1, 9).'-'.rand(111, 999).'.'."000",
         		"pkp" => rand(1,0),
         		"kategori" => $faker->randomElement(['importir', 'dealer']),
-                'logo' => '000000000'.rand(1,2).'.jpg',
+                'tempo_kredit' => rand(10, 30),
         		"created_at" => now(),
         		"updated_at" => now(),
         	];

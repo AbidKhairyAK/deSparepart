@@ -1,15 +1,33 @@
 @extends('app')
 
-@section('title', 'Hutang')
+@section('title', $title)
 
 @section('content')
 
-@include('components.hutang.table')
+@include('components.'.$main.'.table')
+@include('layouts.multi')
 
 @endsection
 
 @section('script')
+<script src="/js/multi.js"></script>
 <script type="text/javascript">
-	$('.table').DataTable();
+
+	var table;
+	$(document).ready(function() {
+		table = $('.table').DataTable({
+	        processing: true,
+	        serverSide: true,
+	        ajax: '{{$ajax}}',
+            order: [[1,'asc']],
+	        columns: [
+            	{ data: 'supplier' },
+            	{ data: 'total_hutang' },
+            	{ data: 'jatuh_tempo_terdekat' },
+	            { data: 'transaksi' },
+	            { data: 'action', searchable: false, orderable: false }
+	        ],
+	    });
+	});
 </script>
 @endsection

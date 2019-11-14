@@ -28,9 +28,15 @@ class DatabaseSeeder extends Seeder
         $this->call(BarangTableSeeder::class);
         $this->call(PenjualanDetailTableSeeder::class);
         $this->call(PenjualanTableSeeder::class);
+        $this->call(PembelianDetailTableSeeder::class);
+        $this->call(PembelianTableSeeder::class);
         $this->call(PembayaranPiutangTableSeeder::class);
+        $this->call(PembayaranHutangTableSeeder::class);
         $this->call(ReturPenjualanDetailTableSeeder::class);
         $this->call(ReturPenjualanTableSeeder::class);
+        $this->call(ReturPembelianDetailTableSeeder::class);
+        $this->call(ReturPembelianTableSeeder::class);
+
 
     	DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }

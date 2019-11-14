@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePenjualanDetailTable extends Migration
+class CreatePembelianDetailTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreatePenjualanDetailTable extends Migration
      */
     public function up()
     {
-        Schema::create('penjualan_detail', function (Blueprint $table) {
+        Schema::create('pembelian_detail', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('penjualan_id');
+            $table->unsignedBigInteger('pembelian_id');
             $table->unsignedBigInteger('barang_id');
             $table->string('part_no', 100);
             $table->string('nama');
@@ -23,6 +23,7 @@ class CreatePenjualanDetailTable extends Migration
             $table->string('satuan');
             $table->integer('harga');
             $table->unsignedTinyInteger('diskon');
+            $table->unsignedTinyInteger('ppn');
             $table->integer('subtotal');
             $table->timestamps();
         });
@@ -35,6 +36,6 @@ class CreatePenjualanDetailTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('penjualan_detail');
+        Schema::dropIfExists('pembelian_detail');
     }
 }
