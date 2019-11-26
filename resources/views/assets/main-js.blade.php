@@ -1,3 +1,5 @@
+<!-- Laravel Main JS -->
+<script src="/js/app.js"></script>
 <!-- JQuery -->
 <script src="/sb-admin/vendor/jquery/jquery.min.js"></script>
 <!-- Bootstrap core JavaScript-->
@@ -7,7 +9,9 @@
 <!-- datatables -->
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/datatables.min.js"></script>
 <!-- Chartjs -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+<!-- select2 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
 <!-- Custom scripts for all pages-->
 <script src="/sb-admin/js/sb-admin-2.min.js"></script>
 <script type="text/javascript">

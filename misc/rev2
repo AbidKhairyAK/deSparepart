@@ -1,0 +1,11 @@
+rebuild form penjualan pake full vue
+
+fitur
+- setiap barang mempunyai harga jual/beli standar
+- setiap barang memiliki harga jual/beli yang relatif saat dikolom transaksi
+- daftar barang dengan harga berbeda akan ditampilkan didalam detail barang
+	- no_faktur_pembelian
+	- qty
+	- stok
+	- tgl_beli
+- perubahan stok saat penjualan akan dilakukan pada barang yang paling awal dibeli
