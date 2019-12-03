@@ -25,6 +25,8 @@
     },
     "dependencies": {
         "select2": "^4.0.12",
-        "v-select2-component": "^0.4.1"
+        "v-money": "^0.8.1",
+        "v-select2-component": "^0.4.1",
+        "vue2-datepicker": "^3.2.0"
     }
 }

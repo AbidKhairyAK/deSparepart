@@ -195,7 +195,6 @@ class PenjualanController extends Controller
 
     public function create()
     {
-        // terakhir tadi malem disini
         $prevData = $this->table->max('no_faktur');
         $newNo = (!is_null($prevData) && substr($prevData, 10) != 99999) ? ( intval("1".substr($prevData, 10)) + 1 ) : null;
         $data['no_faktur'] = "NJA-" . date('y/m/') . (!is_null($newNo) ? substr($newNo, 1) : "00001");
@@ -207,22 +206,9 @@ class PenjualanController extends Controller
         return view($this->folder.'.form', $data);
     }
 
-    public function test()
-    {
-        $prevData = $this->table->max('no_faktur');
-        $newNo = (!is_null($prevData) && substr($prevData, 10) != 99999) ? ( intval("1".substr($prevData, 10)) + 1 ) : null;
-        $data['no_faktur'] = "NJA-" . date('y/m/') . (!is_null($newNo) ? substr($newNo, 1) : "00001");
-
-        $data['main'] = $this->main;
-        $data['title'] = $this->title;
-        $data['action'] = route($this->uri.'.store');;
-        $data['url'] = route($this->uri.'.index');
-        return view($this->folder.'.test', $data);
-    }
-
     public function edit($id)
     {
-        $data['m'] = $this->table->find($id);
+        $data['id'] = $id;
         $data['main'] = $this->main;
         $data['title'] = $this->title;
         $data['action'] = route($this->uri.'.update', $id);
