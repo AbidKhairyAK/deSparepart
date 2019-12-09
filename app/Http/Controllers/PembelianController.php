@@ -204,7 +204,7 @@ class PembelianController extends Controller
 
     public function edit($id)
     {
-        $data['m'] = $this->table->find($id);
+        $data['id'] = $id;
         $data['main'] = $this->main;
         $data['title'] = $this->title;
         $data['action'] = route($this->uri.'.update', $id);
@@ -282,16 +282,18 @@ class PembelianController extends Controller
                     ->where('barang.id', $barang_id)->first();
 
             DB::table('pembelian_detail')->insert([
-                'pembelian_id' => $id,
-                'barang_id' => $barang_id,
-                'part_no' => $model->part_no,
-                'nama' => $model->nama,
-                'qty' => $request->qty[$key],
-                'satuan' => $model->satuan,
-                'diskon' => $request->diskon[$key],
-                'ppn' => $request->ppn[$key],
-                'harga' => str_replace(".", "", $request->harga[$key]),
-                'subtotal' => str_replace(".", "", $request->subtotal[$key]),
+                'pembelian_id'  => $id,
+                'barang_id'     => $barang_id,
+                'part_no'       => $model->part_no,
+                'nama'          => $model->nama,
+                'qty'           => $request->qty[$key],
+                'stok'          => $request->qty[$key],
+                'satuan'        => $model->satuan,
+                'diskon'        => $request->diskon[$key],
+                'ppn'           => $request->ppn[$key],
+                'harga_asli'    => $request->harga_asli[$key],
+                'harga'         => str_replace(".", "", $request->harga[$key]),
+                'subtotal'      => str_replace(".", "", $request->subtotal[$key]),
             ]);
             DB::table('barang')
                 ->where('id', $barang_id)

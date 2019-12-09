@@ -21,8 +21,9 @@ class CreatePenjualanDetailTable extends Migration
             $table->string('nama');
             $table->integer('qty');
             $table->string('satuan');
+            $table->integer('harga_asli');
             $table->integer('harga');
-            $table->unsignedTinyInteger('diskon');
+            $table->tinyInteger('diskon')->default(0);
             $table->integer('subtotal');
             $table->timestamps();
         });

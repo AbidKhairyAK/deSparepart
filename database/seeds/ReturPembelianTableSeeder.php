@@ -23,7 +23,7 @@ class ReturPembelianTableSeeder extends Seeder
         foreach ($p as $key => $pd) {
             $pembayaran = $faker->randomElement(['tunai', 'giro', 'kredit', 'transfer']);
             $data[] = [
-                "user_id" => 1,
+                "user_id" => rand(1, 4),
                 "pembelian_id" => $pd->pembelian_detail->pembelian_id,
                 "pembayaran_hutang_id" => null,
                 "pembayaran" => $pembayaran,

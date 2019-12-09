@@ -150,6 +150,15 @@ class BarangController extends Controller
             ->make(true);
     }
 
+    public function show($id)
+    {
+        $data['model'] = $this->table->find($id);
+        $data['main'] = $this->main;
+        $data['title'] = $this->title;
+        $data['url'] = route($this->uri.'.index');
+        return view($this->folder.'.detail',$data);
+    }
+
     public function create(FormBuilder $formBuilder)
     {
         $data['main'] = $this->main;

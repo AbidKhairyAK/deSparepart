@@ -19,7 +19,7 @@ class ReturPenjualanDetailTableSeeder extends Seeder
 
         foreach ($ps as $key => $p) {
             for ($i=1; $i <= 2; $i++) { 
-                $pd = $p->penjualan_detail()->get()[$i + rand(1, 9)];
+                $pd = $p->penjualan_detail()->get()[$i * 3];
                 $qty = rand(1, $pd->qty);
 
                 $data[] = [

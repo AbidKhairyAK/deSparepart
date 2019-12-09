@@ -1,10 +1,10 @@
 <template>
 <div class="card shadow mb-4">
 	<div class="card-header py-3 d-flex justify-content-between align-items-center">
-		<h6 class="m-0 font-weight-bold text-secondary">Form Penjualan Barang</h6>
+		<h6 class="m-0 font-weight-bold text-secondary">Form Pembelian Barang</h6>
 		<div>
 			<a href="#" class="btn btn-sm btn-primary">
-				<i class="fas fa-clipboard-list"></i> <b>Daftar Penjualan</b>
+				<i class="fas fa-clipboard-list"></i> <b>Daftar Pembelian</b>
 			</a>
 			<a href="#" class="btn btn-sm btn-warning">
 				<i class="fas fa-cubes"></i> <b>Daftar Barang</b>
@@ -19,12 +19,12 @@
 			<div class="d-flex justify-content-between mb-3">
 				<label>
 					<b>NO FAKTUR :</b>
-					<input name="no_faktur" type="text" class="form-control d-inline-block" :value="no_faktur ? no_faktur : form.no_faktur" style="width: auto;" required>
+					<input name="no_faktur" type="text" class="form-control d-inline-block" v-model="form.no_faktur" style="width: auto;" required>
 				</label>
 
 				<label>
-					<b>NO PO : </b>
-					<input name="no_po" type="text" class="form-control d-inline-block" :value="form.no_po" style="width: auto;">
+					<b>NO PO :</b>
+					<input name="no_po" type="text" class="form-control d-inline-block" v-model="form.no_po" style="width: auto;">
 				</label>
 
 				<label>
@@ -39,7 +39,8 @@
 						<thead class="thead-dark">
 							<tr>
 								<th width="150">Qty</th>
-								<th width="150">Diskon %</th>
+								<th width="120">Diskon %</th>
+								<th width="120">PPN %</th>
 								<th>Harga Satuan</th>
 								<th>Jumlah</th>
 								<th>*</th>
@@ -49,7 +50,7 @@
 							
 							<template v-for="(barang, i) in form.barang">
 								<tr class="barang">
-									<td colspan="4">
+									<td colspan="5">
 										<select-custom
 										  name="barang_id[]"
 										  :api="barang_api"
@@ -70,6 +71,9 @@
 									</td>
 									<td>
 										<input @input="changeDetailBarang(i)" v-model="barang.diskon" name="diskon[]" type="number" class="form-control form-control-sm" required>
+									</td>
+									<td>
+										<input @input="changeDetailBarang(i)" v-model="barang.ppn" name="ppn[]" type="number" class="form-control form-control-sm" required>
 									</td>
 									<td @dblclick="barang.readonly = false">
 										<money v-bind="moneyconf" onkeyup="changeHargaBarang(this)" v-model="barang.harga" name="harga[]" type="text" :class="'form-control form-control-sm ' + i" :readonly="barang.readonly" required></money>
@@ -96,50 +100,50 @@
 					<div class="form-group">
 						<div class="custom-control custom-radio custom-control-inline">
 							<input v-model="form.custype" type="radio" class="custom-control-input" id="p1" name="p" value="p1" checked>
-							<label class="custom-control-label" for="p1">Customer Lama</label>
+							<label class="custom-control-label" for="p1">supplier Lama</label>
 						</div>
 						<div class="custom-control custom-radio custom-control-inline">
 							<input v-model="form.custype" type="radio" class="custom-control-input" id="p0" name="p" value="p0">
-							<label class="custom-control-label" for="p0">Customer Baru</label>
+							<label class="custom-control-label" for="p0">supplier Baru</label>
 						</div>
 					</div>
 
 					<div v-if="form.custype == 'p1'">
 						<div class="row mb-3">
-							<span class="col-sm-3"><b>Customer:</b></span>
+							<span class="col-sm-3"><b>supplier:</b></span>
 							<span class="col-sm-9">
 							  <select-custom
 							  	v-if="form.cusready"
-							    name="customer_id"
-							    :api="customer_api"
-							    @input="changeCustomer"
-							    :pre_value="form.customer ? form.customer.id : false"
-							    :pre_text="form.customer ? form.customer.kode+' - '+form.customer.nama : false"
+							    name="supplier_id"
+							    :api="supplier_api"
+							    @input="changeSupplier"
+							    :pre_value="form.supplier ? form.supplier.id : false"
+							    :pre_text="form.supplier ? form.supplier.kode+' - '+form.supplier.perusahaan : false"
 							  ></select-custom>
 							</span>
 						</div>
 						<div class="row mb-3">
 							<span class="col-sm-3"><b>Alamat:</b></span>
-							<span class="col-sm-9">{{ form.customer ? form.customer.alamat : '-' }}</span>
+							<span class="col-sm-9">{{ form.supplier ? form.supplier.alamat : '-' }}</span>
 						</div>
 						<div class="row mb-3">
 							<span class="col-sm-3"><b>Kontak:</b></span>
-							<span class="col-sm-9">{{ form.customer ? (form.customer.kontak_customer.find(c => c.tipe == 'hp') ? form.customer.kontak_customer.find(c => c.tipe == 'hp').kontak : '') : '-' }}</span>
+							<span class="col-sm-9">{{ form.supplier ? (form.supplier.kontak_supplier.find(c => c.tipe == 'hp') ? form.supplier.kontak_supplier.find(c => c.tipe == 'hp').kontak : '') : '-' }}</span>
 						</div>
 					</div>
 
 					<div v-if="form.custype == 'p0'">
 						<div class="row mb-3">
 							<span class="col-sm-3"><b>Nama:</b></span>
-							<span class="col-sm-9"><input name="customer_nama" type="text" class="form-control form-control-sm" required></span>
+							<span class="col-sm-9"><input name="supplier_nama" type="text" class="form-control form-control-sm" required></span>
 						</div>
 						<div class="row mb-3">
 							<span class="col-sm-3"><b>Alamat:</b></span>
-							<span class="col-sm-9"><input name="customer_alamat" type="text" class="form-control form-control-sm"></span>
+							<span class="col-sm-9"><input name="supplier_alamat" type="text" class="form-control form-control-sm"></span>
 						</div>
 						<div class="row mb-3">
 							<span class="col-sm-3"><b>No HP:</b></span>
-							<span class="col-sm-9"><input name="customer_hp" type="text" class="form-control form-control-sm"></span>
+							<span class="col-sm-9"><input name="supplier_hp" type="text" class="form-control form-control-sm"></span>
 						</div>
 					</div>
 
@@ -198,18 +202,18 @@
 						<a href="#" class="px-5 btn btn-danger">
 							<i class="fas fa-times"></i> Batal
 						</a>
-						<button type="button" id="draft" class="px-5 btn btn-warning">
+						<button @click="submitMode(0)" class="px-5 btn btn-warning">
 							<i class="fas fa-archive"></i> Draft
 						</button>
-						<button class="px-5 btn btn-primary">
-							<i class="fas fa-save"></i> Simpan - Publish {{ e ? '' : '- Cetak' }}
+						<button @click="submitMode(1)" class="px-5 btn btn-primary">
+							<i class="fas fa-save"></i> Simpan - Publish
 						</button>
 					</div>
 				</div>
 
 			</div>
 			
-			<input type="hidden" name="publish" value="1">
+			<input type="hidden" name="publish" v-model="mode">
 		</form>
 	</div>
 </div>
@@ -223,7 +227,7 @@
 
 	export default {
 		components: {SelectCustom, Money, DatePicker},
-		props: ['barang_api', 'customer_api', 'form_api', 'no_faktur', 'url', 'date', 'id', 'next_tempo'],
+		props: ['barang_api', 'supplier_api', 'form_api', 'url', 'date', 'id', 'next_tempo'],
 		data: () => ({
 			form: {
 				barang: [],
@@ -235,11 +239,12 @@
 				dibayarkan: 0,
 				kembalian: 0,
 				hutang: 0,
-				customer: null,
+				supplier: null,
 				cusready: false,
 				custype: 'p1',
 				jatuh_tempo: Date.now()
 			},
+			mode: 1,
 			barang: [],
 			barangopt: [],
 			moneyconf: {decimal: ',', thousands: '.', prefix: '', precision: 0, masked: false},
@@ -258,6 +263,9 @@
 			}
 		},
 		methods: {
+			submitMode(val) {
+				this.mode = val;
+			},
 			changePembayaran() {
 				if (this.form.pembayaran == 'kredit') {
 					this.form.jatuh_tempo = new Date(this.next_tempo);
@@ -265,7 +273,7 @@
 			},
 			addBarang() {
 				this.form.barang.push(
-					{ id: null, name: null, qty: 0, diskon: 0, harga: 0, subtotal: 0, harga_asli: 0, readonly: true }
+					{ id: null, name: null, qty: 0, diskon: 0, ppn: 0, harga: 0, subtotal: 0, harga_asli: 0, readonly: true }
 				);
 			},
 			removeBarang(i) {
@@ -278,15 +286,15 @@
 					this.barang = res.data;
 				});
 			},
-			changeCustomer(id) {
-				axios.get(`${this.url}/customer/api?id=${id}`)
+			changeSupplier(id) {
+				axios.get(`${this.url}/supplier/api?id=${id}`)
 				.then(res => {
-					this.form.customer = res.data;
+					this.form.supplier = res.data;
 					this.form.cusready = true;
 				})
 			},
 			changeBarang(index, id) {
-				let harga = this.barang.find(b => b.id == id).harga_jual;
+				let harga = this.barang.find(b => b.id == id).harga_beli;
 				let barang = this.form.barang[index];
 				barang.harga_asli = harga;
 				barang.harga = harga;
@@ -295,7 +303,8 @@
 			},
 			changeDetailBarang(index) {
 				let b = this.form.barang[index];
-				b.harga = b.harga_asli - (b.harga_asli * b.diskon / 100);
+				let harga_ppn = b.harga_asli + (b.harga_asli * b.ppn / 100);
+				b.harga = harga_ppn - (harga_ppn * b.diskon / 100);
 				b.subtotal = b.harga * b.qty;
 				this.countTotal();
 			},
@@ -304,6 +313,7 @@
 				let index = classList[classList.length - 1];
 				let b = this.form.barang[index];
 				b.diskon = 0;
+				b.ppn = 0;
 				b.harga_asli = b.harga;
 				this.changeDetailBarang(index);
 			},
@@ -311,7 +321,7 @@
 				this.form.total = this.form.barang.reduce((total, cur) => ({subtotal : total.subtotal + cur.subtotal})).subtotal;
 			},
 			onEditState() {
-				axios.get(`${this.url}/penjualan/api/full?id=${this.id}`)
+				axios.get(`${this.url}/pembelian/api/full?id=${this.id}`)
 				.then((res) => {
 					let data = res.data;
 					this.form.no_faktur = data.no_faktur;
@@ -321,20 +331,21 @@
 					this.form.dibayarkan = data.dibayarkan;
 					this.form.jatuh_tempo = data.jatuh_tempo ? new Date(data.jatuh_tempo) : Date.now();
 					this.form.barang.splice(0, 1);
-					data.penjualan_detail.forEach((pd, i) => {
+					data.pembelian_detail.forEach((pd, i) => {
 						this.form.barang.push({
 							id: pd.barang_id,
 							name: this.barangopt.find(bopt => pd.barang_id == bopt.id).name,
 							qty: pd.qty,
 							diskon: pd.diskon,
-							harga: pd.harga,
+							ppn: pd.ppn,
 							harga_asli: pd.harga_asli,
+							harga: pd.harga,
 							subtotal: pd.subtotal,
 							readonly: true 
 						});
 						this.changeDetailBarang(i);
 					});
-					this.changeCustomer(data.customer_id);
+					this.changeSupplier(data.supplier_id);
 				});
 			},
 			onOpenSelect(item) {

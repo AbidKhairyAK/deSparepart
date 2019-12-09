@@ -12,6 +12,8 @@ class Barang extends Model
     	'id', 'user_id', 'komponen_id', 'kendaraan_id', 'part_no', 'nama', 'merk', 'stok', 'limit', 'satuan_id', 'harga_beli', 'harga_jual', 'keterangan', 'gambar'
     ];
 
+    protected $with = ['user', 'komponen', 'satuan', 'kendaraan', 'pembelian_detail'];
+
     public function user()
     {
     	return $this->belongsTo(User::class);
@@ -30,6 +32,11 @@ class Barang extends Model
     public function kendaraan()
     {
     	return $this->belongsTo(Kendaraan::class);
+    }
+
+    public function pembelian_detail()
+    {
+        return $this->hasMany(PembelianDetail::class);
     }
 
     public function setHargaBeliAttribute($value)

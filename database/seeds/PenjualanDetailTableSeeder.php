@@ -20,6 +20,7 @@ class PenjualanDetailTableSeeder extends Seeder
             $qty = rand(1, 15);
         	$diskon = $faker->boolean(20) ? rand(10, 70) : 0;
         	$tbl = Barang::find(rand(1, 19));
+            $harga_jual = $tbl->harga_jual - ($tbl->harga_jual * $diskon / 100);
 
         	$data[] = [
         		"penjualan_id" => ceil($i/15),
@@ -28,9 +29,10 @@ class PenjualanDetailTableSeeder extends Seeder
         		"nama" => $tbl->nama,
         		"qty" => $qty,
                 "satuan" => $tbl->satuan->nama,
-                "harga" => $tbl->harga_jual,
+                "harga_asli" => $tbl->harga_jual,
+                "harga" => $harga_jual,
         		"diskon" => $diskon,
-        		"subtotal" => ($tbl->harga_jual - ($tbl->harga_jual * $diskon / 100)) * $qty,
+        		"subtotal" => $harga_jual * $qty,
         		"created_at" => now(),
         		"updated_at" => now(),
         	];
