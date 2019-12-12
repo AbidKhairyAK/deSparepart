@@ -295,8 +295,9 @@ class PenjualanController extends Controller
 		if ($update) {
 			$pds = DB::table('penjualan_detail')->where('penjualan_id', $id);
 			foreach ($pds->get() as $pd) {
-				$cur = DB::table('barang')->where('id', $pd->barang_id)->first();
-				DB::table('barang')->where('id', $pd->barang_id)->update(['stok' => ($cur->stok + $pd->qty)]);
+				$cur = Barang::find($pd->barang_id);
+				$cur->update(['stok' => ($cur->stok + $pd->qty)]);
+				$this->restoreDecreaseBarang($cur, $pd->barang_id, $pd->qty);
 			}
 			$pds->delete();
 		}
@@ -320,27 +321,54 @@ class PenjualanController extends Controller
 				'subtotal'      => str_replace(".", "", $request->subtotal[$key]),
 			]);
 
-			$this->decreaseBarang($barang_id, $request->qty[$key]);
+			$b = Barang::find($barang_id);
+			$b->update(['stok' => $b->stok - $request->qty[$key]]);
+
+			$this->decreaseBarang($b, $barang_id, $request->qty[$key]);
 		}
 	}
 
-	public function decreaseBarang($id, $qty)
+	public function decreaseBarang($b, $id, $qty)
 	{
-		$b = Barang::find($id);
-
 		$pds = $b->pembelian_detail()->where('stok', '>', 0)->oldest();
 		$pd = $pds->first();
 
-		if (!empty($pd) && $pd->stok > $qty) {
+		if (!empty($pd) && $pd->stok >= $qty) {
 			$pds->update(['stok' => $pd->stok - $qty]);
-		} elseif (!empty($pd) && $pd->stok > 0) {
+		} elseif (!empty($pd)) {
 			$pds->update(['stok' => 0]);
-			$this->decreaseBarang($id, $qty - $pd->stok);
+			$this->decreaseBarang($b, $id, $qty - $pd->stok);
 			return;
 		}
+	}
 
-		// invalid code ================================================
-		$b->update(['stok' => $b->stok - $qty]);
+	public function restoreDecreaseBarang($b, $id, $qty)
+	{
+		// i hope this will work :(
+		$apds = $b->pembelian_detail()->where('stok', '>', 0)->oldest();
+		$apd = $apds->first();
+
+		$npds = $b->pembelian_detail()->where('stok', 0)->latest();
+		$npd = $npds->first();
+
+		if (!empty($apd) && $apd->qty > $apd->stok) {
+			$total = $apd->stok + $qty;
+			if ($apd->qty >= $total) {
+				$apds->update(['stok' => $total]);
+			} else {
+				$apds->update(['stok' => $apd->qty]);
+				$this->restoreDecreaseBarang($b, $id, $total - $apd->qty);
+				return;
+			}
+		} elseif (!empty($npd)) {
+			if ($npd->qty >= $qty) {
+				$npds->update(['stok' => $qty]);
+			} else {
+				$npds->update(['stok' => $npd->qty]);
+				$this->restoreDecreaseBarang($b, $id, $qty - $npd->qty);
+				return;
+			}
+		}
 	}
 
 	public function cetak($id)
