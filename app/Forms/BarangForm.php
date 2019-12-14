@@ -13,8 +13,7 @@ class BarangForm extends Form
         $m = $this->getModel();
         $this
             ->add('part_no', 'text', [
-                'attr' => ['required' => true],
-                'value' => $m ? $m->part_no : time(),
+                'value' => $m ? $m->part_no : null,
             ])
             ->add('komponen_id', 'choice', [
                 'label' => 'Komponen / Part',
@@ -60,12 +59,12 @@ class BarangForm extends Form
                 'expanded' => false,
             ])
             ->add('harga_beli', 'text', [
-                'label' => 'Harga Beli /barang',
+                'label' => 'Harga Beli Standar Per-barang',
                 'attr' => ['required' => true],
                 'wrapper' => ['class' => 'form-group col-sm-6'],
             ])
             ->add('harga_jual', 'text', [
-                'label' => 'Harga Jual /barang',
+                'label' => 'Harga Jual Standar Per-barang',
                 'attr' => ['required' => true],
                 'wrapper' => ['class' => 'form-group col-sm-6'],
             ])

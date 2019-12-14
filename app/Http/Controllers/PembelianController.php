@@ -287,11 +287,13 @@ class PembelianController extends Controller
                     ->select('part_no', 'barang.nama', 'satuan.nama as satuan', 'stok')
                     ->where('barang.id', $barang_id)->first();
 
-            $prev = null;
+            $stok = $request->qty[$key];
+            $created_at = isset($created_time) && array_key_exists($barang_id, $created_time) ? $created_time[$barang_id] : now();
+
             if (isset($save)) {
                 foreach($save as $s) {
                     if ($s->barang_id == $barang_id) {
-                        $prev = $s;
+                        $stok = $s->stok;
                     }
                 }
             }
@@ -302,14 +304,14 @@ class PembelianController extends Controller
                 'part_no'       => $model->part_no,
                 'nama'          => $model->nama,
                 'qty'           => $request->qty[$key],
-                'stok'          => $prev ? $prev->stok : $request->qty[$key],
+                'stok'          => $stok ? $prev->stok : ,
                 'satuan'        => $model->satuan,
                 'diskon'        => $request->diskon[$key],
                 'ppn'           => $request->ppn[$key],
                 'harga_asli'    => $request->harga_asli[$key],
                 'harga'         => str_replace(".", "", $request->harga[$key]),
                 'subtotal'      => str_replace(".", "", $request->subtotal[$key]),
-                'created_at'    => array_key_exists($barang_id, $created_time) ? $created_time[$barang_id] : now(),
+                'created_at'    => $created_at,
                 'updated_at'    => now(),
             ]);
             DB::table('barang')
