@@ -304,7 +304,7 @@ class PembelianController extends Controller
                 'part_no'       => $model->part_no,
                 'nama'          => $model->nama,
                 'qty'           => $request->qty[$key],
-                'stok'          => $stok ? $prev->stok : ,
+                'stok'          => $stok,
                 'satuan'        => $model->satuan,
                 'diskon'        => $request->diskon[$key],
                 'ppn'           => $request->ppn[$key],
