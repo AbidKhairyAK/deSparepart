@@ -267,7 +267,13 @@ class PembelianController extends Controller
     public function detailPembelian($request, $id, $update=false)
     {
         if ($update) {
+
             $pds = DB::table('pembelian_detail')->where('pembelian_id', $id);
+
+            $toSave = clone $pds;
+            $created_time = $toSave->pluck('created_at', 'barang_id');
+            $save = $toSave->whereColumn('qty', '>', 'stok')->get();
+
             foreach ($pds->get() as $pd) {
                 $cur = DB::table('barang')->where('id', $pd->barang_id)->first();
                 DB::table('barang')->where('id', $pd->barang_id)->update(['stok' => ($cur->stok - $pd->qty)]);
@@ -281,19 +287,30 @@ class PembelianController extends Controller
                     ->select('part_no', 'barang.nama', 'satuan.nama as satuan', 'stok')
                     ->where('barang.id', $barang_id)->first();
 
+            $prev = null;
+            if (isset($save)) {
+                foreach($save as $s) {
+                    if ($s->barang_id == $barang_id) {
+                        $prev = $s;
+                    }
+                }
+            }
+
             DB::table('pembelian_detail')->insert([
                 'pembelian_id'  => $id,
                 'barang_id'     => $barang_id,
                 'part_no'       => $model->part_no,
                 'nama'          => $model->nama,
                 'qty'           => $request->qty[$key],
-                'stok'          => $request->qty[$key],
+                'stok'          => $prev ? $prev->stok : $request->qty[$key],
                 'satuan'        => $model->satuan,
                 'diskon'        => $request->diskon[$key],
                 'ppn'           => $request->ppn[$key],
                 'harga_asli'    => $request->harga_asli[$key],
                 'harga'         => str_replace(".", "", $request->harga[$key]),
                 'subtotal'      => str_replace(".", "", $request->subtotal[$key]),
+                'created_at'    => array_key_exists($barang_id, $created_time) ? $created_time[$barang_id] : now(),
+                'updated_at'    => now(),
             ]);
             DB::table('barang')
                 ->where('id', $barang_id)

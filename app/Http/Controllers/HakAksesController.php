@@ -18,11 +18,11 @@ class HakAksesController extends Controller
         $this->uri = $this->main;
         $this->title = 'Hak Akses';
         $this->table = $table;
-        // $this->middleware('permission:index-'.$this->main, ['only' => ['index','data']]);
-        // $this->middleware('permission:detail-'.$this->main, ['only' => ['show']]);
-        // $this->middleware('permission:create-'.$this->main, ['only' => ['create','store']]);
-        // $this->middleware('permission:edit-'.$this->main, ['only' => ['edit','update']]);
-        // $this->middleware('permission:delete-'.$this->main, ['only' => ['destroy']]);
+        $this->middleware('permission:index-'.$this->main, ['only' => ['index','data']]);
+        $this->middleware('permission:detail-'.$this->main, ['only' => ['show']]);
+        $this->middleware('permission:create-'.$this->main, ['only' => ['create','store']]);
+        $this->middleware('permission:edit-'.$this->main, ['only' => ['edit','update']]);
+        $this->middleware('permission:delete-'.$this->main, ['only' => ['destroy']]);
     }
 
     public function index()
