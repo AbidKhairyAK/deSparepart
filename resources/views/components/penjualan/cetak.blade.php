@@ -8,11 +8,11 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<style type="text/css">
 		body {
-			font-size: 21px;
+			font-size: 17px;
 			font-family: 'Inconsolata', monospace;
 		}
 		.list-barang {
-			font-size: 19px;
+			font-size: 15px;
 			width: 100%;
 			border: 1px dashed black;
 		}
@@ -80,7 +80,7 @@
 			display: block;
 			position: absolute;
 			top: -25px; right: 0;
-			font-size: 16px;
+			font-size: 12px;
 		}
 		.page-break {
 		    page-break-after: always;
@@ -206,7 +206,7 @@
 			<tfoot>
 				<tr>
 					<td colspan="5">
-						<div class="terbilang"><span>TERBILANG: FITUR "TERBILANG" BELUM BEKERJA DENGAN OPTIMAL</span></div>
+						<div class="terbilang"><span>TERBILANG: {{ strtoupper(terbilang($model->total)) }}</span></div>
 					</td>
 					<td style="text-align: center;"><span class="c">TOTAL</span></td>
 					<td><span class="r">{{ number_format($model->total, 0, '', '.')}}</span></td>
