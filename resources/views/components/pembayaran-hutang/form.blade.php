@@ -126,10 +126,20 @@
 								<div class="form-group col-sm-2">
 									<label>Kembalian</label>
 									<input :value="kembalian | nf" type="text" class="form-control" readonly>
+
+									<div class="custom-control custom-checkbox">
+									    <input type="checkbox" class="custom-control-input" id="kembalian_null" v-model="kembalian_null">
+									    <label class="custom-control-label" for="kembalian_null">kosongkan</label>
+									</div>
 								</div>
 								<div class="form-group col-sm-2">
 									<label>Sisa hutang</label>
 									<input name="sisa" :value="sisa | nf" type="text" class="form-control" readonly>
+
+									<div class="custom-control custom-checkbox">
+									    <input type="checkbox" class="custom-control-input" id="sisa_null" v-model="sisa_null">
+									    <label class="custom-control-label" for="sisa_null">kosongkan</label>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -166,9 +176,12 @@
 			pembelian: false,
 			dibayarkan: null,
 			pembayaran: null,
+			kembalian_null: false,
+			sisa_null: false,
 		},
 		computed: {
 			kembalian() {
+				if (this.kembalian_null) return '0';
 				if (this.dibayarkan) {
 					var res = this.dibayarkan.replace(/\./g, '') - this.hutang;
 					if (res > 0) return res;
@@ -176,6 +189,7 @@
 				return '0';
 			},
 			sisa() {
+				if (this.sisa_null) return '0';
 				if (this.dibayarkan) {
 					var res = this.hutang - this.dibayarkan.replace(/\./g, '');
 					if (res > 0) return res;
