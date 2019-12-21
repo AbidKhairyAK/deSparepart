@@ -39,6 +39,16 @@ class Barang extends Model
         return $this->hasMany(PembelianDetail::class);
     }
 
+    public function penjualan_detail()
+    {
+        return $this->hasMany(PenjualanDetail::class);
+    }
+
+    public function inventaris()
+    {
+        return $this->hasMany(Inventaris::class);
+    }
+
     public function setHargaBeliAttribute($value)
     {
         $this->attributes['harga_beli'] = str_replace(".", "", $value);

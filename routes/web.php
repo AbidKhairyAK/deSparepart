@@ -20,6 +20,10 @@ Route::post('logout', 'AuthController@logout')->name('logout');
 
 Route::group(['middleware' => ['auth']], function () {
 
+	// testing
+	Route::get('inventaris/api', 'InventarisController@api')->name('inventaris.api');
+	// testing
+
 	Route::get('pengguna/data', 'PenggunaController@data')->name('pengguna.data');
 	Route::get('pengguna/{id}/activate', 'PenggunaController@activate')->name('pengguna.activate');
 	Route::get('pengguna/{id}/deactivate', 'PenggunaController@deactivate')->name('pengguna.deactivate');

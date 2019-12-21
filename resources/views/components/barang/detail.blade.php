@@ -84,72 +84,80 @@
 			</div>
 		</div>
 		
-		<hr>
+		
+	</div>
+</div>
+
+
+<div class="card shadow mb-4">
+	<div class="card-header py-3">
+		<h6 class="m-0 font-weight-bold text-secondary">Detail Stok</h6>
+	</div>
+	<div class="card-body">
 
 		@php 
 			$pds1 = $model->pembelian_detail()->where('stok', '>', 0)->get();
 			$pds0 = $model->pembelian_detail()->where('stok', '=', 0)->get();
 		@endphp
-		<br>
-		<h6><b>Stok Masih Ada</b></h6>
 
-		<table class="table table-striped">
-			<thead class="thead-dark">
-				<tr>
-					<th>No Faktur</th>
-					<th>Tgl Beli</th>
-					<th title="Harga beli satuan, sudah termasuk ppn dan diskon">Hrg Beli <sup>?</sup></th>
-					<th>Supplier</th>
-					<th>Qty</th>
-					<th>Stok</th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach($pds1 as $pd)
-				<tr>
-					<td><a href="{{ route('pembelian.show', $pd->pembelian_id) }}">
-						{{ $pd->pembelian->no_faktur }}
-					</a></td>
-					<td>{{ $pd->created_at }}</td>
-					<td>Rp {{ number_format($pd->harga, 0, '', '.') }}</td>
-					<td>{{ $pd->pembelian->supplier->perusahaan }}</td>
-					<td>{{ $pd->qty }}</td>
-					<td>{{ $pd->stok }}</td>
-				</tr>
-				@endforeach
-			</tbody>
-		</table>
+		<div class="row">
+			<div class="col-md-6">
+				<h6><b>Stok Masih Ada</b></h6>
 
-		<hr>
-		<br>
-		<h6><b>Stok Sudah Habis</b></h6>
+				<table class="table table-striped">
+					<thead class="thead-dark">
+						<tr>
+							<th>No Faktur</th>
+							<th>Tgl Beli</th>
+							<th title="Harga beli satuan, sudah termasuk ppn dan diskon">Hrg Beli <sup>?</sup></th>
+							<th>Qty</th>
+							<th>Stok</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach($pds1 as $pd)
+						<tr>
+							<td><a href="{{ route('pembelian.show', $pd->pembelian_id) }}">
+								{{ $pd->pembelian->no_faktur }}
+							</a></td>
+							<td>{{ substr($pd->created_at, 0, 10) }}</td>
+							<td>{{ number_format($pd->harga, 0, '', '.') }}</td>
+							<td>{{ $pd->qty }}</td>
+							<td>{{ $pd->stok }}</td>
+						</tr>
+						@endforeach
+					</tbody>
+				</table>
+			</div>
+			<div class="col-md-6">
+				<h6><b>Stok Sudah Habis</b></h6>
 
-		<table class="table table-striped">
-			<thead class="thead-dark">
-				<tr>
-					<th>No Faktur</th>
-					<th>Tgl Beli</th>
-					<th title="Harga beli satuan, sudah termasuk ppn dan diskon">Hrg Beli <sup>?</sup></th>
-					<th>Supplier</th>
-					<th>Qty</th>
-					<th>Stok</th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach($pds0 as $pd)
-				<tr>
-					<td><a href="{{ route('pembelian.show', $pd->pembelian_id) }}">
-						{{ $pd->pembelian->no_faktur }}
-					</a></td>
-					<td>{{ $pd->created_at }}</td>
-					<td>Rp {{ number_format($pd->harga, 0, '', '.') }}</td>
-					<td>{{ $pd->pembelian->supplier->perusahaan }}</td>
-					<td>{{ $pd->qty }}</td>
-					<td>{{ $pd->stok }}</td>
-				</tr>
-				@endforeach
-			</tbody>
-		</table>
+				<table class="table table-striped">
+					<thead class="thead-dark">
+						<tr>
+							<th>No Faktur</th>
+							<th>Tgl Beli</th>
+							<th title="Harga beli satuan, sudah termasuk ppn dan diskon">Hrg Beli <sup>?</sup></th>
+							<th>Qty</th>
+							<th>Stok</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach($pds0 as $pd)
+						<tr>
+							<td><a href="{{ route('pembelian.show', $pd->pembelian_id) }}">
+								{{ $pd->pembelian->no_faktur }}
+							</a></td>
+							<td>{{ substr($pd->created_at, 0, 10) }}</td>
+							<td>{{ number_format($pd->harga, 0, '', '.') }}</td>
+							<td>{{ $pd->qty }}</td>
+							<td>{{ $pd->stok }}</td>
+						</tr>
+						@endforeach
+					</tbody>
+				</table>
+			</div>
+		</div>
 	</div>
 </div>
 

@@ -13,6 +13,9 @@ class BarangTableSeeder extends Seeder
      */
     public function run()
     {
+        DB::table('inventaris')->truncate();
+        DB::table('inventaris_detail')->truncate();
+
         $faker = Factory::create();
 
         for ($i=0; $i < 20; $i++) { 
@@ -35,6 +38,20 @@ class BarangTableSeeder extends Seeder
         		'created_at' => now(),
         		'updated_at' => now(),
         	];
+
+            DB::table('inventaris')->insert([
+                'tanggal' => '2000-01-01 00:00:00',
+                'barang_id' => $i + 1,
+            ]);
+
+            DB::table('inventaris_detail')->insert([
+                'tanggal' => '2000-01-01 00:00:00',
+                'inventaris_id' => $i + 1,
+                'inv_qty' => $data[$i]['stok'],
+                'inv_stok' => $data[$i]['stok'],
+                'inv_harga' => $data[$i]['harga_beli'],
+                'inv_total' => $data[$i]['harga_beli'] * $data[$i]['stok'],
+            ]);
         }
         
         DB::table('barang')->truncate();

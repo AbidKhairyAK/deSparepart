@@ -1,0 +1,23 @@
+METODE FIFO
+
+#pendekatan pertama
+- pendataan terjadi ketika ada pembelian / penjualan
+- semua dibuat satu baris
+- inventaris
+	- tanggal
+	- barang_id
+	- penjualan_detail_id - nullable
+	- pembelian_detail_id - nullable
+	- trx_qty - nullable
+	- trx_harga - nullable
+	- trx_total - nullable
+
+- inventaris detail
+	- tanggal
+	- inventaris_id
+	- inv_qty - nullable
+	- inv_stok - nullable
+	- inv_harga - nullable
+	- inv_total - nullable
+
+good luck!
