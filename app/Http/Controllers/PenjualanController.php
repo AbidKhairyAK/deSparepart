@@ -169,7 +169,8 @@ class PenjualanController extends Controller
 				$query->whereRaw($sql, ["%{$keyword}%"]);
 			})
 			->filterColumn('tanggal', function($query, $keyword) {
-				$sql = "CONCAT(penjualan.created_at,'-',penjualan.jatuh_tempo)  like ?";
+				// $sql = "CONCAT(penjualan.created_at,'-',penjualan.jatuh_tempo)  like ?";
+				$sql = "penjualan.created_at  like ?";
 				$query->whereRaw($sql, ["%{$keyword}%"]);
 			})
 			->filterColumn('biaya', function($query, $keyword) {

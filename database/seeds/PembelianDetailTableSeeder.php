@@ -20,13 +20,14 @@ class PembelianDetailTableSeeder extends Seeder
             $qty = rand(1, 15);
             $diskon = $faker->boolean(20) ? rand(10, 70) : 0;
         	$ppn = rand(1, 10);
-        	$tbl = Barang::find(rand(1, 19));
+        	$tbl = Barang::find(($i % 19) + 1 );
             $hrg_ppn = $tbl->harga_beli + ($tbl->harga_beli * $ppn / 100);
             $hrg_beli = $hrg_ppn - ($hrg_ppn * $diskon / 100);
-            $date = date('Y-m-d H:i:s', (time() - (43200 * $i)));
+            $pembelian_id = ceil($i/10);
+            $date = date('Y-m-d H:i:s', (time() - (43200 * $pembelian_id)));
 
         	$data[] = [
-        		"pembelian_id" => ceil($i/10),
+        		"pembelian_id" => $pembelian_id,
         		"barang_id" => $tbl->id,
         		"part_no" => $tbl->part_no,
         		"nama" => $tbl->nama,
@@ -44,6 +45,27 @@ class PembelianDetailTableSeeder extends Seeder
         }
 
         DB::table('pembelian_detail')->truncate();
+
+        $barang = DB::table('barang')->orderBy('id')->get();
+        foreach ($barang as $b) {
+            DB::table('pembelian_detail')->insert([
+                "pembelian_id" => 1,
+                "barang_id" => $b->id,
+                "part_no" => $b->part_no,
+                "nama" => $b->nama,
+                "qty" => $b->stok,
+                "stok" => $b->stok,
+                "satuan" => DB::table('satuan')->where('id', $b->satuan_id)->first()->nama,
+                "harga_asli" => $b->harga_beli,
+                "harga" => $b->harga_beli,
+                "ppn" => 0,
+                "diskon" => 0,
+                "subtotal" => $b->stok * $b->harga_beli,
+                "created_at" => '2000-01-01 00:00:00',
+                "updated_at" => '2000-01-01 00:00:00',
+            ]);
+        }
+        
         DB::table('pembelian_detail')->insert($data);
     }
 }

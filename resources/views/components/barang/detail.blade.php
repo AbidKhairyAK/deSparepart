@@ -2,6 +2,21 @@
 
 @section('title', $title)
 
+@section('style')
+<style type="text/css">
+	table td {
+	   text-align: right;
+	   padding-right: 15px !important;
+	}
+	table td table td {
+	   text-align: right;
+	   padding-top: 0.3rem !important;
+	   padding-bottom: 0.3rem !important;
+	   padding-right: 15px !important;
+	}
+</style>
+@endsection
+
 @section('content')
 
 <div class="card shadow mb-4">
@@ -89,6 +104,144 @@
 </div>
 
 
+
+<div class="card shadow mb-4">
+	<div class="card-header py-3">
+		<h6 class="m-0 font-weight-bold text-secondary">Pelaporan Metode FIFO</h6>
+	</div>
+	<div class="card-body">
+		<table class="table table-bordered table-condesed table-sm">
+			<thead>
+				<tr>
+					<th rowspan="2" style="vertical-align: middle;">Tanggal</th>
+					<th colspan="3" class="bg-primary text-light">Pembelian</th>
+					<th colspan="3" class="bg-warning text-light">Penjualan</th>
+					<th colspan="3" class="bg-dark text-light">Persediaan</th>
+				</tr>
+				<tr>
+					<th class="bg-primary text-light">Unit</th>
+					<th class="bg-primary text-light">Harga</th>
+					<th style="border-right: 1px solid #e3e6f0" class="bg-primary text-light">Total</th>
+					<th class="bg-warning text-light">Unit</th>
+					<th class="bg-warning text-light">Harga</th>
+					<th class="bg-warning text-light">Total</th>
+					<th class="bg-dark text-light">Unit</th>
+					<th class="bg-dark text-light">Harga</th>
+					<th class="bg-dark text-light">Total</th>
+				</tr>
+			</thead>
+			<tbody>
+				@php $tanggal_prev = null; @endphp
+				@foreach(
+					$model->inventaris()
+						->orderBy('tanggal')
+						->orderBy('id', 'desc')
+						->get() as $inv
+				)
+
+				@if($inv->tanggal == $tanggal_prev) @php continue; @endphp @endif
+				@php $tanggal_prev = $inv->tanggal; @endphp
+
+				<tr>
+					<td class="text-left" width="180">{{ date('d M Y - H:i', strtotime($inv->tanggal)) }}</td>
+
+					@if($inv->pembelian_detail_id)
+					<td>{{ $inv->trx_qty }}</td>
+					<td>{{ $inv->trx_harga }}</td>
+					<td>{{ $inv->trx_total }}</td>
+					<td></td>
+					<td></td>
+					<td></td>
+
+					@elseif($inv->penjualan_detail_id)
+
+					@php 
+						$pds = $model->inventaris()
+									->where('penjualan_detail_id', $inv->penjualan_detail_id)
+									->orderBy('id')
+									->get();
+					@endphp
+					<td></td>
+					<td></td>
+					<td></td>
+					<td class="p-0">
+						<table class="table m-0">
+							@foreach($pds as $pd)
+							<tr>
+								<td style="border: 0;">{{ $pd->trx_qty }}</td>
+							</tr>
+							@endforeach
+						</table>
+					</td>
+					<td class="p-0">
+						<table class="table m-0">
+							@foreach($pds as $pd)
+							<tr>
+								<td style="border: 0;">{{ $pd->trx_harga }}</td>
+							</tr>
+							@endforeach
+						</table>
+					</td>
+					<td class="p-0">
+						<table class="table m-0">
+							@foreach($pds as $pd)
+							<tr>
+								<td style="border: 0;">{{ $pd->trx_total }}</td>
+							</tr>
+							@endforeach
+						</table>
+					</td>
+
+					@else
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					@endif
+
+					@php 
+						$ds = $inv->inventaris_detail()
+									->orderBy('tanggal')
+									->orderBy('id')
+									->get(); 
+					@endphp
+					<td class="p-0">
+						<table class="table m-0">
+							@foreach($ds as $d)
+							<tr>
+								<td style="border: 0;">{{ $d->inv_stok }}</td>
+							</tr>
+							@endforeach
+						</table>
+					</td>
+					<td class="p-0">
+						<table class="table m-0">
+							@foreach($ds as $d)
+							<tr>
+								<td style="border: 0;">{{ $d->inv_harga }}</td>
+							</tr>
+							@endforeach
+						</table>
+					</td>
+					<td class="p-0">
+						<table class="table m-0">
+							@foreach($ds as $d)
+							<tr>
+								<td style="border: 0;">{{ $d->inv_total }}</td>
+							</tr>
+							@endforeach
+						</table>
+					</td>
+				</tr>
+				@endforeach
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
 <div class="card shadow mb-4">
 	<div class="card-header py-3">
 		<h6 class="m-0 font-weight-bold text-secondary">Detail Stok</h6>
@@ -104,7 +257,7 @@
 			<div class="col-md-6">
 				<h6><b>Stok Masih Ada</b></h6>
 
-				<table class="table table-striped">
+				<table class="table table-striped stok">
 					<thead class="thead-dark">
 						<tr>
 							<th>No Faktur</th>
@@ -132,7 +285,7 @@
 			<div class="col-md-6">
 				<h6><b>Stok Sudah Habis</b></h6>
 
-				<table class="table table-striped">
+				<table class="table table-striped stok text-center">
 					<thead class="thead-dark">
 						<tr>
 							<th>No Faktur</th>
@@ -167,7 +320,7 @@
 
 @section('script')
 <script type="text/javascript">
-	$('.table').DataTable({
+	$('.stok').DataTable({
         "order": [[ 1, "asc" ]]
     });
 </script>

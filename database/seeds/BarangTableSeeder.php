@@ -29,7 +29,7 @@ class BarangTableSeeder extends Seeder
                 'part_no' => (rand(1111, 9999) * 10000).(rand(1111, 9999)),
                 'nama' => $faker->sentence(2),
                 'merk' => $faker->word,
-                'stok' => rand(1, 200),
+                'stok' => rand(1, 50),
                 'limit' => rand(1, 20),
                 'harga_beli' => $hrg_beli,
                 'harga_jual' => $hrg_jual,
@@ -38,20 +38,6 @@ class BarangTableSeeder extends Seeder
         		'created_at' => now(),
         		'updated_at' => now(),
         	];
-
-            DB::table('inventaris')->insert([
-                'tanggal' => '2000-01-01 00:00:00',
-                'barang_id' => $i + 1,
-            ]);
-
-            DB::table('inventaris_detail')->insert([
-                'tanggal' => '2000-01-01 00:00:00',
-                'inventaris_id' => $i + 1,
-                'inv_qty' => $data[$i]['stok'],
-                'inv_stok' => $data[$i]['stok'],
-                'inv_harga' => $data[$i]['harga_beli'],
-                'inv_total' => $data[$i]['harga_beli'] * $data[$i]['stok'],
-            ]);
         }
         
         DB::table('barang')->truncate();

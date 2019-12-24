@@ -17,7 +17,9 @@ class PembelianTableSeeder extends Seeder
 
         for ($i=1; $i <= 10; $i++) { 
         	$paid = rand(0, 1);
-        	$total = DB::table('pembelian_detail')->where('pembelian_id', $i)->sum('subtotal');
+        	$pds = DB::table('pembelian_detail')->where('pembelian_id', $i);
+            $total = $pds->sum('subtotal');
+            $tanggal = $pds->first()->created_at;
             $pembayaran = $faker->randomElement(['tunai', 'kredit', 'giro', 'transfer']);
         	$data[] = [
         		"user_id" => rand(1, 4),
@@ -33,8 +35,8 @@ class PembelianTableSeeder extends Seeder
         		"jatuh_tempo" => !$paid ? date('Y-m-d', (time()+604800)) : null,
         		"total" => $total,
         		"keterangan" => $faker->sentence,
-        		"created_at" => now(),
-        		"updated_at" => now(),
+        		"created_at" => $tanggal,
+        		"updated_at" => $tanggal,
         	];
         }
 

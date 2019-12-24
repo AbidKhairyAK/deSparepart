@@ -152,7 +152,7 @@ class BarangController extends Controller
 
     public function show($id)
     {
-        $data['model'] = $this->table->find($id);
+        $data['model'] = $this->table->where('id', $id)->with('kendaraan', 'komponen', 'pembelian_detail', 'inventaris.inventaris_detail')->first();
         $data['main'] = $this->main;
         $data['title'] = $this->title;
         $data['url'] = route($this->uri.'.index');

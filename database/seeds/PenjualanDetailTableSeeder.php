@@ -19,11 +19,13 @@ class PenjualanDetailTableSeeder extends Seeder
 		for ($i=1; $i <= 149; $i++) { 
 			$qty = rand(1, 5);
 			$diskon = $faker->boolean(20) ? rand(10, 70) : 0;
-			$tbl = Barang::find(rand(1, 19));
+			$tbl = Barang::find( ($i % 19) + 1 );
 			$harga_jual = $tbl->harga_jual - ($tbl->harga_jual * $diskon / 100);
+			$penjualan_id = ceil($i/15);
+            $date = date('Y-m-d H:i:s', (time() - (43300 * $penjualan_id)));
 
 			$data[] = [
-				"penjualan_id"	=> ceil($i/15),
+				"penjualan_id"	=> $penjualan_id,
 				"barang_id"   	=> $tbl->id,
 				"part_no"     	=> $tbl->part_no,
 				"nama"        	=> $tbl->nama,
@@ -33,8 +35,8 @@ class PenjualanDetailTableSeeder extends Seeder
 				"harga" 		=> $harga_jual,
 				"diskon" 		=> $diskon,
 				"subtotal" 		=> $harga_jual * $qty,
-				"created_at"	=> now(),
-				"updated_at" 	=> now(),
+				"created_at"	=> $date,
+				"updated_at" 	=> $date,
 			];
 		}
 
