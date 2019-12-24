@@ -154,10 +154,16 @@ class BarangController extends Controller
     {
         $data['model'] = $this->table->where('id', $id)->with('kendaraan', 'komponen', 'pembelian_detail', 'inventaris.inventaris_detail')->first();
 
-
         $invs = $data['model']->inventaris()->orderBy('tanggal')->orderBy('id', 'desc');
 
-        $data['invs'] = $invs->get();
+        $range_from = request()->get('range_from');
+        $range_to = request()->get('range_to');
+
+        if ($range_from && $range_to) {
+            $invs = $invs->whereBetween('tanggal', ["{$range_from} 00:00:00", "{$range_to} 23:59:59"]);
+        }
+
+        $data['invs'] = $invs->paginate(10);
 
         $data['main'] = $this->main;
         $data['title'] = $this->title;

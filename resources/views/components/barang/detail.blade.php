@@ -99,18 +99,38 @@
 			</div>
 		</div>
 		
-		
 	</div>
 </div>
-
-
 
 <div class="card shadow mb-4">
 	<div class="card-header py-3">
 		<h6 class="m-0 font-weight-bold text-secondary">Pelaporan Metode FIFO</h6>
 	</div>
 	<div class="card-body">
-		<hr>
+		<div class="d-flex justify-content-between align-items-center p-0">
+			<div>
+				<form>
+					from: <input style="width: 150px;" 
+								type="date" 
+								name="range_from" 
+								class="form-control form-control-sm d-inline-block" 
+								value="{{ request()->get('range_from') }}"
+							>
+					to: <input style="width: 150px;" 
+								type="date" 
+								name="range_to" 
+								class="form-control form-control-sm d-inline-block" 
+								value="{{ request()->get('range_to') }}"
+							>
+					<button class="btn btn-sm btn-primary">submit</button>
+				</form>
+			</div>
+			<div>{{ $invs->appends([
+						'range_from' => request()->get('range_from'), 
+						'range_to' => request()->get('range_to'), 
+					])->links() }}</div>
+		</div>
+		<hr class="mt-0">
 		<table class="table table-bordered table-condesed table-sm">
 			<thead>
 				<tr>
