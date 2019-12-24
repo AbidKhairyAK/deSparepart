@@ -110,10 +110,11 @@
 		<h6 class="m-0 font-weight-bold text-secondary">Pelaporan Metode FIFO</h6>
 	</div>
 	<div class="card-body">
+		<hr>
 		<table class="table table-bordered table-condesed table-sm">
 			<thead>
 				<tr>
-					<th rowspan="2" style="vertical-align: middle;">Tanggal</th>
+					<th rowspan="2" class="bg-dark text-light" style="vertical-align: middle;">Tanggal</th>
 					<th colspan="3" class="bg-primary text-light">Pembelian</th>
 					<th colspan="3" class="bg-warning text-light">Penjualan</th>
 					<th colspan="3" class="bg-dark text-light">Persediaan</th>
@@ -132,12 +133,7 @@
 			</thead>
 			<tbody>
 				@php $tanggal_prev = null; @endphp
-				@foreach(
-					$model->inventaris()
-						->orderBy('tanggal')
-						->orderBy('id', 'desc')
-						->get() as $inv
-				)
+				@foreach($invs as $inv)
 
 				@if($inv->tanggal == $tanggal_prev) @php continue; @endphp @endif
 				@php $tanggal_prev = $inv->tanggal; @endphp
@@ -146,9 +142,9 @@
 					<td class="text-left" width="180">{{ date('d M Y - H:i', strtotime($inv->tanggal)) }}</td>
 
 					@if($inv->pembelian_detail_id)
-					<td>{{ $inv->trx_qty }}</td>
-					<td>{{ $inv->trx_harga }}</td>
-					<td>{{ $inv->trx_total }}</td>
+					<td>{{ number_format($inv->trx_qty, 0, '', '.') }}</td>
+					<td>{{ number_format($inv->trx_harga, 0, '', '.') }}</td>
+					<td>{{ number_format($inv->trx_total, 0, '', '.') }}</td>
 					<td></td>
 					<td></td>
 					<td></td>
@@ -168,7 +164,7 @@
 						<table class="table m-0">
 							@foreach($pds as $pd)
 							<tr>
-								<td style="border: 0;">{{ $pd->trx_qty }}</td>
+								<td style="border: 0;">{{ number_format($pd->trx_qty, 0, '', '.') }}</td>
 							</tr>
 							@endforeach
 						</table>
@@ -177,7 +173,7 @@
 						<table class="table m-0">
 							@foreach($pds as $pd)
 							<tr>
-								<td style="border: 0;">{{ $pd->trx_harga }}</td>
+								<td style="border: 0;">{{ number_format($pd->trx_harga, 0, '', '.') }}</td>
 							</tr>
 							@endforeach
 						</table>
@@ -186,7 +182,7 @@
 						<table class="table m-0">
 							@foreach($pds as $pd)
 							<tr>
-								<td style="border: 0;">{{ $pd->trx_total }}</td>
+								<td style="border: 0;">{{ number_format($pd->trx_total, 0, '', '.') }}</td>
 							</tr>
 							@endforeach
 						</table>
@@ -211,7 +207,7 @@
 						<table class="table m-0">
 							@foreach($ds as $d)
 							<tr>
-								<td style="border: 0;">{{ $d->inv_stok }}</td>
+								<td style="border: 0;">{{ number_format($d->inv_stok, 0, '', '.') }}</td>
 							</tr>
 							@endforeach
 						</table>
@@ -220,7 +216,7 @@
 						<table class="table m-0">
 							@foreach($ds as $d)
 							<tr>
-								<td style="border: 0;">{{ $d->inv_harga }}</td>
+								<td style="border: 0;">{{ number_format($d->inv_harga, 0, '', '.') }}</td>
 							</tr>
 							@endforeach
 						</table>
@@ -229,7 +225,7 @@
 						<table class="table m-0">
 							@foreach($ds as $d)
 							<tr>
-								<td style="border: 0;">{{ $d->inv_total }}</td>
+								<td style="border: 0;">{{ number_format($d->inv_total, 0, '', '.') }}</td>
 							</tr>
 							@endforeach
 						</table>

@@ -56,6 +56,7 @@ class InventarisTableSeeder extends Seeder
     {
         $latest = DB::table('inventaris')
                     ->orderBy('tanggal', 'desc')
+                    ->orderBy('id', 'desc')
                     ->where('barang_id', $inv->barang_id)
                     ->where('tanggal', '<', $inv->tanggal)
                     ->first();
@@ -91,9 +92,10 @@ class InventarisTableSeeder extends Seeder
     public function jual($inv, $sisa = false, $skip = 1)
     {
         $latest = DB::table('inventaris')
+                    ->orderBy('tanggal', 'desc')
+                    ->orderBy('id', 'desc')
                     ->where('barang_id', $inv->barang_id)
                     ->where('tanggal', '<', $inv->tanggal)
-                    ->orderBy('tanggal', 'desc')
                     ->first();
 
         $first = DB::table('inventaris_detail')
