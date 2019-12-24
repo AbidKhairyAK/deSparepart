@@ -49,6 +49,36 @@ class InventarisTableSeeder extends Seeder
                     $this->jual($inv);
                 }
             }
+
+            foreach ($invs as $inv) {
+                if (!empty($inv->penjualan_detail_id)) {
+                    $this->decreaseBarang($barang, $barang->id, $inv->trx_qty);
+                }
+            }
+
+            $current_stock = Inventaris::with('inventaris_detail')
+                        ->where('barang_id', $barang->id)
+                        ->orderBy('tanggal', 'desc')
+                        ->orderBy('id', 'desc')
+                        ->first()
+                        ->inventaris_detail()
+                        ->sum('inv_stok');
+
+            $barang->update(['stok' => $current_stock]);
+        }
+    }
+
+    public function decreaseBarang($b, $id, $qty)
+    {
+        $pds = $b->pembelian_detail()->where('stok', '>', 0)->oldest();
+        $pd = $pds->first();
+
+        if (!empty($pd) && $pd->stok >= $qty) {
+            $pds->update(['stok' => $pd->stok - $qty]);
+        } elseif (!empty($pd)) {
+            $pds->update(['stok' => 0]);
+            $this->decreaseBarang($b, $id, $qty - $pd->stok);
+            return;
         }
     }
 
