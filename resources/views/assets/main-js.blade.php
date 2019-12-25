@@ -1,11 +1,11 @@
 <!-- Laravel Main JS -->
 <script src="/js/app.js"></script>
 <!-- JQuery -->
-<script src="/sb-admin/vendor/jquery/jquery.min.js"></script>
+<!-- <script src="/sb-admin/vendor/jquery/jquery.min.js"></script> -->
 <!-- Bootstrap core JavaScript-->
-<script src="/sb-admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- <script src="/sb-admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script> -->
 <!-- JQuery Easing-->
-<script src="/sb-admin/vendor/jquery-easing/jquery.easing.min.js"></script>
+<!-- <script src="/sb-admin/vendor/jquery-easing/jquery.easing.min.js"></script> -->
 <!-- datatables -->
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.18/datatables.min.js"></script>
 <!-- Chartjs -->
