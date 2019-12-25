@@ -146,16 +146,20 @@ class InventarisTableSeeder extends Seeder
 
         $qty    = $sisa ?: $inv->trx_qty;
 
-        if ($first && $first->inv_stok > $qty) {
+        if ($first && $first->inv_stok >= $qty) {
             $stok = $first->inv_stok - $qty;
-            DB::table('inventaris_detail')->insert([
-                'tanggal'       => $first->tanggal,
-                'inventaris_id' => $inv->id,
-                'inv_qty'       => $first->inv_qty,
-                'inv_stok'      => $stok,
-                'inv_harga'     => $first->inv_harga,
-                'inv_total'     => $first->inv_harga * $stok,
-            ]);
+
+            if ($stok > 0) {
+                DB::table('inventaris_detail')->insert([
+                    'tanggal'       => $first->tanggal,
+                    'inventaris_id' => $inv->id,
+                    'inv_qty'       => $first->inv_qty,
+                    'inv_stok'      => $stok,
+                    'inv_harga'     => $first->inv_harga,
+                    'inv_total'     => $first->inv_harga * $stok,
+                ]);
+            }
+            
             foreach ($prevs as $prev) {
                 DB::table('inventaris_detail')->insert([
                     'tanggal'       => $prev->tanggal,

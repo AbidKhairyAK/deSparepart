@@ -154,7 +154,7 @@ class BarangController extends Controller
     {
         $data['model'] = $this->table->where('id', $id)->with('kendaraan', 'komponen', 'pembelian_detail', 'inventaris.inventaris_detail')->first();
 
-        $invs = $data['model']->inventaris()->orderBy('tanggal')->orderBy('id', 'desc');
+        $invs = $data['model']->inventaris()->with('inventaris_detail')->orderBy('tanggal')->orderBy('id', 'desc');
 
         $range_from = request()->get('range_from');
         $range_to = request()->get('range_to');

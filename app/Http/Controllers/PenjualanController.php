@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Model\Penjualan;
+use App\Model\PenjualanDetail;
 use App\Model\Customer;
 use App\Model\Barang;
+use App\Model\Inventaris;
 use Kris\LaravelFormBuilder\FormBuilder;
 use DataTables;
 use Form;
@@ -302,6 +304,9 @@ class PenjualanController extends Controller
 			}
 			$pds->delete();
 		}
+
+		$p = Penjualan::find($id);
+
 		foreach ($request->barang_id as $key => $barang_id) {
 		   
 			$model = DB::table('barang')
@@ -309,7 +314,7 @@ class PenjualanController extends Controller
 					->select('part_no', 'barang.nama', 'satuan.nama as satuan', 'stok')
 					->where('barang.id', $barang_id)->first();
 
-			DB::table('penjualan_detail')->insert([
+			$pd = PenjualanDetail::create([
 				'penjualan_id'  => $id,
 				'barang_id'     => $barang_id,
 				'part_no'       => $model->part_no,
@@ -320,14 +325,111 @@ class PenjualanController extends Controller
 				'harga_asli'    => $request->harga_asli[$key],
 				'harga'         => str_replace(".", "", $request->harga[$key]),
 				'subtotal'      => str_replace(".", "", $request->subtotal[$key]),
+				'created_at' 	=> $p->created_at,
+				'updated_at' 	=> $p->updated_at,
 			]);
 
 			$b = Barang::find($barang_id);
 			$b->update(['stok' => $b->stok - $request->qty[$key]]);
 
 			$this->decreaseBarang($b, $barang_id, $request->qty[$key]);
+
+			$inv = Inventaris::create([
+			    'tanggal'               => $p->created_at,
+			    'barang_id'             => $barang_id,
+			    'penjualan_detail_id'   => $pd->id,
+			    'trx_qty'               => $pd->qty,
+			    'trx_harga'             => $pd->harga,
+			    'trx_total'             => $pd->subtotal,
+			]);
+
+			$this->inv_jual($inv);
 		}
 	}
+
+	public function inv_jual($inv, $sisa = false, $skip = 1)
+    {
+        $latest = DB::table('inventaris')
+                    ->orderBy('tanggal', 'desc')
+                    ->orderBy('id', 'desc')
+                    ->where('barang_id', $inv->barang_id)
+                    ->where('tanggal', '<', $inv->tanggal)
+                    ->first();
+
+        $first = DB::table('inventaris_detail')
+                    ->where('inventaris_id', $latest->id)
+                    ->where('inv_stok', '>', '0')
+                    ->orderBy('id')
+                    ->skip($skip - 1)
+                    ->take(1)
+                    ->first();
+
+        $prevs = DB::table('inventaris_detail')
+                    ->where('inventaris_id', $latest->id)
+                    ->where('inv_stok', '>', '0')
+                    ->orderBy('id')
+                    ->skip($skip)
+                    ->take(PHP_INT_MAX)
+                    ->get();
+
+        $qty    = $sisa ?: $inv->trx_qty;
+
+        if ($first && $first->inv_stok >= $qty) {
+            $stok = $first->inv_stok - $qty;
+
+            if ($stok > 0) {
+	            DB::table('inventaris_detail')->insert([
+	                'tanggal'       => $first->tanggal,
+	                'inventaris_id' => $inv->id,
+	                'inv_qty'       => $first->inv_qty,
+	                'inv_stok'      => $stok,
+	                'inv_harga'     => $first->inv_harga,
+	                'inv_total'     => $first->inv_harga * $stok,
+	            ]);
+            }
+            
+            foreach ($prevs as $prev) {
+                DB::table('inventaris_detail')->insert([
+                    'tanggal'       => $prev->tanggal,
+                    'inventaris_id' => $inv->id,
+                    'inv_qty'       => $prev->inv_qty,
+                    'inv_stok'      => $prev->inv_stok,
+                    'inv_harga'     => $prev->inv_harga,
+                    'inv_total'     => $prev->inv_total,
+                ]);
+            }
+
+            DB::table('inventaris')->where('id', $inv->id)->update([
+                'trx_qty' => $qty,
+                'trx_harga' => $first->inv_harga,
+                'trx_total' => $qty * $first->inv_harga,
+            ]);
+
+        } else if ($first && $first->inv_stok > 0) {
+            DB::table('inventaris')->insert([
+                'tanggal'               => $inv->tanggal,
+                'barang_id'             => $inv->barang_id,
+                'penjualan_detail_id'   => $inv->penjualan_detail_id,
+                'trx_qty'               => $first->inv_stok,
+                'trx_harga'             => $first->inv_harga,
+                'trx_total'             => $first->inv_stok * $first->inv_harga,
+            ]);
+
+            DB::table('inventaris')->where('id', $inv->id)->update([
+                'trx_qty'   => $first->inv_stok,
+                'trx_harga' => $first->inv_harga,
+                'trx_total' => $first->inv_stok * $first->inv_harga,
+            ]);
+
+            $new_inv = DB::table('inventaris')
+                        ->where('penjualan_detail_id', $inv->penjualan_detail_id)
+                        ->orderBy('id', 'desc')
+                        ->first();
+
+            // habiskan stok inventaris_detail
+            $this->inv_jual($new_inv, $qty - $first->inv_stok, $skip + 1);
+        }
+    }
 
 	public function decreaseBarang($b, $id, $qty)
 	{

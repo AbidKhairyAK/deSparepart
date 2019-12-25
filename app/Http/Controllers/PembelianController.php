@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Model\Pembelian;
+use App\Model\PembelianDetail;
 use App\Model\Supplier;
+use App\Model\Inventaris;
 use Kris\LaravelFormBuilder\FormBuilder;
 use DataTables;
 use Form;
@@ -298,7 +300,7 @@ class PembelianController extends Controller
                 }
             }
 
-            DB::table('pembelian_detail')->insert([
+            $pd = PembelianDetail::create([
                 'pembelian_id'  => $id,
                 'barang_id'     => $barang_id,
                 'part_no'       => $model->part_no,
@@ -314,9 +316,58 @@ class PembelianController extends Controller
                 'created_at'    => $created_at,
                 'updated_at'    => now(),
             ]);
+
             DB::table('barang')
                 ->where('id', $barang_id)
                 ->update(['stok' => ($model->stok + $request->qty[$key]) ]);
+
+            $inv = Inventaris::create([
+                'tanggal'               => $created_at,
+                'barang_id'             => $barang_id,
+                'pembelian_detail_id'   => $pd->id,
+                'trx_qty'               => $pd->qty,
+                'trx_harga'             => $pd->harga,
+                'trx_total'             => $pd->subtotal,
+            ]);
+
+            $this->inv_beli($inv);
         }
+    }
+
+    public function inv_beli($inv)
+    {
+        $latest = DB::table('inventaris')
+                    ->orderBy('tanggal', 'desc')
+                    ->orderBy('id', 'desc')
+                    ->where('barang_id', $inv->barang_id)
+                    ->where('tanggal', '<', $inv->tanggal)
+                    ->first();
+
+        if ($latest) {
+            $prevs = DB::table('inventaris_detail')
+                        ->where('inventaris_id', $latest->id)
+                        ->orderBy('tanggal')
+                        ->get();
+
+            foreach ($prevs as $prev) {
+                DB::table('inventaris_detail')->insert([
+                    'tanggal'       => $prev->tanggal,
+                    'inventaris_id' => $inv->id,
+                    'inv_qty'       => $prev->inv_qty,
+                    'inv_stok'      => $prev->inv_stok,
+                    'inv_harga'     => $prev->inv_harga,
+                    'inv_total'     => $prev->inv_total,
+                ]);
+            }
+        }
+        
+        DB::table('inventaris_detail')->insert([
+            'tanggal'       => $inv->tanggal,
+            'inventaris_id' => $inv->id,
+            'inv_qty'       => $inv->trx_qty,
+            'inv_stok'      => $inv->trx_qty,
+            'inv_harga'     => $inv->trx_harga,
+            'inv_total'     => $inv->trx_total,
+        ]);
     }
 }

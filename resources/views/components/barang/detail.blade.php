@@ -128,7 +128,7 @@
 			<div>{{ $invs->appends([
 						'range_from' => request()->get('range_from'), 
 						'range_to' => request()->get('range_to'), 
-					])->links() }}</div>
+					])->onEachSide(1)->links() }}</div>
 		</div>
 		<hr class="mt-0">
 		<table class="table table-bordered table-condesed table-sm">
