@@ -17,7 +17,7 @@ class PembelianDetailTableSeeder extends Seeder
         $faker = Factory::create('id_ID');
 
         for ($i=1; $i <= 200; $i++) { 
-            $qty = $i == 1 ? rand(80, 100) : rand(20, 40);
+            $qty = $i == 200 ? rand(80, 100) : rand(20, 40);
             $diskon = $faker->boolean(20) ? rand(10, 70) : 0;
         	$ppn = rand(1, 10);
         	$tbl = Barang::find(($i % 20) + 1 );
