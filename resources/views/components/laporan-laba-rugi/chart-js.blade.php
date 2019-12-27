@@ -8,10 +8,10 @@ function format_number(x) {
 
 var penjualan = $('#penjualan-chart');
 var penjualanData = {
-    labels: {!! json_encode($chart_penjualan['label']) !!},
+    labels: ['05 Juli', '06 Juli', '07 Juli', '08 Juli', '09 Juli', '10 Juli', '11 Juli', '12 Juli', '13 Juli', '14 Juli'],
     datasets: [{
         label: 'Orang',
-        data: {!! json_encode($chart_penjualan['data']) !!},
+        data: [2100000, 4100000, 6200000, 2500000, 1700000, 5600000, 3100000, 1300000, 1600000, 3700000],
         backgroundColor: '#4e73df'
     }]
 };
@@ -41,9 +41,10 @@ var penjualanChart = new Chart(penjualan, {
             yAxes: [{
                 ticks: {
                     beginAtZero: true,
-                    max: Math.max(...penjualanData.datasets[0].data) + (Math.max(...penjualanData.datasets[0].data) * 0.1),
+                    stepSize: 1000000,
+                    max: Math.max(...penjualanData.datasets[0].data) + 1000000,
                     callback: function(value, index, values) {
-                        return Math.ceil(value / 1000000) + 'Jt';
+                        return (value / 1000000) + 'Jt';
                     }
                 },
                 gridLines: {
@@ -59,18 +60,18 @@ var penjualanChart = new Chart(penjualan, {
     }
 });
 
-var pembelian = $('#pembelian-chart');
-var pembelianData = {
-    labels: {!! json_encode($chart_pembelian['label']) !!},
+var piutang = $('#piutang-chart');
+var piutangData = {
+    labels: ['05 Juli', '06 Juli', '07 Juli', '08 Juli', '09 Juli', '10 Juli', '11 Juli', '12 Juli', '13 Juli', '14 Juli'],
     datasets: [{
         label: 'Orang',
-        data: {!! json_encode($chart_pembelian['data']) !!},
+        data: [2100000, 4100000, 6200000, 2500000, 1700000, 5600000, 3100000, 1300000, 1600000, 3700000],
         backgroundColor: '#f6c23e'
     }]
 };
-var pembelianChart = new Chart(pembelian, {
+var piutangChart = new Chart(piutang, {
     type: 'bar',
-    data: pembelianData,
+    data: piutangData,
     options: {
         legend: {
             display: false
@@ -94,9 +95,10 @@ var pembelianChart = new Chart(pembelian, {
             yAxes: [{
                 ticks: {
                     beginAtZero: true,
-                    max: Math.max(...pembelianData.datasets[0].data) + (Math.max(...pembelianData.datasets[0].data) * 0.1),
+                    stepSize: 1000000,
+                    max: Math.max(...piutangData.datasets[0].data) + 1000000,
                     callback: function(value, index, values) {
-                        return Math.ceil(value / 1000000) + 'Jt';
+                        return (value / 1000000) + 'Jt';
                     }
                 },
                 gridLines: {
@@ -111,4 +113,5 @@ var pembelianChart = new Chart(pembelian, {
         }
     }
 });
+
 </script>

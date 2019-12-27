@@ -25,6 +25,8 @@ class PermissionRoleTableSeeder extends Seeder
         ];
 
     	$excp = [[]];
+
+        $this->command->getOutput()->progressStart(1);
         foreach ($exceptions as $i => $exception) {
         	foreach ($exception as $x => $menu) {
         		foreach ($actions as $y => $act) {
@@ -33,6 +35,8 @@ class PermissionRoleTableSeeder extends Seeder
         	}
         	$permissions = Permission::orderBy('id')->whereNotIn('slug', $excp[$i])->pluck('id');
         	Role::find(($i+1))->permissions()->sync($permissions);
+            $this->command->getOutput()->progressAdvance();
         }
+        $this->command->getOutput()->progressFinish();
     }
 }

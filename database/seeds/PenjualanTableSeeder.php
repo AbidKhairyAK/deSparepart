@@ -15,12 +15,13 @@ class PenjualanTableSeeder extends Seeder
     {
         $faker = Factory::create('id_ID');
 
-        for ($i=1; $i <= 10; $i++) { 
+        for ($i=1; $i <= 120; $i++) { 
         	$paid = rand(0, 1);
         	$pds = DB::table('penjualan_detail')->where('penjualan_id', $i);
             $total = $pds->sum('subtotal');
             $tanggal = $pds->first()->created_at;
             $pembayaran = $faker->randomElement(['tunai', 'kredit', 'giro', 'transfer']);
+
         	$data[] = [
         		"user_id" => rand(1, 4),
         		"customer_id" => rand(1, 9),

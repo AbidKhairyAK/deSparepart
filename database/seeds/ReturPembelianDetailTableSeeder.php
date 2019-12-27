@@ -19,7 +19,7 @@ class ReturPembelianDetailTableSeeder extends Seeder
 
         foreach ($ps as $key => $p) {
             for ($i=1; $i <= 2; $i++) { 
-                $pd = $p->pembelian_detail()->get()[$i * 3];
+                $pd = $p->pembelian_detail()->get()[$i * 2];
                 $qty = rand(1, $pd->qty);
 
                 $data[] = [

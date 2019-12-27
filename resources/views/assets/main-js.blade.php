@@ -12,9 +12,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
 <!-- select2 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+<!-- datepicker -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 <!-- Custom scripts for all pages-->
 <script src="/sb-admin/js/sb-admin-2.min.js"></script>
 <script type="text/javascript">
+    $('.datepicker').datepicker({
+        format: 'yyyy-mm-dd'
+    });
+
 	function dropdown() {
 		 // however much room you determine you need to prevent jumping
         var requireHeight = 600;

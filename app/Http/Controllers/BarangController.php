@@ -152,12 +152,19 @@ class BarangController extends Controller
 
     public function show($id)
     {
+        $range_from = request()->get('range_from');
+        $range_to = request()->get('range_to');
+
+        if (!$range_from || !$range_to) {
+            $past = date('Y-m-d', strtotime('-12 month'));
+            $now = date('Y-m-d');
+
+            return redirect("/barang/{$id}?range_from={$past}&range_to={$now}");
+        }
+
         $data['model'] = $this->table->where('id', $id)->with('kendaraan', 'komponen', 'pembelian_detail', 'inventaris.inventaris_detail')->first();
 
         $invs = $data['model']->inventaris()->with('inventaris_detail')->orderBy('tanggal')->orderBy('id', 'desc');
-
-        $range_from = request()->get('range_from');
-        $range_to = request()->get('range_to');
 
         if ($range_from && $range_to) {
             $invs = $invs->whereBetween('tanggal', ["{$range_from} 00:00:00", "{$range_to} 23:59:59"]);

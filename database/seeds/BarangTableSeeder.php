@@ -13,9 +13,6 @@ class BarangTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('inventaris')->truncate();
-        DB::table('inventaris_detail')->truncate();
-
         $faker = Factory::create();
 
         for ($i=0; $i < 20; $i++) { 
@@ -29,7 +26,7 @@ class BarangTableSeeder extends Seeder
                 'part_no' => (rand(1111, 9999) * 10000).(rand(1111, 9999)),
                 'nama' => $faker->sentence(2),
                 'merk' => $faker->word,
-                'stok' => rand(1, 50),
+                'stok' => rand(80, 100),
                 'limit' => rand(1, 20),
                 'harga_beli' => $hrg_beli,
                 'harga_jual' => $hrg_jual,
