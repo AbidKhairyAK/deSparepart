@@ -23,7 +23,7 @@
 			margin: 0;
 		}
 	}
-	#wrapper {
+	/* #wrapper {
 		position: fixed;
 		overflow: hidden;
 		top: 0; right: 0; bottom: 0; left: 0;
@@ -33,7 +33,7 @@
 		position: -webkit-sticky;
 		top: 0px;
 		z-index: 10;
-	}
+	} */
 	.select2-selection {
 		padding-top: 4px !important;
 		padding-bottom: 30px !important;
