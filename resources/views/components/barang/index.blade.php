@@ -14,7 +14,7 @@
 <script type="text/javascript">
 	var table;
 	$(function() {
-	    table = $('.table').DataTable({
+	    table = $('#table').DataTable({
 	        processing: true,
 	        serverSide: true,
 	        ajax: '{{$ajax}}',
@@ -33,4 +33,5 @@
 	    });
 	});
 </script>
+@include('components.modal.stock_item')
 @endsection

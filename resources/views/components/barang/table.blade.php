@@ -14,8 +14,8 @@
 		</div>
 	</div>
 	<div class="card-body">
-		
-		<table class="table table-striped">
+
+		<table id="table" class="table table-striped">
 			<thead class="thead-dark">
 				<tr>
 					<th>#</th>
