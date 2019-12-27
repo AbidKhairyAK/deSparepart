@@ -13,9 +13,6 @@ class BarangTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('inventaris')->truncate();
-        DB::table('inventaris_detail')->truncate();
-
         $faker = Factory::create();
 
         for ($i=0; $i < 20; $i++) { 

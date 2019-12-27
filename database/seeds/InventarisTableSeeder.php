@@ -13,10 +13,19 @@ class InventarisTableSeeder extends Seeder
      */
     public function run()
     {
+        DB::table('inventaris')->truncate();
+        DB::table('inventaris_detail')->truncate();
+
         $barangs = Barang::all();
 
+        $this->command->getOutput()->progressStart(20);
+
         foreach ($barangs as $barang) {
-        	foreach ($barang->pembelian_detail()->orderBy('created_at')->get() as $detail) {
+
+            $pembelian_detail = $barang->pembelian_detail()->orderBy('created_at')->get();
+            $penjualan_detail = $barang->penjualan_detail()->orderBy('created_at')->get();
+
+        	foreach ($pembelian_detail as $detail) {
         		DB::table('inventaris')->insert([
                     'tanggal'               => $detail->created_at,
         			'barang_id'				=> $barang->id,
@@ -26,7 +35,7 @@ class InventarisTableSeeder extends Seeder
         			'trx_total'				=> $detail->subtotal,
         		]);
         	}
-        	foreach ($barang->penjualan_detail()->orderBy('created_at')->get() as $detail) {
+        	foreach ($penjualan_detail as $detail) {
         		DB::table('inventaris')->insert([
                     'tanggal'               => $detail->created_at,
         			'barang_id'				=> $barang->id,
@@ -65,7 +74,11 @@ class InventarisTableSeeder extends Seeder
                         ->sum('inv_stok');
 
             $barang->update(['stok' => $current_stock]);
+
+            $this->command->getOutput()->progressAdvance();
         }
+
+        $this->command->getOutput()->progressFinish();
     }
 
     public function decreaseBarang($b, $id, $qty)

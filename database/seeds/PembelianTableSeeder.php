@@ -15,7 +15,7 @@ class PembelianTableSeeder extends Seeder
     {
         $faker = Factory::create('id_ID');
 
-        for ($i=1; $i <= 10; $i++) { 
+        for ($i=1; $i <= 40; $i++) { 
         	$paid = rand(0, 1);
         	$pds = DB::table('pembelian_detail')->where('pembelian_id', $i);
             $total = $pds->sum('subtotal');

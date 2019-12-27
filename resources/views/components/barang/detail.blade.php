@@ -111,15 +111,13 @@
 			<div>
 				<form>
 					from: <input style="width: 150px;" 
-								type="date" 
 								name="range_from" 
-								class="form-control form-control-sm d-inline-block" 
+								class="datepicker form-control form-control-sm d-inline-block" 
 								value="{{ request()->get('range_from') }}"
 							>
 					to: <input style="width: 150px;" 
-								type="date" 
 								name="range_to" 
-								class="form-control form-control-sm d-inline-block" 
+								class="datepicker form-control form-control-sm d-inline-block" 
 								value="{{ request()->get('range_to') }}"
 							>
 					<button class="btn btn-sm btn-primary">submit</button>

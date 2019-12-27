@@ -16,15 +16,15 @@ class PembelianDetailTableSeeder extends Seeder
     {
         $faker = Factory::create('id_ID');
 
-        for ($i=1; $i <= 99; $i++) { 
-            $qty = rand(1, 15);
+        for ($i=1; $i <= 200; $i++) { 
+            $qty = $i == 1 ? rand(80, 100) : rand(20, 40);
             $diskon = $faker->boolean(20) ? rand(10, 70) : 0;
         	$ppn = rand(1, 10);
-        	$tbl = Barang::find(($i % 19) + 1 );
+        	$tbl = Barang::find(($i % 20) + 1 );
             $hrg_ppn = $tbl->harga_beli + ($tbl->harga_beli * $ppn / 100);
             $hrg_beli = $hrg_ppn - ($hrg_ppn * $diskon / 100);
-            $pembelian_id = ceil($i/10);
-            $date = date('Y-m-d H:i:s', (time() - (43200 * $pembelian_id)));
+            $pembelian_id = ceil($i/5);
+            $date = date('Y-m-d H:i:s', (time() - (2628000 * $pembelian_id)));
 
         	$data[] = [
         		"pembelian_id" => $pembelian_id,
