@@ -17,7 +17,7 @@ class PembelianDetailTableSeeder extends Seeder
         $faker = Factory::create('id_ID');
 
         for ($i=1; $i <= 200; $i++) { 
-            $qty = $i == 200 ? rand(80, 100) : rand(20, 40);
+            $qty = rand(20, 40);
             $diskon = $faker->boolean(20) ? rand(10, 70) : 0;
         	$ppn = rand(1, 10);
         	$tbl = Barang::find(($i % 20) + 1 );
@@ -61,8 +61,8 @@ class PembelianDetailTableSeeder extends Seeder
                 "ppn" => 0,
                 "diskon" => 0,
                 "subtotal" => $b->stok * $b->harga_beli,
-                "created_at" => '2000-01-01 00:00:00',
-                "updated_at" => '2000-01-01 00:00:00',
+                "created_at" => '2015-01-01 00:00:00',
+                "updated_at" => '2015-01-01 00:00:00',
             ]);
         }
         
