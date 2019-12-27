@@ -1,11 +1,17 @@
 @extends('app')
 
-@section('title', 'Halaman Belum Dibuat')
+@section('title', 'Laporan Penjualan')
 
 @section('content')
-<div id="page-header">
-	<h1 class="h3 mb-1 text-gray-800">Daftar Halaman Belum Dibuat</h1>
-	<p class="mb-4">Maaf, halaman ini belum dibuat</p>
-</div>
 
+@include('components.laporan-penjualan.table')
+@include('components.laporan-penjualan.chart')
+
+@endsection
+
+@section('script')
+@include('components.laporan-penjualan.chart-js')
+<script type="text/javascript">
+	$('.table').DataTable();
+</script>
 @endsection
