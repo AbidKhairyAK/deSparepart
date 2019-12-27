@@ -35,4 +35,5 @@
 <script type="text/javascript">
 	$('.table').DataTable();
 </script>
+@include('components.modal.stock_item')
 @endsection

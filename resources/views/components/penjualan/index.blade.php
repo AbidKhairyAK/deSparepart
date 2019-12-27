@@ -19,7 +19,7 @@
 
 	var table;
 	$(document).ready(function() {
-		table = $('.table').DataTable({
+		table = $('#table').DataTable({
 	        processing: true,
 	        serverSide: true,
 	        ajax: '{{$ajax}}',
@@ -37,7 +37,8 @@
 		@if(session()->has('print'))
 	    $('.print')[0].click();
 	    @endif
-	    
+
 	});
 </script>
+@include('components.modal.stock_item')
 @endsection
