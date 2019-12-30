@@ -16,7 +16,7 @@ class PembelianDetailTableSeeder extends Seeder
     {
         $faker = Factory::create('id_ID');
 
-        for ($i=1; $i <= 200; $i++) { 
+        for ($i=6; $i <= 200; $i++) { 
             $qty = rand(20, 40);
             $diskon = $faker->boolean(20) ? rand(10, 70) : 0;
         	$ppn = rand(1, 10);
@@ -24,7 +24,7 @@ class PembelianDetailTableSeeder extends Seeder
             $hrg_ppn = $tbl->harga_beli + ($tbl->harga_beli * $ppn / 100);
             $hrg_beli = $hrg_ppn - ($hrg_ppn * $diskon / 100);
             $pembelian_id = ceil($i/5);
-            $date = date('Y-m-d H:i:s', (time() - (2628000 * $pembelian_id)));
+            $date = date('Y-m-d H:i:s', (time() - (2584800 * $pembelian_id)));
 
         	$data[] = [
         		"pembelian_id" => $pembelian_id,

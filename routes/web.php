@@ -98,5 +98,8 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::get('/laporan-pembelian', 'LaporanPembelianController@index')->name('laporan-pembelian.index');
 	Route::get('/laporan-kinerja-karyawan', 'LaporanKinerjaKaryawanController@index')->name('laporan-kinerja-karyawan.index');
 	Route::get('/laporan-laba-rugi', 'LaporanLabaRugiController@index')->name('laporan-laba-rugi.index');
-});
 
+	Route::get('history/data', 'HistoryController@data')->name('history.data');
+	Route::get('history/{id}', 'HistoryController@show')->name('history.show');
+	Route::get('history', 'HistoryController@index')->name('history.index');
+});

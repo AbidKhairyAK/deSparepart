@@ -127,6 +127,11 @@
       </li>
     @endif
   @endforeach
+  <li class="nav-item">
+    <a class="nav-link" href="{{ url('/history') }}">
+      <i class="fas fa-fw fa-history"></i>
+      <span>History</span></a>
+  </li>
 
   <!-- Divider -->
   <hr class="sidebar-divider d-none d-md-block">

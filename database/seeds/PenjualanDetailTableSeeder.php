@@ -19,7 +19,7 @@ class PenjualanDetailTableSeeder extends Seeder
 		$this->command->getOutput()->progressStart(600);
 
 		for ($i=1; $i <= 600; $i++) { 
-			$qty = rand(1, 15);
+			$qty = rand(10, 15);
 			$diskon = $faker->boolean(20) ? rand(10, 70) : 0;
 			$tbl = Barang::find( ($i % 20) + 1 );
 			$harga_jual = $tbl->harga_jual - ($tbl->harga_jual * $diskon / 100);

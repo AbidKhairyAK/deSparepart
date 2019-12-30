@@ -3,13 +3,15 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Supplier extends Model
+class Supplier extends Model implements Auditable
 {
+	use \OwenIt\Auditing\Auditable;
 	protected $table = 'supplier';
 
     protected $fillable = [
-    	'id', 'kode', 'perusahaan', 'pemilik', 'cp', 'alamat', 'npwp', 'pkp', 'kategori', 'status', 'tempo_kredit', 'user_id', 
+    	'id', 'kode', 'perusahaan', 'pemilik', 'cp', 'alamat', 'npwp', 'pkp', 'kategori', 'status', 'tempo_kredit', 'user_id',
     ];
 
     public function barang()

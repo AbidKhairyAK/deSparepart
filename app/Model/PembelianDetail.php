@@ -3,9 +3,11 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class PembelianDetail extends Model
+class PembelianDetail extends Model implements Auditable
 {
+	use \OwenIt\Auditing\Auditable;
 	protected $table = 'pembelian_detail';
 
     protected $fillable = [
