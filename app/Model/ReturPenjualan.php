@@ -3,9 +3,11 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class ReturPenjualan extends Model
+class ReturPenjualan extends Model implements Auditable
 {
+	use \OwenIt\Auditing\Auditable;
 	protected $table = 'retur_penjualan';
 
     protected $fillable = [
