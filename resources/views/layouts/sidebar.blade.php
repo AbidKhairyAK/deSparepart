@@ -52,9 +52,9 @@
     ],
     [
       'name' => 'Laporan', 'icon' => 'file-invoice-dollar', 'child' => [
-        ['name' => 'Laporan Penjualan', 'link' => '/laporan-penjualan', 'perm' => 'index-laporan-penjualan'],
-        ['name' => 'Laporan Pembelian', 'link' => '/laporan-pembelian', 'perm' => 'index-laporan-pembelian'],
-        ['name' => 'Laporan Kinerja Karyawan', 'link' => '/laporan-kinerja-karyawan', 'perm' => 'index-laporan-kinerja-karyawan'],
+        // ['name' => 'Laporan Penjualan', 'link' => '/laporan-penjualan', 'perm' => 'index-laporan-penjualan'],
+        // ['name' => 'Laporan Pembelian', 'link' => '/laporan-pembelian', 'perm' => 'index-laporan-pembelian'],
+        // ['name' => 'Laporan Kinerja Karyawan', 'link' => '/laporan-kinerja-karyawan', 'perm' => 'index-laporan-kinerja-karyawan'],
         ['name' => 'Laporan Laba Rugi', 'link' => '/laporan-laba-rugi', 'perm' => 'index-laporan-laba-rugi'],
       ],
     ],
