@@ -28,8 +28,8 @@ class ReturPembelianDetailTableSeeder extends Seeder
                     "qty" => $qty,
                     "biaya" => $pd->harga * $qty,
                     "keterangan" => rand(0, 1) ? $faker->sentence() : null,
-                    "created_at" => now(),
-                    "updated_at" => now(),
+                    "created_at" => date('Y-m-d', strtotime($p->created_at) + 86400),
+                    "updated_at" => date('Y-m-d', strtotime($p->created_at) + 86400),
                 ];
             }
         }

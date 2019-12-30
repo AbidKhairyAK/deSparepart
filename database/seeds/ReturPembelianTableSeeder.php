@@ -18,7 +18,7 @@ class ReturPembelianTableSeeder extends Seeder
 
         DB::statement("SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
         
-        $p = ReturPembelianDetail::select(DB::raw('SUM(biaya) as total, pembelian_detail_id'))->groupBy('retur_pembelian_id')->get();
+        $p = ReturPembelianDetail::select(DB::raw('SUM(biaya) as total, pembelian_detail_id, created_at'))->groupBy('retur_pembelian_id')->get();
 
         foreach ($p as $key => $pd) {
             $pembayaran = $faker->randomElement(['tunai', 'giro', 'kredit', 'transfer']);
@@ -30,8 +30,8 @@ class ReturPembelianTableSeeder extends Seeder
                 'pembayaran_detail' => $pembayaran == 'giro' ? $faker->isbn13 : null,
                 "dilunaskan" => 0,
                 "dikembalikan" => $pd->total,
-                "created_at" => now(),
-                "updated_at" => now(),
+                "created_at" => $pd->created_at,
+                "updated_at" => $pd->created_at,
             ];
         }
 
