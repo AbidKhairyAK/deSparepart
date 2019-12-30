@@ -36,3 +36,8 @@ function terbilang($nilai) {
 	}     		
 	return $hasil;
 }
+
+function rupiah($value, $kurs = false) {
+	$k = $kurs ? 'Rp ' : '';
+	return $k.number_format($value, 0, '', '.');
+}

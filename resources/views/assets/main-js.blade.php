@@ -18,7 +18,25 @@
 <script src="/sb-admin/js/sb-admin-2.min.js"></script>
 <script type="text/javascript">
     $('.datepicker').datepicker({
-        format: 'yyyy-mm-dd'
+        format: 'yyyy-mm-dd',
+        autoclose: true,
+        todayHighlight: true,
+    });
+
+    $('.monthpicker').datepicker({
+        format: 'yyyy-mm',
+        startView: "months", 
+        minViewMode: "months",
+        autoclose: true,
+        todayHighlight: true,
+    });
+
+    $('.yearpicker').datepicker({
+        format: 'yyyy',
+        startView: "years", 
+        minViewMode: "years",
+        autoclose: true,
+        todayHighlight: true,
     });
 
 	function dropdown() {

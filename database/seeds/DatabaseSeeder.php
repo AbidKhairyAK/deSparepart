@@ -37,6 +37,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ReturPembelianDetailTableSeeder::class);
         $this->call(ReturPembelianTableSeeder::class);
         $this->call(InventarisTableSeeder::class);
+        $this->call(LabaTableSeeder::class);
         // $this->call(TestBarangDetailStok::class);
 
 
