@@ -63,7 +63,7 @@
         ['name' => 'Daftar Jabatan', 'link' => '/jabatan', 'perm' => 'index-jabatan'],
         ['name' => 'Daftar Hak Akses', 'link' => '/hak-akses', 'perm' => 'index-hak-akses'],
         ['name' => 'Enkripsi Angka', 'link' => '/enkripsi', 'perm' => 'index-enkripsi'],
-        ['name' => 'Backup & Restore', 'link' => '/backup', 'perm' => 'index-backup'],
+        // ['name' => 'Backup & Restore', 'link' => '/backup', 'perm' => 'index-backup'],
       ],
     ],
   ];
