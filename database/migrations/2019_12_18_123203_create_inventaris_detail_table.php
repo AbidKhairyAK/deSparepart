@@ -17,8 +17,8 @@ class CreateInventarisDetailTable extends Migration
             $table->bigIncrements('id');
             $table->datetime('tanggal');
             $table->unsignedBigInteger('inventaris_id');
-            $table->unsignedMediumInteger('inv_qty')->nullable();
-            $table->unsignedMediumInteger('inv_stok')->nullable();
+            $table->mediumInteger('inv_qty')->nullable();
+            $table->mediumInteger('inv_stok')->nullable();
             $table->unsignedInteger('inv_harga')->nullable();
             $table->unsignedInteger('inv_total')->nullable();
             $table->timestamps();

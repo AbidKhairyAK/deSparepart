@@ -330,44 +330,68 @@ class PembelianController extends Controller
                 'trx_total'             => $pd->subtotal,
             ]);
 
-            $this->inv_beli($inv);
+            if (!$update) {
+                $this->inv_beli($inv, $pd);
+            }
         }
     }
 
-    public function inv_beli($inv)
+    public function inv_beli($inv, $pd)
     {
-        $latest = DB::table('inventaris')
-                    ->orderBy('tanggal', 'desc')
+        $latest = Inventaris::orderBy('tanggal', 'desc')
                     ->orderBy('id', 'desc')
                     ->where('barang_id', $inv->barang_id)
                     ->where('tanggal', '<', $inv->tanggal)
                     ->first();
 
-        if ($latest) {
-            $prevs = DB::table('inventaris_detail')
-                        ->where('inventaris_id', $latest->id)
-                        ->orderBy('tanggal')
-                        ->get();
+        $min = $latest ? $latest->inventaris_detail()->first() : null;
 
-            foreach ($prevs as $prev) {
+        if ($min && $min->inv_stok < 0) {
+
+            $qty = $min->inv_stok + $inv->trx_qty;
+            $harga = ($qty > 0) ? $inv->trx_harga : $min->inv_harga;
+
+            if ($qty != 0) {
                 DB::table('inventaris_detail')->insert([
-                    'tanggal'       => $prev->tanggal,
+                    'tanggal'       => $inv->tanggal,
                     'inventaris_id' => $inv->id,
-                    'inv_qty'       => $prev->inv_qty,
-                    'inv_stok'      => $prev->inv_stok,
-                    'inv_harga'     => $prev->inv_harga,
-                    'inv_total'     => $prev->inv_total,
+                    'inv_qty'       => $qty,
+                    'inv_stok'      => $qty,
+                    'inv_harga'     => $harga,
+                    'inv_total'     => $harga * $qty * (($qty > 0) ? 1 : -1),
                 ]);
             }
+
+            $pd->update(['stok' => (($qty > 0) ? $qty : 0)]);
+            
+        } else {      
+            if ($latest) {
+                $prevs = DB::table('inventaris_detail')
+                            ->where('inventaris_id', $latest->id)
+                            ->orderBy('tanggal')
+                            ->get();
+
+                foreach ($prevs as $prev) {
+                    DB::table('inventaris_detail')->insert([
+                        'tanggal'       => $prev->tanggal,
+                        'inventaris_id' => $inv->id,
+                        'inv_qty'       => $prev->inv_qty,
+                        'inv_stok'      => $prev->inv_stok,
+                        'inv_harga'     => $prev->inv_harga,
+                        'inv_total'     => $prev->inv_total,
+                    ]);
+                }
+            }
+            
+            DB::table('inventaris_detail')->insert([
+                'tanggal'       => $inv->tanggal,
+                'inventaris_id' => $inv->id,
+                'inv_qty'       => $inv->trx_qty,
+                'inv_stok'      => $inv->trx_qty,
+                'inv_harga'     => $inv->trx_harga,
+                'inv_total'     => $inv->trx_total,
+            ]);
         }
-        
-        DB::table('inventaris_detail')->insert([
-            'tanggal'       => $inv->tanggal,
-            'inventaris_id' => $inv->id,
-            'inv_qty'       => $inv->trx_qty,
-            'inv_stok'      => $inv->trx_qty,
-            'inv_harga'     => $inv->trx_harga,
-            'inv_total'     => $inv->trx_total,
-        ]);
+
     }
 }

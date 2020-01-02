@@ -33,7 +33,7 @@ class LabaTableSeeder extends Seeder
         		$this->perbulan($y, $m, $startY, $startM);
         	}
 
-        	$this->pertahun($y, $startY, $startM);
+        	$this->pertahun($y, $startY);
         }
 		$this->command->getOutput()->progressFinish();
 
@@ -105,7 +105,7 @@ class LabaTableSeeder extends Seeder
 		}
     }
 
-    public function pertahun($y, $startY, $startM)
+    public function pertahun($y, $startY)
     {
 		$total_penjualan	= DB::table('penjualan')->where('created_at', 'like', "{$y}%")->sum('total');
 		$total_pembelian 	= DB::table('pembelian')->where('created_at', 'like', "{$y}%")->sum('total');

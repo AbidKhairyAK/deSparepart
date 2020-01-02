@@ -342,8 +342,10 @@ class PenjualanController extends Controller
 			    'trx_harga'             => $pd->harga,
 			    'trx_total'             => $pd->subtotal,
 			]);
-
-			$this->inv_jual($inv);
+            
+            if (!$update) {
+				$this->inv_jual($inv);
+			}
 		}
 	}
 
@@ -426,9 +428,41 @@ class PenjualanController extends Controller
                         ->orderBy('id', 'desc')
                         ->first();
 
-            // habiskan stok inventaris_detail
             $this->inv_jual($new_inv, $qty - $first->inv_stok, $skip + 1);
+        } else {
+        	$this->inv_minus($inv, $qty);
         }
+    }
+
+    public function inv_minus($inv, $qty)
+    {
+    	$b = DB::table('barang')->where('id', $inv->barang_id)->first();
+
+    	DB::table('inventaris')->where('id', $inv->id)->update([
+    	    'trx_qty' => $qty,
+    	    'trx_harga' => $b->harga_beli,
+    	    'trx_total' => $qty * $b->harga_beli,
+    	]);
+
+    	$minus = Inventaris::orderBy('tanggal', 'desc')
+    	            ->orderBy('id', 'desc')
+    	            ->where('barang_id', $inv->barang_id)
+                    ->where('tanggal', '<', $inv->tanggal)
+    	            ->whereHas('inventaris_detail', function($m) {
+    	            	$m->where('inv_stok', '<', 0);
+    	            })
+    	            ->first();
+
+    	$stok = $minus ? ($minus->inventaris_detail()->first()->inv_stok * -1) + $qty : $qty;
+
+		DB::table('inventaris_detail')->insert([
+		    'tanggal'       => $inv->tanggal,
+		    'inventaris_id' => $inv->id,
+		    'inv_qty'       => $stok * -1,
+		    'inv_stok'      => $stok * -1,
+		    'inv_harga'     => $b->harga_beli,
+		    'inv_total'     => $stok * $b->harga_beli,
+		]);
     }
 
 	public function decreaseBarang($b, $id, $qty)
@@ -447,7 +481,6 @@ class PenjualanController extends Controller
 
 	public function restoreDecreaseBarang($b, $id, $qty)
 	{
-		// i hope this will work :(
 		$apds = $b->pembelian_detail()->where('stok', '>', 0)->oldest();
 		$apd = $apds->first();
 
