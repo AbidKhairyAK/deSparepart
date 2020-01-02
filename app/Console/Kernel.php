@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Http\Controllers\LaporanLabaRugiController as LRC;
 
 class Kernel extends ConsoleKernel
 {
@@ -30,6 +31,10 @@ class Kernel extends ConsoleKernel
         // Backups (to Google Drive)
         $schedule->command('backup:clean')->dailyAt('01:30');
         $schedule->command('backup:run --only-db')->dailyAt('01:35');
+
+        // Count Laba Rugi
+        $schedule->call(function() { LRC::recountPerbulan(); })->dailyAt('02:00');
+        $schedule->call(function() { LRC::recountPertahun(); })->monthlyOn(2, '03:00');
     }
 
     /**

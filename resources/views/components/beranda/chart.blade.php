@@ -5,7 +5,7 @@
 				<h6 class="m-0 font-weight-bold text-secondary">Statistik Penjualan Bulan Ini</h6>
 			</div>
 			<div class="card-body">
-				<canvas id="penjualan-chart" width="400" height="200"></canvas>
+				<canvas id="penjualan-chart" width="400" height="250"></canvas>
 			</div>
 		</div>
 	</div>
@@ -15,7 +15,7 @@
 				<h6 class="m-0 font-weight-bold text-secondary">Statistik Pembelian Bulan Ini</h6>
 			</div>
 			<div class="card-body">
-				<canvas id="pembelian-chart" width="400" height="200"></canvas>
+				<canvas id="pembelian-chart" width="400" height="250"></canvas>
 			</div>
 		</div>
 	</div>

@@ -141,4 +141,66 @@ class LaporanLabaRugiController extends Controller
             );
         }
     }
+
+    public function recountPertahun()
+    {
+        $y = date('Y');
+
+        $total_penjualan    = DB::table('penjualan')->where('created_at', 'like', "{$y}%")->sum('total');
+        $total_pembelian    = DB::table('pembelian')->where('created_at', 'like', "{$y}%")->sum('total');
+
+        if ($total_penjualan > 0 || $total_pembelian > 0) {
+
+            $retur_penjualan    = DB::table('retur_penjualan')->where('created_at', 'like', "{$y}%");
+            $retur_penjualan    = $retur_penjualan->sum('dikembalikan') + $retur_penjualan->sum('dilunaskan');
+            $retur_pembelian    = DB::table('retur_pembelian')->where('created_at', 'like', "{$y}%");
+            $retur_pembelian    = $retur_pembelian->sum('dikembalikan') + $retur_pembelian->sum('dilunaskan');
+
+            $penjualan_bersih   = $total_penjualan - $retur_penjualan;
+            $pembelian_bersih   = $total_pembelian - $retur_pembelian;
+
+            $id_barang          = DB::table('barang')->pluck('id');
+            $persediaan_awal    = 0;
+            $persediaan_akhir   = 0;
+
+            foreach ($id_barang as $idb) {
+                $persediaan_awal += Inventaris::has('inventaris_detail')
+                                            ->where('barang_id', $idb)
+                                            ->where('tanggal', '<', "{$y}-01-01 00:00:00")
+                                            ->orderBy('tanggal', 'desc')
+                                            ->first()
+                                            ->inventaris_detail()
+                                            ->sum('inv_total');
+
+                $persediaan_akhir += Inventaris::has('inventaris_detail')
+                                            ->where('barang_id', $idb)
+                                            ->where('tanggal', '<', date('Y-m-t', strtotime("{$y}-12-01"))." 23:59:59")
+                                            ->orderBy('tanggal', 'desc')
+                                            ->first()
+                                            ->inventaris_detail()
+                                            ->sum('inv_total');
+            }
+
+            $persediaan_siap_jual   = $pembelian_bersih + $persediaan_awal;
+            $hpp                    = $persediaan_siap_jual - $persediaan_akhir;
+            $laba_kotor             = $penjualan_bersih - $hpp;
+
+            DB::table('laba')->insert([
+                'total_penjualan'       => $total_penjualan,
+                'retur_penjualan'       => $retur_penjualan,
+                'penjualan_bersih'      => $penjualan_bersih,
+                'total_pembelian'       => $total_pembelian,
+                'retur_pembelian'       => $retur_pembelian,
+                'pembelian_bersih'      => $pembelian_bersih,
+                'persediaan_awal'       => $persediaan_awal,
+                'persediaan_siap_jual'  => $persediaan_siap_jual,
+                'persediaan_akhir'      => $persediaan_akhir,
+                'hpp'                   => $hpp,
+                'laba_kotor'            => $laba_kotor,
+                'tanggal_awal'          => $y.'-01-01 00:00:00',
+                'tanggal_akhir'         => date('Y-m-t H:i:s', strtotime($y.'-12-01')),
+                'tipe'                  => 'pertahun',
+            ]);
+        }
+    }
 }
