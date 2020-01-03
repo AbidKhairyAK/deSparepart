@@ -30,7 +30,7 @@ class BerandaController extends Controller
         $data['chart_penjualan'] = $this->chart($penjualan, $range_from, $range_to);
         $data['chart_pembelian'] = $this->chart($pembelian, $range_from, $range_to);
 
-        $data['limit'] = DB::table('barang')->whereColumn('stok', '<', 'limit')->get();
+        $data['limit'] = DB::table('barang')->whereColumn('stok', '<=', 'limit')->get();
 
     	return view('components.beranda.index', $data);
     }

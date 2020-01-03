@@ -27,6 +27,7 @@ class CreateSupplierTable extends Migration
             $table->string('kategori');
             $table->boolean('status')->default(1);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

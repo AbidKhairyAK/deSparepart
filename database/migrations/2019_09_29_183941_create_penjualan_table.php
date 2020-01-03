@@ -29,6 +29,7 @@ class CreatePenjualanTable extends Migration
             $table->integer('total');
             $table->string('keterangan')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

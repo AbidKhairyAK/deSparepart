@@ -23,6 +23,7 @@ class CreateReturPenjualanTable extends Migration
             $table->integer('dilunaskan')->nullable();
             $table->integer('dikembalikan')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

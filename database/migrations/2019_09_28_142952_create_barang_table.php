@@ -29,6 +29,7 @@ class CreateBarangTable extends Migration
             $table->string('gambar', 15)->nullable();
             $table->string('keterangan');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -25,6 +25,7 @@ class CreatePembayaranPiutangTable extends Migration
             $table->string('pembayaran_detail', 20)->nullable();
             $table->string('status_lunas');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

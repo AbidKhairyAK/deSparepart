@@ -1,0 +1,12 @@
+daftar softdeletes
+- komponen
+- kendaraan
+- barang
+- supplier
+- customer
+- penjualan
+- pembelian
+- pembayaran_piutang
+- pembayaran_hutang
+- retur_penjualan
+- retur_pembelian

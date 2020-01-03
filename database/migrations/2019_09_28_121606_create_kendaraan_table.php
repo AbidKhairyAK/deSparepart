@@ -21,6 +21,7 @@ class CreateKendaraanTable extends Migration
             $table->string('pabrikan');
             $table->enum('tipe', ['mobil', 'motor', 'sepeda', 'lainnya']);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
