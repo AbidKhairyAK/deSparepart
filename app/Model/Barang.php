@@ -4,10 +4,12 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Barang extends Model implements Auditable
 {
 	use \OwenIt\Auditing\Auditable;
+    use SoftDeletes;
 
 	protected $table = 'barang';
 
@@ -19,12 +21,12 @@ class Barang extends Model implements Auditable
 
     public function user()
     {
-    	return $this->belongsTo(User::class);
+    	return $this->belongsTo(User::class)->withTrashed();
     }
 
     public function komponen()
     {
-        return $this->belongsTo(Komponen::class);
+        return $this->belongsTo(Komponen::class)->withTrashed();
     }
 
     public function satuan()
@@ -34,7 +36,7 @@ class Barang extends Model implements Auditable
 
     public function kendaraan()
     {
-    	return $this->belongsTo(Kendaraan::class);
+    	return $this->belongsTo(Kendaraan::class)->withTrashed();
     }
 
     public function pembelian_detail()

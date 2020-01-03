@@ -23,6 +23,7 @@ class CreateCustomerTable extends Migration
             $table->enum('kategori', ['bengkel', 'toko', 'umum'])->default('umum');
             $table->boolean('status')->default(1);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

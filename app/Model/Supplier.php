@@ -4,10 +4,13 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Supplier extends Model implements Auditable
 {
 	use \OwenIt\Auditing\Auditable;
+    use SoftDeletes;
+    
 	protected $table = 'supplier';
 
     protected $fillable = [
@@ -16,12 +19,12 @@ class Supplier extends Model implements Auditable
 
     public function barang()
     {
-    	return $this->belongsToMany(Barang::class);
+    	return $this->belongsToMany(Barang::class)->withTrashed();
     }
 
     public function pembelian()
     {
-        return $this->hasMany(Pembelian::class);
+        return $this->hasMany(Pembelian::class)->withTrashed();
     }
 
     public function kontak_supplier()

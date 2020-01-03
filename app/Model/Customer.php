@@ -4,10 +4,13 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customer extends Model implements Auditable
 {
 	use \OwenIt\Auditing\Auditable;
+    use SoftDeletes;
+    
 	protected $table = 'customer';
 
     protected $fillable = [
@@ -21,6 +24,6 @@ class Customer extends Model implements Auditable
 
     public function penjualan()
     {
-    	return $this->hasMany(Penjualan::class);
+    	return $this->hasMany(Penjualan::class)->withTrashed();
     }
 }

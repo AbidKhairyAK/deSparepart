@@ -1,13 +1,16 @@
-<?php
+->withTrashed();<?php
 
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Contracts\Auditable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pembelian extends Model implements Auditable
 {
 	use \OwenIt\Auditing\Auditable;
+    use SoftDeletes;
+    
 	protected $table = 'pembelian';
 
     protected $fillable = [
@@ -16,12 +19,12 @@ class Pembelian extends Model implements Auditable
 
     public function user()
     {
-    	return $this->belongsTo(User::class);
+    	return $this->belongsTo(User::class)->withTrashed();
     }
 
     public function supplier()
     {
-        return $this->belongsTo(Supplier::class);
+        return $this->belongsTo(Supplier::class)->withTrashed();
     }
 
     public function pembelian_detail()
@@ -31,6 +34,6 @@ class Pembelian extends Model implements Auditable
 
     public function pembayaran_hutang()
     {
-    	return $this->hasMany(PembayaranHutang::class);
+    	return $this->hasMany(PembayaranHutang::class)->withTrashed();
     }
 }

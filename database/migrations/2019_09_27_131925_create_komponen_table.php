@@ -21,6 +21,7 @@ class CreateKomponenTable extends Migration
             $table->enum('tipe', ['umum', 'mobil', 'motor', 'sepeda']);
             $table->string('bagian', 100);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
