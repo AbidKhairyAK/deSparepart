@@ -10,6 +10,7 @@
   <meta name="author" content="">
 
   <title>Sistem | @yield('title')</title>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
 
   @include('assets.main-css')
 
@@ -55,7 +56,7 @@
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
   </a>
-  
+
   @include('assets.main-js')
 
   @yield('script')

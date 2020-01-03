@@ -8,62 +8,17 @@
 		</div>
 	</div>
 	<div class="card-body">
-		
+
 		<table class="table table-striped">
 			<thead class="thead-dark">
 				<tr>
+					<th>#</th>
 					<th>Nama Jabatan</th>
 					<th>Deskripsi</th>
 					<th>Aksi</th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr>
-					<td>Karyawan</td>
-					<td>Loram ipsum dolor sir amet von sachez requesqat in pace...</td>
-					<td>
-						<div class="dropdown no-arrow">
-							<button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
-								<i class="fas fa-cogs"></i>
-							</button>
-							<div class="dropdown-menu dropdown-menu-right shadow">
-								<a class="dropdown-item" href="#">Edit</a>
-								<a class="dropdown-item" href="#">Hapus</a>
-							</div>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>Kasir</td>
-					<td>Loram ipsum dolor sir amet von sachez requesqat in pace...</td>
-					<td>
-						<div class="dropdown no-arrow">
-							<button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
-								<i class="fas fa-cogs"></i>
-							</button>
-							<div class="dropdown-menu dropdown-menu-right shadow">
-								<a class="dropdown-item" href="#">Edit</a>
-								<a class="dropdown-item" href="#">Hapus</a>
-							</div>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>Gudang</td>
-					<td>Loram ipsum dolor sir amet von sachez requesqat in pace...</td>
-					<td>
-						<div class="dropdown no-arrow">
-							<button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
-								<i class="fas fa-cogs"></i>
-							</button>
-							<div class="dropdown-menu dropdown-menu-right shadow">
-								<a class="dropdown-item" href="#">Edit</a>
-								<a class="dropdown-item" href="#">Hapus</a>
-							</div>
-						</div>
-					</td>
-				</tr>
-			</tbody>
+			<tbody></tbody>
 		</table>
 	</div>
 </div>

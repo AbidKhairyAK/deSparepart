@@ -1,4 +1,4 @@
-->withTrashed();<?php
+<?php
 
 namespace App\Model;
 
@@ -10,7 +10,7 @@ class Pembelian extends Model implements Auditable
 {
 	use \OwenIt\Auditing\Auditable;
     use SoftDeletes;
-    
+
 	protected $table = 'pembelian';
 
     protected $fillable = [

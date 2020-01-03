@@ -87,10 +87,14 @@ Route::group(['middleware' => ['auth']], function () {
 
 	Route::get('/barang/multiedit', 'BarangController@multiedit');
 
+	Route::get('karyawan/data', 'KaryawanController@data')->name('karyawan.data');
 	Route::resource('/karyawan', 'KaryawanController');
 	// Route::resource('/pengguna', 'PenggunaController');
 	Route::resource('/penjual', 'PenjualController');
+
+	Route::get('jabatan/data', 'JabatanController@data')->name('jabatan.data');
 	Route::resource('/jabatan', 'JabatanController');
+
 	Route::resource('/enkripsi', 'EnkripsiController');
 	Route::resource('/backup', 'BackupController');
 
