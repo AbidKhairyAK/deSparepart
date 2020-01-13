@@ -19,7 +19,7 @@
 			<div class="d-flex justify-content-between mb-3">
 				<label>
 					<b>NO FAKTUR :</b>
-					<input name="no_faktur" type="text" class="form-control d-inline-block" v-model="form.no_faktur" style="width: auto;" required>
+					<input name="no_faktur" type="text" class="form-control d-inline-block" v-model="form.no_faktur" style="width: auto;">
 				</label>
 
 				<label>

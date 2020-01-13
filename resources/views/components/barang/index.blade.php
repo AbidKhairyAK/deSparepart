@@ -22,11 +22,9 @@
 	        columns: [
 	            { data: 'id', searchable: false, orderable: false },
             	{ data: 'gambar' },
-            	{ data: 'part_no' },
+            	{ data: 'nomor' },
             	{ data: 'identitas' },
-            	{ data: 'stok' },
-            	{ data: 'limit' },
-            	{ data: 'satuan' },
+            	{ data: 'jumlah' },
             	{ data: 'harga' },
 	            { data: 'action', searchable: false, orderable: false }
 	        ],

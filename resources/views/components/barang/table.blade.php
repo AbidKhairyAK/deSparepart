@@ -20,11 +20,9 @@
 				<tr>
 					<th>#</th>
 					<th>Gambar</th>
-					<th>Part No</th>
+					<th>kode</th>
 					<th width="300">Identitas</th>
-					<th>Stok</th>
-					<th>Limit</th>
-					<th>Satuan</th>
+					<th>Jumlah</th>
 					<th>Harga</th>
 					<th>Aksi</th>
 				</tr>

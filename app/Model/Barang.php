@@ -14,7 +14,7 @@ class Barang extends Model implements Auditable
 	protected $table = 'barang';
 
     protected $fillable = [
-    	'id', 'user_id', 'komponen_id', 'kendaraan_id', 'part_no', 'nama', 'merk', 'stok', 'limit', 'satuan_id', 'harga_beli', 'harga_jual', 'keterangan', 'gambar'
+    	'id', 'user_id', 'komponen_id', 'kendaraan_id', 'kode', 'part_no', 'nama', 'merk', 'stok', 'limit', 'satuan_id', 'harga_beli', 'harga_jual', 'keterangan', 'gambar'
     ];
 
     protected $with = ['user', 'komponen', 'satuan', 'kendaraan', 'pembelian_detail'];
