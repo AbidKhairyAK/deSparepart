@@ -24,8 +24,7 @@
 	        columns: [
 	            { data: 'id', searchable: false, orderable: false },
             	{ data: 'kode' },
-	            { data: 'barang' },
-	            { data: 'biaya' },
+	            { data: 'dikembalikan' },
 	            { data: 'pembayaran' },
 	            { data: 'tanggal' },
 	            { data: 'action', searchable: false, orderable: false }

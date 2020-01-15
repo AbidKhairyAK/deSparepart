@@ -35,6 +35,11 @@
 									<p><b>@{{ penjualan.no_faktur }}</b></p>
 								</div>
 
+								<div class="form-group col-sm-12" id="preview">
+									<label>No Retur:</label>
+									<input type="text" name="no_retur" class="form-control" value="{{ $e ? $model->no_retur : $no_retur }}">
+								</div>
+
 								<div class="form-group col-sm-12">
 									<label>Daftar Barang:</label>
 									<table class="table table-bordered table-sm my-3" style="position: relative;">
@@ -72,7 +77,7 @@
 									</table>
 								</div>
 
-								<div class="form-group col-sm-12">
+								<div class="form-group col-sm-6">
 									<label>Pembayaran</label>
 									<select v-model="pembayaran" name="pembayaran" class="form-control" required>
 										<option value="tunai">TUNAI</option>
@@ -81,29 +86,12 @@
 										<option value="transfer">TRANSFER</option>
 									</select>
 									<br>
-									<input v-if="pembayaran == 'giro'" name="pembayaran_detail" type="text" class="form-control" placeholder="No Giro..." required>
+									<input v-if="pembayaran == 'giro'" name="pembayaran_detail" type="text" class="form-control" placeholder="No Giro..." value="{{ $model->pembayaran_detail }}" required>
 								</div>
 
-								<div class="form-group col-sm-3">
-									<label>No Pelunasan</label>
-									<input name="no_pelunasan" :value="piutang ? '{{ $no_pelunasan }}' : ''" type="text" class="form-control" readonly>
-								</div>
-								<div class="form-group col-sm-3">
-									<label>Piutang</label>
-									<input name="piutang" :value="piutang | nf" type="text" class="form-control" readonly>
-								</div>
-								<div class="form-group col-sm-3">
-									<label>Sisa Piutang</label>
-									<input name="sisa" :value="sisa | nf" type="text" class="form-control" readonly>
-								</div>
-								<div class="form-group col-sm-3">
-									<label>Total Dilunaskan</label>
-									<input name="dilunaskan" :value="dilunaskan | nf" type="text" class="form-control" readonly>
-								</div>
-
-								<div class="form-group col-sm-12">
+								<div class="form-group col-sm-6">
 									<label>Total Dikembalikan</label>
-									<input name="dikembalikan" :value="dikembalikan | nf" type="text" class="form-control" readonly>
+									<input name="dikembalikan" :value="total | nf" type="text" class="form-control" readonly>
 								</div>
 
 							</div>
@@ -143,42 +131,6 @@
 			retur: [],
 			biaya: [],
 			keterangan: [],
-		},
-		computed: {
-			sisa() {
-				var res = null;
-
-				if (this.total && this.piutang) { res = this.piutang - this.total; }
-				
-				if (res == null)		{ return this.piutang; } 
-				else if(res > 0)		{ return res; } 
-				else 								{ return '0'; }
-			},
-			piutang() {
-				var x = this.penjualan.pembayaran_piutang;
-
-				@if($e) 
-					if (x.length > 1) {
-						return x[x.length - 2].sisa;
-					} else {
-						return this.penjualan.hutang;
-					}
-				@endif
-
-				if (x.length > 0) {
-					return x[x.length - 1].sisa;
-				}
-				return this.penjualan.hutang;
-			},
-			dilunaskan() {
-				if (this.total > this.piutang) 						{ return this.piutang; } 
-				else if (this.piutang - this.total > 0) 	{ return this.total; } 
-				else 																			{ return '0'; }
-			},
-			dikembalikan() {
-				var b = this.total - this.piutang; 
-				return (b > 0) ? b : '0';
-			}
 		},
 		methods: {
 			getData(id){

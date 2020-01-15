@@ -25,6 +25,7 @@ class CreatePembelianTable extends Migration
             $table->integer('hutang')->nullable();
             $table->boolean('status_lunas');
             $table->boolean('status_post');
+            $table->boolean('status_retur')->default(0);
             $table->date('jatuh_tempo')->nullable();
             $table->integer('total');
             $table->string('keterangan')->nullable();

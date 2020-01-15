@@ -13,26 +13,30 @@
 </style>
 @endsection
 
+@php
+	$tipe = request()->get('tipe');
+	$waktu = request()->get('waktu');
+@endphp
+
 @section('content')
 
 <form>
 	tipe: <select style="width: 150px;" 
 				name="tipe"
-				class="form-control form-control-sm d-inline-block" 
-				value="{{ request()->get('tipe') }}"
+				class="form-control form-control-sm d-inline-block"
 			>
-				<option>perbulan</option>
-				<option>pertahun</option>
+				<option {{ $tipe == 'perbulan' ? 'selected' : null }}>perbulan</option>
+				<option {{ $tipe == 'pertahun' ? 'selected' : null }}>pertahun</option>
 			</select>
 	waktu: <input style="width: 150px;" 
-				name="waktu"
-				class="monthpicker picker form-control form-control-sm d-inline-block"
-				value="{{ request()->get('waktu') }}"
+				name="{{ $tipe == 'perbulan' ? 'waktu' : 'ignore' }}"
+				class="monthpicker picker form-control form-control-sm {{ $tipe == 'perbulan' ? 'd-inline-block' : 'd-none' }}"
+				value="{{ $tipe == 'perbulan' ? $waktu : date('Y-m') }}"
 			>
 			<input style="width: 150px;" 
-				name="ignore" 
-				class="yearpicker picker form-control form-control-sm d-none"
-				value="{{ date('Y') }}" 
+				name="{{ $tipe == 'pertahun' ? 'waktu' : 'ignore' }}" 
+				class="yearpicker picker form-control form-control-sm {{ $tipe == 'pertahun' ? 'd-inline-block' : 'd-none' }}"
+				value="{{ $tipe == 'pertahun' ? $waktu : date('Y') }}"
 			>
 	<button class="btn btn-sm btn-primary">submit</button>
 </form>

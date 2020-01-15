@@ -43,22 +43,16 @@ class ReturPenjualanController extends Controller
 
         $data = $this->table->join('penjualan', 'penjualan.id', '=', 'retur_penjualan.penjualan_id')
             ->join('retur_penjualan_detail', 'retur_penjualan_detail.retur_penjualan_id', '=', 'retur_penjualan.id')
-            ->leftJoin('pembayaran_piutang', 'pembayaran_piutang.id', '=', 'retur_penjualan.pembayaran_piutang_id')
-
             ->select(DB::raw('
-                    SUM(retur_penjualan_detail.biaya) as biaya, 
-                    COUNT(retur_penjualan_detail.retur_penjualan_id) as barang, 
                     penjualan.no_faktur, 
                     penjualan.created_at as tgl_jual, 
                     retur_penjualan.id, 
-                    retur_penjualan.dikembalikan, 
-                    retur_penjualan.dilunaskan, 
+                    retur_penjualan.no_retur, 
+                    retur_penjualan.dikembalikan,
                     retur_penjualan.pembayaran, 
-                    retur_penjualan.created_at as tgl_retur, 
-                    pembayaran_piutang.no_pelunasan'
+                    retur_penjualan.created_at as tgl_retur'
                 ))
             ->groupBy('retur_penjualan_detail.retur_penjualan_id')
-
             ->orderBy('retur_penjualan.created_at', 'desc');
 
 
@@ -69,7 +63,19 @@ class ReturPenjualanController extends Controller
                 $tag .= '</label>';
                 return $tag;
             })
-            ->editColumn('tanggal', function($index) {
+            ->addColumn('kode', function($index) {
+                $tag = "<table>
+                        <tr>
+                            <td>No Faktur</td><td class='px-2'>:</td><th>".$index->no_faktur."</th>
+                        </tr>
+                        <tr>
+                            <td>No Retur</td><td class='px-2'>:</td><th>".$index->no_retur."</th>
+                        </tr>
+                    </table>
+                ";
+                return $tag;
+            })
+            ->addColumn('tanggal', function($index) {
                 $tag = "<table>
                         <tr>
                             <td>Tgl Jual</td><td class='px-2'>:</td><th>".substr($index->tgl_jual, 0, 10)."</th>
@@ -81,32 +87,8 @@ class ReturPenjualanController extends Controller
                 ";
                 return $tag;
             })
-            ->addColumn('kode', function($index) {
-                $tag = "<table>
-                        <tr>
-                            <td>No Faktur</td><td class='px-2'>:</td><th>".$index->no_faktur."</th>
-                        </tr>
-                        <tr>
-                            <td>No Pelunasan</td><td class='px-2'>:</td><th>".$index->no_pelunasan."</th>
-                        </tr>
-                    </table>
-                ";
-                return $tag;
-            })
-            ->addColumn('barang', function ($index) {
-                return $index->barang." jenis";
-            })
-            ->addColumn('biaya', function ($index) {
-                $tag = "<table>
-                        <tr>
-                            <td>Dikembalikan</td><td class='px-2'>:</td><th>".number_format($index->dikembalikan, 0, '', '.')."</th>
-                        </tr>
-                        <tr>
-                            <td>Dilunaskan</td><td class='px-2'>:</td><th>".number_format($index->dilunaskan, 0, '', '.')."</th>
-                        </tr>
-                    </table>
-                ";
-                return $tag;
+            ->editColumn('dikembalikan', function ($index) {
+                return 'Rp ' . number_format($index->dikembalikan, 0, '', '.');
             })
             ->addColumn('action', function ($index) {
                 $user = auth()->user();
@@ -132,14 +114,14 @@ class ReturPenjualanController extends Controller
                 return $tag;
             })
             ->filterColumn('kode', function($query, $keyword) {
-                $sql = "CONCAT(penjualan.no_faktur,'-',pembayaran_piutang.no_pelunasan) like ?";
+                $sql = "CONCAT(penjualan.no_faktur,'-',retur_penjualan.no_retur) like ?";
                 $query->whereRaw($sql, ["%{$keyword}%"]);
             })
             ->filterColumn('tanggal', function($query, $keyword) {
                 $sql = "CONCAT(penjualan.created_at,'-',retur_penjualan.created_at) like ?";
                 $query->whereRaw($sql, ["%{$keyword}%"]);
             })
-            ->rawColumns(['id', 'kode', 'tanggal', 'biaya', 'action'])
+            ->rawColumns(['id', 'kode', 'tanggal', 'action'])
             ->make(true);
 
         return $table;
@@ -152,9 +134,9 @@ class ReturPenjualanController extends Controller
             $data['m'] = DB::table('penjualan')->select('no_faktur', 'id')->where('id', $id)->first();
         }
 
-        $prevData = PembayaranPiutang::where('no_pelunasan', 'like', 'BM-'.date('y')."%")->orderBy('no_pelunasan', 'desc')->first();
-        $newNo = !is_null($prevData) ? ( intval("1".substr($prevData->no_pelunasan, 5)) + 1 ) : null;
-        $data['no_pelunasan'] = "BM-" . date('y') . (!is_null($prevData) ? substr($newNo, 1) : "00001");
+        $prevData = $this->table->max('no_retur');
+        $newNo = (!is_null($prevData) && substr($prevData, 10) != 99999) ? ( intval("1".substr($prevData, 10)) + 1 ) : null;
+        $data['no_retur'] = "XXX-" . date('y/m/') . (!is_null($newNo) ? substr($newNo, 1) : "00001");
 
         $data['main'] = $this->main;
         $data['title'] = $this->title;
@@ -167,7 +149,6 @@ class ReturPenjualanController extends Controller
     {
         $data['model'] = $this->table->with('retur_penjualan_detail')->find($id);
         $data['m'] = DB::table('penjualan')->select('no_faktur', 'id')->where('id', $data['model']->penjualan_id)->first();
-        $data['no_pelunasan'] = $data['model']->pembayaran_piutang_id ? $data['model']->pembayaran_piutang->no_pelunasan : '';
 
         $data['main'] = $this->main;
         $data['title'] = $this->title;
@@ -178,25 +159,10 @@ class ReturPenjualanController extends Controller
 
     public function store(Request $request)
     {
-        if ($request->no_pelunasan) {
-            $pp = PembayaranPiutang::create([
-                'user_id' => auth()->user()->id,
-                'penjualan_id' => $request->penjualan_id,
-                'no_pelunasan' => $request->no_pelunasan,
-                'piutang' => str_replace('.', '', $request->piutang),
-                'dibayarkan' => str_replace('.', '', $request->dilunaskan),
-                'sisa' => str_replace('.', '', $request->sisa),
-                'pembayaran' => $request->pembayaran,
-                'pembayaran_detail' => $request->pembayaran_detail,
-                'status_lunas' => $request->sisa == 0,
-            ]);
+        $p = Penjualan::find($request->penjualan_id);
 
-            if ($request->sisa == 0) {
-                Penjualan::where('id', $request->penjualan_id)->update([
-                    'status_lunas' => '1',
-                ]);
-            }
-        }
+        $total = $p->total - $request->dikembalikan;
+        // kemarin disini ========================================================
 
         $rp = ReturPenjualan::create([
             'user_id' => auth()->user()->id,
@@ -204,8 +170,7 @@ class ReturPenjualanController extends Controller
             'pembayaran_piutang_id' => isset($pp) ? $pp->id : null,
             'pembayaran' => $request->pembayaran,
             'pembayaran_detail' => $request->pembayaran_detail,
-            'dilunaskan' => $request->dilunaskan>0 ? str_replace('.', '', $request->dilunaskan) : null,
-            'dikembalikan' => $request->dikembalikan>0 ? str_replace('.', '', $request->dikembalikan) : null,
+            'dikembalikan' => str_replace('.', '', $request->dikembalikan),
         ]);
 
         $rpd = $request->qty;
@@ -230,29 +195,11 @@ class ReturPenjualanController extends Controller
     public function update(Request $request, $id)
     {
         $model = ReturPenjualan::find($id);
-        if ($request->no_pelunasan) {
-            $pp = PembayaranPiutang::find($model->pembayaran_piutang_id)->update([
-                'user_id' => auth()->user()->id,
-                'penjualan_id' => $request->penjualan_id,
-                'no_pelunasan' => $request->no_pelunasan,
-                'piutang' => str_replace('.', '', $request->piutang),
-                'dibayarkan' => str_replace('.', '', $request->dilunaskan),
-                'sisa' => str_replace('.', '', $request->sisa),
-                'pembayaran' => $request->pembayaran,
-                'pembayaran_detail' => $request->pembayaran_detail,
-                'status_lunas' => $request->sisa == 0,
-            ]);
-
-            Penjualan::where('id', $request->penjualan_id)->update([
-                'status_lunas' => $request->sisa == 0,
-            ]);
-        }
 
         $rp = $model->update([
             'user_id' => auth()->user()->id,
             'pembayaran' => $request->pembayaran,
             'pembayaran_detail' => $request->pembayaran_detail,
-            'dilunaskan' => $request->dilunaskan>0 ? str_replace('.', '', $request->dilunaskan) : null,
             'dikembalikan' => $request->dikembalikan>0 ? str_replace('.', '', $request->dikembalikan) : null,
         ]);
 

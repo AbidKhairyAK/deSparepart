@@ -25,10 +25,9 @@ class ReturPembelianTableSeeder extends Seeder
             $data[] = [
                 "user_id" => rand(1, 4),
                 "pembelian_id" => $pd->pembelian_detail->pembelian_id,
-                "pembayaran_hutang_id" => null,
+                "no_retur" => "XXX-".date('y/m/', strtotime($pd->created_at)).substr((100000 + $key), 1),
                 "pembayaran" => $pembayaran,
                 'pembayaran_detail' => $pembayaran == 'giro' ? $faker->isbn13 : null,
-                "dilunaskan" => 0,
                 "dikembalikan" => $pd->total,
                 "created_at" => $pd->created_at,
                 "updated_at" => $pd->created_at,

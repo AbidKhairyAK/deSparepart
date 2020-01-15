@@ -1,4 +1,4 @@
-->withTrashed();<?php
+<?php
 
 namespace App\Model;
 

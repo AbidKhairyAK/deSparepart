@@ -21,6 +21,7 @@ class CreatePembelianDetailTable extends Migration
             $table->string('nama');
             $table->integer('qty');
             $table->integer('stok');
+            $table->integer('retur')->default(0);
             $table->string('satuan');
             $table->integer('harga');
             $table->integer('harga_asli');
