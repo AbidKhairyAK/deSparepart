@@ -249,6 +249,12 @@
 						</table>
 					</td>
 				</tr>
+				<tr class="table-secondary">
+					<th colspan="7"><b>TOTAL</b></th>
+					<td><b>{{ number_format($ds->sum('inv_stok'), 0, '', '.') }}</b></td>
+					<td><b>{{ number_format($ds->sum('inv_harga'), 0, '', '.') }}</b></td>
+					<td><b>{{ number_format($ds->sum('inv_total'), 0, '', '.') }}</b></td>
+				</tr>
 				@endforeach
 			</tbody>
 		</table>
