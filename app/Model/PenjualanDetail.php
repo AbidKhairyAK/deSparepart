@@ -11,7 +11,7 @@ class PenjualanDetail extends Model implements Auditable
 	protected $table = 'penjualan_detail';
 
     protected $fillable = [
-    	'id', "penjualan_id", "barang_id", "part_no", "satuan", "nama", "qty", "stok", "harga", "harga_asli", "subtotal", "diskon"
+    	'id', "penjualan_id", "barang_id", "part_no", "satuan", "nama", "qty", "stok", "harga", "harga_asli", "subtotal", "diskon", "retur"
 	];
 
     public function penjualan()

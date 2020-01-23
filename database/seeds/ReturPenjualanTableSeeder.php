@@ -20,15 +20,15 @@ class ReturPenjualanTableSeeder extends Seeder
         
         $p = ReturPenjualanDetail::select(DB::raw('SUM(biaya) as total, penjualan_detail_id, created_at'))->groupBy('retur_penjualan_id')->get();
 
+        $count = count($p);
         foreach ($p as $key => $pd) {
             $pembayaran = $faker->randomElement(['tunai', 'giro', 'kredit', 'transfer']);
             $data[] = [
                 "user_id" => 1,
                 "penjualan_id" => $pd->penjualan_detail->penjualan_id,
-                "pembayaran_piutang_id" => null,
+                "no_retur" => "XXX-".date('y/m/', strtotime($pd->created_at)).substr((100000 + ($count - $key)), 1),
                 "pembayaran" => $pembayaran,
                 'pembayaran_detail' => $pembayaran == 'giro' ? $faker->isbn13 : null,
-                "dilunaskan" => 0,
                 "dikembalikan" => $pd->total,
                 "created_at" => $pd->created_at,
                 "updated_at" => $pd->created_at,

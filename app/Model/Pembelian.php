@@ -36,4 +36,9 @@ class Pembelian extends Model implements Auditable
     {
     	return $this->hasMany(PembayaranHutang::class)->withTrashed();
     }
+
+    public function retur_pembelian()
+    {
+        return $this->hasOne(ReturPembelian::class)->withTrashed();
+    }
 }

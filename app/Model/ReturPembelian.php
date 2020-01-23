@@ -1,4 +1,4 @@
-->withTrashed();<?php
+<?php
 
 namespace App\Model;
 
@@ -14,7 +14,7 @@ class ReturPembelian extends Model implements Auditable
 	protected $table = 'retur_pembelian';
 
     protected $fillable = [
-    	'id', "user_id", "pembelian_id", "pembayaran_hutang_id", "dilunaskan", "dikembalikan", "pembayaran"
+    	'id', "user_id", "pembelian_id", "no_retur", "dikurangi", "dikembalikan", "pembayaran"
     ];
 
     public function user()
@@ -25,11 +25,6 @@ class ReturPembelian extends Model implements Auditable
     public function pembelian()
     {
         return $this->belongsTo(Pembelian::class)->withTrashed();
-    }
-
-    public function pembayaran_hutang()
-    {
-        return $this->belongsTo(PembayaranHutang::class)->withTrashed();
     }
 
     public function retur_pembelian_detail()

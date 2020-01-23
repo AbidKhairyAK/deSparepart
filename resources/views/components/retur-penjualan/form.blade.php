@@ -35,6 +35,11 @@
 									<p><b>@{{ penjualan.no_faktur }}</b></p>
 								</div>
 
+								<div class="form-group col-sm-12" id="preview">
+									<label>No Retur:</label>
+									<input type="text" name="no_retur" class="form-control" value="{{ $e ? $model->no_retur : $no_retur }}">
+								</div>
+
 								<div class="form-group col-sm-12">
 									<label>Daftar Barang:</label>
 									<table class="table table-bordered table-sm my-3" style="position: relative;">
@@ -72,7 +77,7 @@
 									</table>
 								</div>
 
-								<div class="form-group col-sm-12">
+								<div class="form-group col-sm-4">
 									<label>Pembayaran</label>
 									<select v-model="pembayaran" name="pembayaran" class="form-control" required>
 										<option value="tunai">TUNAI</option>
@@ -81,29 +86,25 @@
 										<option value="transfer">TRANSFER</option>
 									</select>
 									<br>
-									<input v-if="pembayaran == 'giro'" name="pembayaran_detail" type="text" class="form-control" placeholder="No Giro..." required>
+									<input v-if="pembayaran == 'giro'" name="pembayaran_detail" type="text" class="form-control" placeholder="No Giro..." value="{{ $e ? $model->pembayaran_detail : null }}" required>
 								</div>
 
-								<div class="form-group col-sm-3">
-									<label>No Pelunasan</label>
-									<input name="no_pelunasan" :value="piutang ? '{{ $no_pelunasan }}' : ''" type="text" class="form-control" readonly>
-								</div>
-								<div class="form-group col-sm-3">
-									<label>Piutang</label>
-									<input name="piutang" :value="piutang | nf" type="text" class="form-control" readonly>
-								</div>
-								<div class="form-group col-sm-3">
-									<label>Sisa Piutang</label>
-									<input name="sisa" :value="sisa | nf" type="text" class="form-control" readonly>
-								</div>
-								<div class="form-group col-sm-3">
-									<label>Total Dilunaskan</label>
-									<input name="dilunaskan" :value="dilunaskan | nf" type="text" class="form-control" readonly>
-								</div>
-
-								<div class="form-group col-sm-12">
-									<label>Total Dikembalikan</label>
+								<div class="form-group col-sm-4">
+									<label>Dikembalikan Tunai</label>
 									<input name="dikembalikan" :value="dikembalikan | nf" type="text" class="form-control" readonly>
+								</div>
+
+								<div class="form-group col-sm-4">
+									<label>Dikurangi Piutang</label>
+									<input name="dikurangi" :value="dikurangi | nf" type="text" class="form-control" readonly>
+									<p v-if="check_edit" class="text-muted" title="Bagian ini berfungsi untuk menampilkan jumlah piutang yang telah dikurangi Sebelumnya, dan tidak akan terpengaruh oleh pelunasan piutang">
+										<small>
+											Telah Dikurangi Sebelumnya :
+											<b>@{{ (pengurangan ? pengurangan : '0') | nf }}</b>
+											<sup>?</sup>
+											<input type="hidden" name="dikurangi_sebelumnya" :value="pengurangan">
+										</small>
+									</p>
 								</div>
 
 							</div>
@@ -139,41 +140,32 @@
 		data: {
 			penjualan: false,
 			pembayaran: null,
+			pengurangan: null,
 			total: null,
 			retur: [],
 			biaya: [],
 			keterangan: [],
+			check_edit: false,
 		},
 		computed: {
-			sisa() {
-				var res = null;
-
-				if (this.total && this.piutang) { res = this.piutang - this.total; }
-				
-				if (res == null)		{ return this.piutang; } 
-				else if(res > 0)		{ return res; } 
-				else 								{ return '0'; }
-			},
 			piutang() {
+				var h = this.penjualan.hutang
 				var x = this.penjualan.pembayaran_piutang;
 
-				@if($e) 
-					if (x.length > 1) {
-						return x[x.length - 2].sisa;
-					} else {
-						return this.penjualan.hutang;
-					}
+				if (x.length > 0) {
+					h = x[x.length - 1].sisa;
+				}
+
+				@if($e)
+					h = parseInt(h) + parseInt(this.pengurangan);
 				@endif
 
-				if (x.length > 0) {
-					return x[x.length - 1].sisa;
-				}
-				return this.penjualan.hutang;
+				return h;
 			},
-			dilunaskan() {
-				if (this.total > this.piutang) 						{ return this.piutang; } 
+			dikurangi() {
+				if (this.total > this.piutang) 				{ return this.piutang; } 
 				else if (this.piutang - this.total > 0) 	{ return this.total; } 
-				else 																			{ return '0'; }
+				else 										{ return 0; }
 			},
 			dikembalikan() {
 				var b = this.total - this.piutang; 
@@ -184,6 +176,9 @@
 			getData(id){
 				var self = this;
 				axios.get(`/penjualan/api/full?id=${id}`).then(function(res) {
+					if (res.data.has_retur && window.location.pathname == '/retur-penjualan/create') { 
+						window.location.replace('{{ url("/") }}' + `/retur-penjualan/${res.data.retur_penjualan.id}/edit`); 
+					}
 					self.penjualan = res.data;
 				});
 			},
@@ -215,9 +210,11 @@
 		},
 		mounted() {
 			@if($e)
-				this.total = `{{ $model->dikembalikan + $model->dilunaskan }}`
+				this.check_edit = true;
+				this.total = `{{ $model->dikembalikan + $model->dikurangi }}`;
+				this.pengurangan = `{{ $model->dikurangi }}`;
 				this.pembayaran = `{{ $model->pembayaran }}`;
-				console.log('{{ $model->penjualan->no_faktur }}')
+
 				@foreach($model->retur_penjualan_detail()->get() as $d)
 					this.retur[{{ $d->penjualan_detail_id }}] = '{{ $d->qty }}';
 					this.biaya[{{ $d->penjualan_detail_id }}] = '{{ $d->biaya }}';

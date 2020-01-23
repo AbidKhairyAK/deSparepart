@@ -48,7 +48,8 @@ class PenjualanController extends Controller
 		if ($type=='select') {
 			$data = $data->select('no_faktur', 'id')->get();
 		} else if ($type=='full' && !empty($id)){
-			$data = $data->with(['customer', 'penjualan_detail', 'pembayaran_piutang'])->where('id', $id)->first();
+			$data = $data->with(['customer', 'penjualan_detail', 'pembayaran_piutang', 'retur_penjualan'])->find($id);
+			$data->has_retur = $data->where('id', $id)->has('retur_penjualan')->exists();
 		}
 
 		return response()->json($data);
@@ -277,7 +278,7 @@ class PenjualanController extends Controller
 		$penjualan = [
 			"user_id" => auth()->user()->id,
 			"no_faktur" => $request->no_faktur,
-			"no_po" => $request->no_po,
+			"no_po" => $request->no_po ?: '-',
 			"customer_id" => $request->p == 'p0' ? $customer->id : $request->customer_id,
 			"keterangan" => $request->keterangan,
 			"total" => $total,

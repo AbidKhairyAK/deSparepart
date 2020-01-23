@@ -12,12 +12,15 @@ class BarangForm extends Form
     {
         $m = $this->getModel();
         $this
+            ->add('kode', 'text', [
+                'value' => $m ? $m->kode : null,
+            ])
             ->add('part_no', 'text', [
                 'value' => $m ? $m->part_no : null,
             ])
             ->add('komponen_id', 'choice', [
                 'label' => 'Komponen / Part',
-                'choices' => $m ? [$m->komponen->id => $m->komponen->nama] : [],
+                'choices' => $m ? [$m->komponen->id => $m->komponen->nama] : ['1' => 'UMUM'],
                 'wrapper' => ['class' => 'form-group col-sm-6'],
                 'attr' => ['required' => true, 'class' => 'form-control select2'],
                 'multiple' => false,
@@ -35,9 +38,7 @@ class BarangForm extends Form
                 'label' => 'Nama Barang',
                 'attr' => ['required' => true]
             ])
-            ->add('merk', 'text', [
-                'attr' => ['required' => true]
-            ])
+            ->add('merk', 'text')
             ->add('stok', 'number', [
                 'label' => 'Stok Sekarang',
                 'attr' => ['required' => true],
@@ -60,13 +61,13 @@ class BarangForm extends Form
             ])
             ->add('harga_beli', 'text', [
                 'label' => 'Harga Beli Standar Per-barang',
-                'attr' => ['required' => true],
                 'wrapper' => ['class' => 'form-group col-sm-6'],
+                'value' => $m ? $m->harga_beli : 0,
             ])
             ->add('harga_jual', 'text', [
                 'label' => 'Harga Jual Standar Per-barang',
-                'attr' => ['required' => true],
                 'wrapper' => ['class' => 'form-group col-sm-6'],
+                'value' => $m ? $m->harga_jual : 0,
             ])
             ->add('keterangan', 'textarea', [
                 'attr' => ['rows' => 4],

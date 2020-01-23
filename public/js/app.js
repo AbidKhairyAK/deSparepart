@@ -63189,7 +63189,7 @@ var render = function() {
                 ],
                 staticClass: "form-control d-inline-block",
                 staticStyle: { width: "auto" },
-                attrs: { name: "no_faktur", type: "text", required: "" },
+                attrs: { name: "no_faktur", type: "text" },
                 domProps: { value: _vm.form.no_faktur },
                 on: {
                   input: function($event) {

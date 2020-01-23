@@ -249,8 +249,8 @@ class PembelianController extends Controller
 
         $pembelian = [
             "user_id" => auth()->user()->id,
-            "no_faktur" => $request->no_faktur,
-            "no_po" => $request->no_po,
+            "no_faktur" => $request->no_faktur ?: '-',
+            "no_po" => $request->no_po ?: '-',
             "supplier_id" => $request->supplier_id,
             "keterangan" => $request->keterangan,
             "total" => $total,

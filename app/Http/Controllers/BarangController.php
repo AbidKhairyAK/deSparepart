@@ -63,7 +63,7 @@ class BarangController extends Controller
         $data = $this->table
                     ->join('kendaraan', 'barang.kendaraan_id', '=', 'kendaraan.id')
                     ->join('komponen', 'barang.komponen_id', '=', 'komponen.id')
-                    ->select(['barang.id', 'komponen_id', 'kendaraan_id', 'satuan_id', 'part_no', 'barang.nama', 'barang.merk', 'stok', 'limit', 'harga_beli', 'harga_jual', 'keterangan', 'gambar', 'barang.created_at'])
+                    ->select(['barang.id', 'komponen_id', 'kendaraan_id', 'satuan_id', 'part_no', 'barang.kode', 'barang.nama', 'barang.merk', 'stok', 'limit', 'harga_beli', 'harga_jual', 'keterangan', 'gambar', 'barang.created_at'])
                     ->orderBy('created_at', 'desc');
         return DataTables::of($data)
             ->editColumn('id', function($index) {
@@ -79,12 +79,16 @@ class BarangController extends Controller
                 $gambar = (!empty($index->gambar) && file_exists(public_path('img/'.$index->gambar))) ? $index->gambar : 'default.png';
                 return "<a href='/img/{$gambar}' target='_blank'><img src='/img/{$gambar}' width='50'/></a>";
             })
-            ->editColumn('stok', function($index) {
-                $color = '';
-                if ($index->stok <= 0) { $color = 'text-danger'; }
-                elseif ($index->stok <= $index->limit) { $color = 'text-warning'; }
-
-                return "<span class='{$color}'>{$index->stok}</span>";
+            ->addColumn('nomor', function ($index) {
+                $tag = "<table>
+                        <tr>
+                            <td>Kode Brg</td><td class='px-2'>:</td><th>{$index->kode}</th>
+                        </tr><tr>
+                            <td>Part NO</td><td class='px-2'>:</td><th>{$index->part_no}</th>
+                        </tr>
+                    </table>
+                ";
+                return $tag;
             })
             ->addColumn('identitas', function ($index) {
                 $tag = "<table>
@@ -98,6 +102,25 @@ class BarangController extends Controller
                         </tr>
                         <tr>
                             <td>Kendaraan</td><td class='px-2'>:</td><th>{$index->kendaraan->merk}</th>
+                        </tr>
+                    </table>
+                ";
+                return $tag;
+            })
+            ->addColumn('jumlah', function ($index) {
+                $color = '';
+                if ($index->stok <= 0) { $color = 'text-danger'; }
+                elseif ($index->stok <= $index->limit) { $color = 'text-warning'; }
+
+                $tag = "<table>
+                        <tr>
+                            <td>Stok</td><td class='px-2'>:</td><th><span class='{$color}'>{$index->stok}</span></th>
+                        </tr>
+                        <tr>
+                            <td>Limit</td><td class='px-2'>:</td><th>{$index->limit}</th>
+                        </tr>
+                        <tr>
+                            <td>Satuan</td><td class='px-2'>:</td><th>{$index->satuan->nama}</th>
                         </tr>
                     </table>
                 ";
@@ -146,7 +169,7 @@ class BarangController extends Controller
                 $sql = "CONCAT(barang.harga_jual,'-',barang.harga_beli)  like ?";
                 $query->whereRaw($sql, ["%{$keyword}%"]);
             })
-            ->rawColumns(['id', 'gambar', 'harga', 'stok', 'identitas', 'action'])
+            ->rawColumns(['id', 'nomor', 'gambar', 'harga', 'jumlah', 'identitas', 'action'])
             ->make(true);
     }
 
@@ -211,6 +234,13 @@ class BarangController extends Controller
     {
         $request->merge([ 'user_id' => auth()->user()->id ]);
 
+        if (!empty($request->kode)) {  
+            $request->validate([ 'kode' => 'max:100|unique:barang,kode' ]);
+        }
+        if (!empty($request->part_no)) {  
+            $request->validate([ 'part_no' => 'max:100|unique:barang,part_no' ]);
+        }
+
         $check_satuan = Satuan::where('id', $request->satuan_id)->exists();
         if (!$check_satuan) {
             $satuan = Satuan::create(['nama' => $request->satuan_id]);
@@ -229,6 +259,14 @@ class BarangController extends Controller
     public function update(Request $request, $id)
     {
         $request->merge([ 'user_id' => auth()->user()->id ]);
+
+        
+        if (!empty($request->kode)) {  
+            $request->validate([ 'kode' => 'max:100|unique:barang,kode,'.$id ]);
+        }
+        if (!empty($request->part_no)) {  
+            $request->validate([ 'part_no' => 'max:100|unique:barang,part_no,'.$id ]);
+        }
 
         $check_satuan = Satuan::where('id', $request->satuan_id)->exists();
         if (!$check_satuan) {

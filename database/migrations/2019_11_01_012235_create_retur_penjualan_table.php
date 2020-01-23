@@ -17,11 +17,11 @@ class CreateReturPenjualanTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('user_id');
             $table->unsignedBigInteger('penjualan_id');
-            $table->unsignedBigInteger('pembayaran_piutang_id')->nullable();
+            $table->string('no_retur', 100);
             $table->enum('pembayaran', ['tunai', 'giro', 'kredit', 'transfer']);
             $table->string('pembayaran_detail', 20)->nullable();
-            $table->integer('dilunaskan')->nullable();
-            $table->integer('dikembalikan')->nullable();
+            $table->integer('dikurangi')->default(0);
+            $table->integer('dikembalikan')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

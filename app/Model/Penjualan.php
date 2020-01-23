@@ -36,4 +36,9 @@ class Penjualan extends Model implements Auditable
     {
     	return $this->hasMany(PembayaranPiutang::class)->withTrashed();
     }
+
+    public function retur_penjualan()
+    {
+        return $this->hasOne(ReturPenjualan::class);
+    }
 }

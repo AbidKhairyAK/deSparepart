@@ -15,6 +15,16 @@ class KomponenTableSeeder extends Seeder
     {
         $faker = Factory::create();
 
+        $data[] = [
+            'user_id' => 1,
+            'kode' => time() + rand(11111, 99999),
+            'nama' => 'UMUM',
+            'tipe' => 'umum',
+            'bagian' => 'UMUM',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+
         for ($i=0; $i < 20; $i++) { 
         	$data[] = [
                 'user_id' => rand(1, 4),

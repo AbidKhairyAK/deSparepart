@@ -25,7 +25,7 @@ class PembayaranHutangTableSeeder extends Seeder
         	$data[] = [
                 "user_id" => rand(1, 4),
         		"pembelian_id" => $id,
-                "no_pelunasan" => "BM-19".(substr((100001 + $i), 1)),
+                "no_pelunasan" => "BK-19".(substr((100001 + $i), 1)),
                 "hutang" => $hutang,
                 "dibayarkan" => $bool ? $hutang :  ($hutang * 70/100),
                 "sisa" => $bool ? 0 : ($hutang * 30/100),
