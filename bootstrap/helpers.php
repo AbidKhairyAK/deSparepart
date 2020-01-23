@@ -41,3 +41,8 @@ function rupiah($value, $kurs = false) {
 	$k = $kurs ? 'Rp ' : '';
 	return $k.number_format($value, 0, '', '.');
 }
+
+function removedot($value)
+{
+	return str_replace('.', '', $value);
+}

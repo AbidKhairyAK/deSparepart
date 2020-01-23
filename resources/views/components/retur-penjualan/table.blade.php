@@ -20,7 +20,7 @@
 				<tr>
 					<th>#</th>
 					<th>Kode</th>
-					<th>Dikembalikan</th>
+					<th>Total</th>
 					<th>Pembayaran</th>
 					<th>Tanggal</th>
 					<th width="120">Aksi</th>

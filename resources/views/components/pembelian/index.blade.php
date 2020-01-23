@@ -31,5 +31,4 @@
 	    });
 	});
 </script>
-@include('components.modal.stock_item')
 @endsection

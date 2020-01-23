@@ -31,6 +31,8 @@ class ReturPembelianDetailTableSeeder extends Seeder
                     "created_at" => date('Y-m-d', strtotime($p->created_at) + 86400),
                     "updated_at" => date('Y-m-d', strtotime($p->created_at) + 86400),
                 ];
+
+                $pd->update(['retur' => $qty]);
             }
         }
 

@@ -20,7 +20,8 @@ class CreateReturPembelianTable extends Migration
             $table->string('no_retur', 100)->nullable();
             $table->enum('pembayaran', ['tunai', 'giro', 'kredit', 'transfer']);
             $table->string('pembayaran_detail', 20)->nullable();
-            $table->integer('dikembalikan')->nullable();
+            $table->integer('dikurangi')->default(0);
+            $table->integer('dikembalikan')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

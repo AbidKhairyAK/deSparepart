@@ -61,7 +61,7 @@
 		.left-head p {
 			line-height: 25px;
 			position: relative;
-			top: -20px;
+			/*top: -20px;*/
 		}
 		.right-head td {
 			line-height: 20px;
@@ -101,7 +101,7 @@
 <body>
 
 	@php
-		$page_count = ceil($model->penjualan_detail()->count() / 10);
+		$page_count = ceil($model->retur_penjualan_detail()->count() / 10);
 	@endphp
 
 	@for($p=0; $p<$page_count; $p++)
@@ -111,49 +111,37 @@
 	<div class="container">
 		<p class="page">Hal: {{ $p+1 }}/{{ $page_count }}</p>
 
-		<h2><span class="c">FAKTUR PENJUALAN</span></h2>
+		<h2><span class="c">NOTA RETUR</span></h2>
 
 		<table class="head">
 			<tr>
 				<td class="left-head">
 					<p><span><b>PERUSAHAAN ANDA</b><br>Jl. Alamat Anda, Kota Anda</span></p>
-					<p><span>Kepada Yth.<br>{{ $model->customer->nama }}</span></p>
+					<p><span>Kepada Yth.<br>{{ $model->penjualan->customer->nama }}</span></p>
 				</td>
 				<td class="right-head">
 					<p>
 						<table>
 							<tr>
-								<td><span>NO FAKTUR</td>
+								<td><span>NO RETUR</td>
 								<td><span>:</span></td>
-								<td><span>{{ $model->no_faktur }}</span></td>
+								<td><span>{{ $model->no_retur }}</span></td>
 							</tr>
 							<tr>
-								<td><span>TANGGAL</td>
+								<td><span>NO FAKTUR</td>
+								<td><span>:</span></td>
+								<td><span>{{ $model->penjualan->no_faktur }}</span></td>
+							</tr>
+							<tr>
+								<td><span>TANGGAL JUAL</td>
+								<td><span>:</span></td>
+								<td><span>{{ date('Y-m-d', strtotime($model->penjualan->created_at)) }}</span></td>
+							</tr>
+							<tr>
+								<td><span>TANGGAL RETUR</td>
 								<td><span>:</span></td>
 								<td><span>{{ date('Y-m-d', strtotime($model->created_at)) }}</span></td>
 							</tr>
-							<tr><td></td><td></td><td></td></tr>
-							<tr><td></td><td></td><td></td></tr>
-							<tr>
-								<td><span>NO PO</span></td>
-								<td><span>:</span></td>
-								<td><span>{{ $model->no_po }}</span></td>
-							</tr>
-							<tr>
-								<td><span>TGL PO</span></td>
-								<td><span>:</span></td>
-								<td></td>
-							</tr>
-							<tr>
-								<td><span>JT TEMPO</span></td>
-								<td><span>:</span></td>
-								<td><span>{{ $model->jatuh_tempo }}</span></td>
-							</tr>
-							<!-- <tr>
-								<td><span>NO MOBIL</span></td>
-								<td><span>:</span></td>
-								<td></td>
-							</tr> -->
 						</table>
 					</p>
 				</td>
@@ -166,23 +154,21 @@
 					<td width="5"><span class="c">NO</span></td>
 					<td width="80"><span class="c">PART NO</span></td>
 					<td width="220"><span class="c">NAMA BARANG</span></td>
-					<td><span class="c">QTY</span></td>
+					<td><span class="c">RETUR</span></td>
 					<td><span class="c">HARGA</span></td>
-					<td width="50"><span class="c">DISKON</span></td>
 					<td><span class="c">JUMLAH</span></td>
 				</tr>
 			</thead>
 			<tbody>
 				@php $no = isset($no) ? $no : 1; @endphp
-				@foreach($model->penjualan_detail()->offset($p * 10)->limit(10)->get() as $detail)
+				@foreach($model->retur_penjualan_detail()->offset($p * 10)->limit(10)->get() as $detail)
 				<tr>
 					<td><span>{{ $no++ }}</span></td>
-					<td><span>{{ $detail->part_no }}</span></td>
-					<td><span>{{ $detail->nama }}</span></td>
-					<td><span class="r">{{ $detail->qty }} {{ $detail->satuan }}</span></td>
-					<td><span class="r">{{ number_format($detail->harga, 0, '', '.')}}</span></td>
-					<td><span class="r">{{ $detail->diskon }}%</span></td>
-					<td><span class="r">{{ number_format($detail->subtotal, 0, '', '.')}}</span></td>
+					<td><span>{{ $detail->penjualan_detail->part_no }}</span></td>
+					<td><span>{{ $detail->penjualan_detail->nama }}</span></td>
+					<td><span class="r">{{ $detail->qty }} {{ $detail->penjualan_detail->satuan }}</span></td>
+					<td><span class="r">{{ number_format($detail->penjualan_detail->harga, 0, '', '.')}}</span></td>
+					<td><span class="r">{{ number_format($detail->biaya, 0, '', '.')}}</span></td>
 				</tr>
 				@endforeach
 				
@@ -196,7 +182,6 @@
 							<td></td>
 							<td></td>
 							<td></td>
-							<td></td>
 						</tr>
 					@endfor
 				@endif
@@ -205,11 +190,29 @@
 			@if(($p+1) == $page_count)
 			<tfoot>
 				<tr>
-					<td colspan="5">
-						<div class="terbilang"><span>TERBILANG: {{ strtoupper(terbilang($model->total)) }}</span></div>
+					<td colspan="4"><div class="terbilang"></div></td>
+					<td style="text-align: center;">
+						<span class="c">Dikembalikan Tunai</span>
+					</td>
+					<td>
+						<span class="r">{{ number_format($model->dikembalikan, 0, '', '.') }}</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4" style="border: 0;"><div class="terbilang"></div></td>
+					<td style="text-align: center; border-top: 0;">
+						<span class="c">Piutang Dikurangi</span>
+					</td>
+					<td style="border-top: 0;">
+						<span class="r">{{ number_format($model->dikurangi, 0, '', '.') }}</span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4" style="border: 0;">
+						<div class="terbilang"><span>TERBILANG: {{ strtoupper(terbilang($model->dikurangi + $model->dikembalikan)) }}</span></div>
 					</td>
 					<td style="text-align: center;"><span class="c">TOTAL</span></td>
-					<td><span class="r">{{ number_format($model->total, 0, '', '.')}}</span></td>
+					<td><span class="r">{{ number_format($model->dikurangi + $model->dikembalikan, 0, '', '.') }}</span></td>
 				</tr>
 			</tfoot>
 			@endif
@@ -218,14 +221,10 @@
 		@if(($p+1) == $page_count)
 		<table class="footer">
 			<tr>
-				<td><span>DITERIMA OLEH:</span></td>
-				<td><span>DIPERIKSA OLEH:</span></td>
-				<td><span>DIBUAT OLEH:</span></td>
+				<td style="width: 70%;"><span>DITERIMA OLEH:</span></td>
 				<td><span>HORMAT KAMI,</span></td>
 			</tr>
 			<tr>
-				<td><span>(............)</span></td>
-				<td><span>(............)</span></td>
 				<td><span>(............)</span></td>
 				<td><span>(............)</span></td>
 			</tr>

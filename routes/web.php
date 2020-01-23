@@ -76,6 +76,7 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::resource('/pembayaran-hutang', 'PembayaranHutangController');
 
 	Route::get('retur-penjualan/data', 'ReturPenjualanController@data')->name('retur-penjualan.data');
+	Route::get('retur-penjualan/{id}/cetak', 'ReturPenjualanController@cetak')->name('retur-penjualan.cetak');
 	Route::resource('/retur-penjualan', 'ReturPenjualanController');
 
 	Route::get('retur-pembelian/data', 'ReturPembelianController@data')->name('retur-pembelian.data');

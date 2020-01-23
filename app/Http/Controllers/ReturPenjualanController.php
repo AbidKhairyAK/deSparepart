@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Model\Penjualan;
+use App\Model\PenjualanDetail;
 use App\Model\ReturPenjualan;
 use App\Model\ReturPenjualanDetail;
 use App\Model\PembayaranPiutang;
 use App\Model\Barang;
 use DataTables;
 use Form;
+use PDF;
 
 class ReturPenjualanController extends Controller
 {
@@ -49,6 +51,7 @@ class ReturPenjualanController extends Controller
                     retur_penjualan.id, 
                     retur_penjualan.no_retur, 
                     retur_penjualan.dikembalikan,
+                    retur_penjualan.dikurangi,
                     retur_penjualan.pembayaran, 
                     retur_penjualan.created_at as tgl_retur'
                 ))
@@ -87,8 +90,17 @@ class ReturPenjualanController extends Controller
                 ";
                 return $tag;
             })
-            ->editColumn('dikembalikan', function ($index) {
-                return 'Rp ' . number_format($index->dikembalikan, 0, '', '.');
+            ->addColumn('total', function ($index) {
+                $tag = "<table>
+                        <tr>
+                            <td>Dikembalikan</td><td class='px-2'>:</td><th>".rupiah($index->dikembalikan)."</th>
+                        </tr>
+                        <tr>
+                            <td>Dikurangi</td><td class='px-2'>:</td><th>".rupiah($index->dikurangi)."</th>
+                        </tr>
+                    </table>
+                ";
+                return $tag;
             })
             ->addColumn('action', function ($index) {
                 $user = auth()->user();
@@ -105,9 +117,14 @@ class ReturPenjualanController extends Controller
                         'link' => $user->can('detail-'.$this->main) ? route($this->uri.'.destroy',$index->id) : '#',
                         'dis' => $user->can('detail-'.$this->main) ? '' : 'disabled',
                     ],
+                    'cetak'  => [
+                        'link' => route($this->uri.'.cetak',$index->id),
+                        'dis' => '',
+                    ],
                 ];
                 $tag = Form::open(array("url" => $can['delete']['link'], "method" => "DELETE"));
-                $tag .= "<a href='{$can['edit']['link']}' class='btn btn-primary btn-sm {$can['edit']['dis']}' title='edit'><i class='fas fa-edit'></i></a>";
+                $tag .= "<a href='{$can['cetak']['link']}' target='_blank' class='btn btn-info btn-sm {$can['cetak']['dis']}' title='cetak'><i class='fas fa-print'></i></a>";
+                $tag .= " <a href='{$can['edit']['link']}' class='btn btn-primary btn-sm {$can['edit']['dis']}' title='edit'><i class='fas fa-edit'></i></a>";
                 // $tag .= " <a href='{$can['detail']['link']}' class='btn btn-info btn-sm {$can['detail']['dis']}' title='detail'><i class='fas fa-eye'></i></a>";
                 $tag .= " <button {$can['delete']['dis']} type='submit' onclick='return confirm(`apa anda yakin?`)' class='btn btn-danger btn-sm' title='hapus'><i class='fas fa-trash'></i></button>";
                 $tag .= Form::close();
@@ -117,11 +134,15 @@ class ReturPenjualanController extends Controller
                 $sql = "CONCAT(penjualan.no_faktur,'-',retur_penjualan.no_retur) like ?";
                 $query->whereRaw($sql, ["%{$keyword}%"]);
             })
+            ->filterColumn('total', function($query, $keyword) {
+                $sql = "CONCAT(retur_penjualan.dikurangi,'-',retur_penjualan.dikembalikan) like ?";
+                $query->whereRaw($sql, ["%{$keyword}%"]);
+            })
             ->filterColumn('tanggal', function($query, $keyword) {
                 $sql = "CONCAT(penjualan.created_at,'-',retur_penjualan.created_at) like ?";
                 $query->whereRaw($sql, ["%{$keyword}%"]);
             })
-            ->rawColumns(['id', 'kode', 'tanggal', 'action'])
+            ->rawColumns(['id', 'kode', 'total', 'tanggal', 'action'])
             ->make(true);
 
         return $table;
@@ -133,7 +154,7 @@ class ReturPenjualanController extends Controller
         if ($id) {
             $data['m'] = DB::table('penjualan')->select('no_faktur', 'id')->where('id', $id)->first();
         }
-
+        
         $prevData = $this->table->max('no_retur');
         $newNo = (!is_null($prevData) && substr($prevData, 10) != 99999) ? ( intval("1".substr($prevData, 10)) + 1 ) : null;
         $data['no_retur'] = "XXX-" . date('y/m/') . (!is_null($newNo) ? substr($newNo, 1) : "00001");
@@ -161,16 +182,22 @@ class ReturPenjualanController extends Controller
     {
         $p = Penjualan::find($request->penjualan_id);
 
-        $total = $p->total - $request->dikembalikan;
-        // kemarin disini ========================================================
+        if ($request->dikurangi) {
+            $sisa_hutang = $p->hutang - removedot($request->dikurangi);
+            $p->update([
+                'hutang' => $sisa_hutang,
+                'status_lunas' => $sisa_hutang == 0,
+            ]);
+        }
 
         $rp = ReturPenjualan::create([
             'user_id' => auth()->user()->id,
             'penjualan_id' => $request->penjualan_id,
-            'pembayaran_piutang_id' => isset($pp) ? $pp->id : null,
+            'no_retur' => $request->no_retur,
             'pembayaran' => $request->pembayaran,
             'pembayaran_detail' => $request->pembayaran_detail,
-            'dikembalikan' => str_replace('.', '', $request->dikembalikan),
+            'dikurangi' => removedot($request->dikurangi),
+            'dikembalikan' => removedot($request->dikembalikan),
         ]);
 
         $rpd = $request->qty;
@@ -181,30 +208,41 @@ class ReturPenjualanController extends Controller
                     'retur_penjualan_id' => $rp->id,
                     'penjualan_detail_id' => $key,
                     'qty' => $value,
-                    'biaya' => str_replace('.', '', $request->biaya[$key]),
+                    'biaya' => removedot($request->biaya[$key]),
                     'keterangan' => $request->keterangan[$key]
                 ]);
+
+                PenjualanDetail::find($key)->increment('retur', $value);
 
                 Barang::find($request->barang_id[$key])->increment('stok', $value);
             }
         }
 
-        return redirect($this->uri);
+        return redirect($this->uri)->with('print', route('retur-penjualan.cetak', $rp->id));;
     }
 
     public function update(Request $request, $id)
     {
         $model = ReturPenjualan::find($id);
 
+        $sisa_hutang = ($model->penjualan->hutang + $request->dikurangi_sebelumnya) - removedot($request->dikurangi);
+
+        $model->penjualan->update([
+            'hutang' => $sisa_hutang,
+            'status_lunas' => $sisa_hutang == 0,
+        ]);
+
         $rp = $model->update([
             'user_id' => auth()->user()->id,
             'pembayaran' => $request->pembayaran,
             'pembayaran_detail' => $request->pembayaran_detail,
-            'dikembalikan' => $request->dikembalikan>0 ? str_replace('.', '', $request->dikembalikan) : null,
+            'dikembalikan' => removedot($request->dikembalikan),
+            'dikurangi' => removedot($request->dikurangi),
         ]);
 
         $old_rpd = ReturPenjualanDetail::where('retur_penjualan_id', $id);
         foreach ($old_rpd->get() as $o) {
+            $o->penjualan_detail->update(['retur' => 0]);
             $o->penjualan_detail->barang->decrement('stok', $o->qty);
         }
         $old_rpd->delete();
@@ -217,9 +255,11 @@ class ReturPenjualanController extends Controller
                     'retur_penjualan_id' => $id,
                     'penjualan_detail_id' => $key,
                     'qty' => $value,
-                    'biaya' => str_replace('.', '', $request->biaya[$key]),
+                    'biaya' => removedot($request->biaya[$key]),
                     'keterangan' => $request->keterangan[$key]
                 ]);
+
+                PenjualanDetail::find($key)->update(['retur' => $value]);
 
                 Barang::find($request->barang_id[$key])->increment('stok', $value);
             }
@@ -232,5 +272,13 @@ class ReturPenjualanController extends Controller
     {
         $this->table->findOrFail($id)->delete();
         return redirect($this->uri);
+    }
+
+    public function cetak($id)
+    {
+        $data['model'] = $this->table->with('penjualan', 'retur_penjualan_detail')->find($id);
+        
+        // return view($this->folder.'.cetak',$data);
+        return PDF::setOptions(['orientation' => 'landscape'])->loadView($this->folder.'.cetak',$data)->setPaper([0, 0, 720, 792], 'landscape')->stream();
     }
 }

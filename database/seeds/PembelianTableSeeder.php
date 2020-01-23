@@ -24,8 +24,8 @@ class PembelianTableSeeder extends Seeder
         	$data[] = [
         		"user_id" => rand(1, 4),
         		"supplier_id" => rand(1, 9),
-        		"no_faktur" => rand(111, 999)."-".date('y/m/', strtotime($tanggal)).substr((100000 + $i), 1),
-        		"no_po" => rand(0,1) ? rand(111111111, 999999999) : null,
+        		"no_faktur" => rand(0,1) ? rand(111, 999)."-".date('y/m/', strtotime($tanggal)).substr((100000 + 41 - $i), 1) : '-',
+        		"no_po" => rand(0,1) ? rand(111111111, 999999999) : '-',
                 "pembayaran" => $pembayaran,
                 "pembayaran_detail" => $pembayaran == 'giro' ? rand(111111111, 999999999) : null,
         		"dibayarkan" => !$paid ? ($total * 70/100) : $total,

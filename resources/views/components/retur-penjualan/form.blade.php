@@ -77,7 +77,7 @@
 									</table>
 								</div>
 
-								<div class="form-group col-sm-6">
+								<div class="form-group col-sm-4">
 									<label>Pembayaran</label>
 									<select v-model="pembayaran" name="pembayaran" class="form-control" required>
 										<option value="tunai">TUNAI</option>
@@ -86,12 +86,25 @@
 										<option value="transfer">TRANSFER</option>
 									</select>
 									<br>
-									<input v-if="pembayaran == 'giro'" name="pembayaran_detail" type="text" class="form-control" placeholder="No Giro..." value="{{ $model->pembayaran_detail }}" required>
+									<input v-if="pembayaran == 'giro'" name="pembayaran_detail" type="text" class="form-control" placeholder="No Giro..." value="{{ $e ? $model->pembayaran_detail : null }}" required>
 								</div>
 
-								<div class="form-group col-sm-6">
-									<label>Total Dikembalikan</label>
-									<input name="dikembalikan" :value="total | nf" type="text" class="form-control" readonly>
+								<div class="form-group col-sm-4">
+									<label>Dikembalikan Tunai</label>
+									<input name="dikembalikan" :value="dikembalikan | nf" type="text" class="form-control" readonly>
+								</div>
+
+								<div class="form-group col-sm-4">
+									<label>Dikurangi Piutang</label>
+									<input name="dikurangi" :value="dikurangi | nf" type="text" class="form-control" readonly>
+									<p v-if="check_edit" class="text-muted" title="Bagian ini berfungsi untuk menampilkan jumlah piutang yang telah dikurangi Sebelumnya, dan tidak akan terpengaruh oleh pelunasan piutang">
+										<small>
+											Telah Dikurangi Sebelumnya :
+											<b>@{{ (pengurangan ? pengurangan : '0') | nf }}</b>
+											<sup>?</sup>
+											<input type="hidden" name="dikurangi_sebelumnya" :value="pengurangan">
+										</small>
+									</p>
 								</div>
 
 							</div>
@@ -127,15 +140,45 @@
 		data: {
 			penjualan: false,
 			pembayaran: null,
+			pengurangan: null,
 			total: null,
 			retur: [],
 			biaya: [],
 			keterangan: [],
+			check_edit: false,
+		},
+		computed: {
+			piutang() {
+				var h = this.penjualan.hutang
+				var x = this.penjualan.pembayaran_piutang;
+
+				if (x.length > 0) {
+					h = x[x.length - 1].sisa;
+				}
+
+				@if($e)
+					h = parseInt(h) + parseInt(this.pengurangan);
+				@endif
+
+				return h;
+			},
+			dikurangi() {
+				if (this.total > this.piutang) 				{ return this.piutang; } 
+				else if (this.piutang - this.total > 0) 	{ return this.total; } 
+				else 										{ return 0; }
+			},
+			dikembalikan() {
+				var b = this.total - this.piutang; 
+				return (b > 0) ? b : '0';
+			}
 		},
 		methods: {
 			getData(id){
 				var self = this;
 				axios.get(`/penjualan/api/full?id=${id}`).then(function(res) {
+					if (res.data.has_retur && window.location.pathname == '/retur-penjualan/create') { 
+						window.location.replace('{{ url("/") }}' + `/retur-penjualan/${res.data.retur_penjualan.id}/edit`); 
+					}
 					self.penjualan = res.data;
 				});
 			},
@@ -167,9 +210,11 @@
 		},
 		mounted() {
 			@if($e)
-				this.total = `{{ $model->dikembalikan + $model->dilunaskan }}`
+				this.check_edit = true;
+				this.total = `{{ $model->dikembalikan + $model->dikurangi }}`;
+				this.pengurangan = `{{ $model->dikurangi }}`;
 				this.pembayaran = `{{ $model->pembayaran }}`;
-				console.log('{{ $model->penjualan->no_faktur }}')
+
 				@foreach($model->retur_penjualan_detail()->get() as $d)
 					this.retur[{{ $d->penjualan_detail_id }}] = '{{ $d->qty }}';
 					this.biaya[{{ $d->penjualan_detail_id }}] = '{{ $d->biaya }}';

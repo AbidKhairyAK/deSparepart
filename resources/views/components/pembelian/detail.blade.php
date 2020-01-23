@@ -118,7 +118,10 @@
 					<td>{{ $no++ }}</td>
 					<td>{{ $detail->part_no }}</td>
 					<td>{{ $detail->nama }}</td>
-					<td>{{ $detail->qty }}</td>
+					<td>
+						{{ $detail->qty }}
+						@if($detail->retur > 0) <small>{{ "(retur {$detail->retur})" }}</small> @endif
+					</td>
 					<td>{{ $detail->diskon }}%</td>
 					<td>{{ $detail->ppn }}%</td>
 					<td>{{ number_format($detail->harga, 0, '', '.')}}</td>

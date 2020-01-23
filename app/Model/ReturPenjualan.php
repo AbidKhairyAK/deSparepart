@@ -14,7 +14,7 @@ class ReturPenjualan extends Model implements Auditable
 	protected $table = 'retur_penjualan';
 
     protected $fillable = [
-    	'id', "user_id", "penjualan_id", "pembayaran_piutang_id", "dilunaskan", "dikembalikan", "pembayaran"
+    	'id', "user_id", "penjualan_id", "no_retur", "dikurangi", "dikembalikan", "pembayaran"
     ];
 
     public function user()
@@ -25,11 +25,6 @@ class ReturPenjualan extends Model implements Auditable
     public function penjualan()
     {
         return $this->belongsTo(Penjualan::class)->withTrashed();
-    }
-
-    public function pembayaran_piutang()
-    {
-        return $this->belongsTo(PembayaranPiutang::class)->withTrashed();
     }
 
     public function retur_penjualan_detail()
