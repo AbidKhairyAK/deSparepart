@@ -18,7 +18,7 @@
 		<table class="table table-striped">
 			<thead class="thead-dark">
 				<tr>
-					<th>#</th>
+					<!-- <th>#</th> -->
 					<th>Username</th>
 					<th>Email</th>
 					<th>Role</th>

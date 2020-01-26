@@ -18,7 +18,7 @@
 		<table class="table table-striped">
 			<thead class="thead-dark">
 				<tr>
-					<th>#</th>
+					<!-- <th>#</th> -->
 					<th width="250">Identitas</th>
 					<th width="200">Alamat</th>
 					<th width="200">Kontak</th>

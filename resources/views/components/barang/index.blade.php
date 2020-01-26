@@ -5,7 +5,8 @@
 @section('content')
 
 @include('components.'.$main.'.table')
-@include('layouts.multi')
+@include('components.'.$main.'.modal-form')
+{{-- @include('layouts.multi') --}}
 
 @endsection
 
@@ -20,7 +21,7 @@
 	        ajax: '{{$ajax}}',
             order: [[2,'desc']],
 	        columns: [
-	            { data: 'id', searchable: false, orderable: false },
+	            // { data: 'id', searchable: false, orderable: false },
             	{ data: 'gambar' },
             	{ data: 'nomor' },
             	{ data: 'identitas' },
@@ -29,6 +30,27 @@
 	            { data: 'action', searchable: false, orderable: false }
 	        ],
 	    });
+
+	    $('.select2').select2({
+			ajax: {
+				url: `{{ route('barang.api') }}`,
+				data: function (params) {
+					return {
+						search: params.term,
+					}
+				},
+				processResults: function (data) {
+					return {
+						results: data.map((item) => {
+							return {
+									text: item.name,
+									id: item.id
+							}
+						})
+					};
+				}
+			}
+		});
 	});
 </script>
 @include('components.modal.stock_item')

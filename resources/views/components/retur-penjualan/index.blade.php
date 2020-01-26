@@ -9,7 +9,7 @@
 @endif
 
 @include('components.'.$main.'.table')
-@include('layouts.multi')
+{{-- @include('layouts.multi') --}}
 
 @endsection
 
@@ -26,7 +26,7 @@
             order: [[1,'asc']],
 			
 	        columns: [
-	            { data: 'id', searchable: false, orderable: false },
+	            // { data: 'id', searchable: false, orderable: false },
             	{ data: 'kode' },
 	            { data: 'total' },
 	            { data: 'pembayaran' },

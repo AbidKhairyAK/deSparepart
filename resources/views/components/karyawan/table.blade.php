@@ -12,7 +12,7 @@
 		<table class="table table-striped">
 			<thead class="thead-dark">
 				<tr>
-					<th>#</th>
+					<!-- <th>#</th> -->
 					<th>Nama</th>
 					<th>Jabatan</th>
 					<th>Foto</th>

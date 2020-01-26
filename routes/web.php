@@ -50,6 +50,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 	Route::get('satuan/api', 'SatuanController@api')->name('satuan.api');
 
+	Route::get('barang/cetak', 'BarangController@cetak')->name('barang.cetak');
 	Route::get('barang/api', 'BarangController@api')->name('barang.api');
 	Route::get('barang/data', 'BarangController@data')->name('barang.data');
 	Route::resource('/barang', 'BarangController');

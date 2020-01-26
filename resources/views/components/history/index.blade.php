@@ -5,7 +5,7 @@
 @section('content')
 
 @include('components.'.$main.'.table')
-@include('layouts.multi')
+{{-- @include('layouts.multi') --}}
 
 @endsection
 
@@ -20,7 +20,7 @@
 	        ajax: '{!!$ajax!!}',
             order: [[4,'asc']],
 	        columns: [
-	            { data: 'id', searchable: false, orderable: false },
+	            // { data: 'id', searchable: false, orderable: false },
                 { data: 'user_id' },
                 { data: 'auditable_type' },
             	{ data: 'event' },

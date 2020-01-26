@@ -5,7 +5,7 @@
 @section('content')
 
 @include('components.jabatan.table')
-@include('layouts.multi')
+{{-- @include('layouts.multi') --}}
 
 @endsection
 
@@ -21,7 +21,7 @@
 	        ajax: '{{$ajax}}',
             order: [],
 	        columns: [
-            	{ data: 'id'},
+            	// { data: 'id'},
             	{ data: 'nama', searchable: true, orderable: true },
 	            { data: 'deskripsi', searchable: false, orderable: false },
 	            { data: 'action', searchable: false, orderable: false }

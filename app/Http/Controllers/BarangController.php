@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Model\Barang;
 use App\Model\Satuan;
+use App\Model\Inventaris;
 use Kris\LaravelFormBuilder\FormBuilder;
 use DataTables;
 use Form;
+use PDF;
 
 class BarangController extends Controller
 {
@@ -303,5 +305,13 @@ class BarangController extends Controller
         $newName = time().'.'.$gambar->getClientOriginalExtension();
         $gambar->move(public_path('img'), $newName);
         return $newName;
+    }
+
+    public function cetak(Request $request)
+    {
+        $data['test'] = $this->table->whereIn('id', $request->barang_id);
+        $data['tanggal'] = $request->tanggal;
+
+        return PDF::setOptions(['orientation' => 'potrait'])->loadView($this->folder.'.cetak',$data)->setPaper([0, 0, 720, 792], 'potrait')->stream();
     }
 }

@@ -9,7 +9,7 @@
 @endif
 
 @include('components.'.$main.'.table')
-@include('layouts.multi')
+{{-- @include('layouts.multi') --}}
 
 @endsection
 
@@ -24,7 +24,7 @@
 	        serverSide: true,
 	        ajax: '{{$ajax}}',
 	        columns: [
-	            { data: 'id', searchable: false, orderable: false },
+	            // { data: 'id', searchable: false, orderable: false },
             	{ data: 'nomor' },
             	{ data: 'customer', name: 'customer.nama'},
             	{ data: 'tanggal' },

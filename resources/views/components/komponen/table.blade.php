@@ -18,7 +18,7 @@
 		<table class="table table-striped">
 			<thead class="thead-dark">
 				<tr>
-					<th>#</th>
+					<!-- <th>#</th> -->
 					<th>Kode</th>
 					<th>Nama Komponen</th>
 					<th>Bagian</th>

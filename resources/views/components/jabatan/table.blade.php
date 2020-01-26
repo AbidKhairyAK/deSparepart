@@ -12,7 +12,7 @@
 		<table class="table table-striped">
 			<thead class="thead-dark">
 				<tr>
-					<th>#</th>
+					<!-- <th>#</th> -->
 					<th>Nama Jabatan</th>
 					<th>Deskripsi</th>
 					<th>Aksi</th>

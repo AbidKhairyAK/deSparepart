@@ -28,7 +28,7 @@
 		<table id="table" class="table table-striped">
 			<thead class="thead-dark">
 				<tr>
-					<th>#</th>
+					<!-- <th>#</th> -->
 					<th>Nomor</th>
 					<th width="180">Customer</th>
 					<th>Tanggal</th>
