@@ -1,0 +1,24 @@
+
+1. Ample Admin
+=> https://wrappixel.com/demos/admin-templates/ampleadmin/ample-admin-lite/dashboard.html
+
+2. Argon Dashboard
+=> https://demos.creative-tim.com/argon-dashboard/index.html
+
+3. Xtreme Admin
+=> https://wrappixel.com/demos/free-admin-templates/xtreme-admin-lite/xtreme-html/ltr/index.html
+
+4. Shards Dashboard
+=> https://designrevision.com/demo/shards-dashboard-lite/index.html
+
+5. Lumino Admin
+=> https://medialoot.com/preview/lumino/index.html#
+
+6. Material Pro Admin
+=> https://wrappixel.com/demos/free-admin-templates/material-pro-lite/html/index.html
+
+7. Monster Admin
+=> https://wrappixel.com/demos/free-admin-templates/monster-admin-lite/monster-html/index.html
+
+8. Brilliant
+=> https://webthemez.com/demo/brilliant-free-bootstrap-admin-template/index.html

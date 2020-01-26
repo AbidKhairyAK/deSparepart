@@ -4,7 +4,7 @@
 
 @section('content')
 @include('components.'.$main.'.table')
-@include('layouts.multi')
+{{-- @include('layouts.multi') --}}
 
 @endsection
 
@@ -19,7 +19,7 @@
 	        ajax: '{{$ajax}}',
             order: [[2,'desc']],
 	        columns: [
-	            { data: 'id', searchable: false, orderable: false },
+	            // { data: 'id', searchable: false, orderable: false },
             	{ data: 'name' },
 	            { data: 'count' },
 	            { data: 'action', searchable: false, orderable: false }

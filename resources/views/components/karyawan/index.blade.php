@@ -5,7 +5,7 @@
 @section('content')
 
 @include('components.karyawan.table')
-@include('layouts.multi')
+{{-- @include('layouts.multi') --}}
 
 @endsection
 
@@ -21,7 +21,7 @@
 	        ajax: '{{$ajax}}',
             order: [],
 	        columns: [
-            	{ data: 'id'},
+            	// { data: 'id'},
 				{ data: 'nama', searchable: false, orderable: false },
 				{ data: 'jabatan_id', searchable: false, orderable: false },
 				{ data: 'foto', searchable: false, orderable: false },
