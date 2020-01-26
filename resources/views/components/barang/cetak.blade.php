@@ -159,6 +159,20 @@
 					<td><span>{{ $detail->satuan->nama }}</span></td>
 				</tr>
 				@endforeach
+
+				@if(($p+1) == $page_count)
+					@php $placeholder = 20 - (($no-1)%20); @endphp
+					@for($i=0; $i<$placeholder; $i++)
+						<tr>
+							<td>.</td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+					@endfor
+				@endif
+
 			</tbody>
 		</table>
 
