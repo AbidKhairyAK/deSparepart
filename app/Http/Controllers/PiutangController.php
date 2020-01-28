@@ -72,7 +72,7 @@ class PiutangController extends Controller
                             <td>No Faktur</td><td class='px-2'>:</td><th>{$penjualan->no_faktur}</th>
                         </tr>
                         <tr>
-                            <td>Hutang</td><td class='px-2'>:</td><th>Rp ".number_format($penjualan->hutang, 0, '', '.')."</th>
+                            <td>Piutang</td><td class='px-2'>:</td><th>Rp ".number_format($penjualan->hutang, 0, '', '.')."</th>
                         </tr>
                     </table>
                 ";
@@ -83,7 +83,7 @@ class PiutangController extends Controller
                 return 'Rp '.number_format($hutang, 0, '', '.');
             })
             ->addColumn('transaksi', function ($index) {
-                return "Hutang ".$index->penjualan()->where('status_lunas', '0')->count('id')." Transaksi";
+                return "Piutang ".$index->penjualan()->where('status_lunas', '0')->count('id')." Transaksi";
             })
             ->addColumn('action', function ($index) {
                 $user = auth()->user();

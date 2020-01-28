@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Model\Supplier;
+use App\Model\PembelianDetail;
 use Kris\LaravelFormBuilder\FormBuilder;
 use DataTables;
 use Form;
@@ -124,19 +125,19 @@ class SupplierController extends Controller
                         'dis' => $user->can('delete-'.$this->main) ? '' : 'disabled',
                     ],
                     'detail'  => [
-                        'link' => $user->can('detail-'.$this->main) ? route($this->uri.'.destroy',$index->id) : '#',
+                        'link' => $user->can('detail-'.$this->main) ? route($this->uri.'.show',$index->id) : '#',
                         'dis' => $user->can('detail-'.$this->main) ? '' : 'disabled',
                     ],
                 ];
                 $tag = Form::open(array("url" => $can['delete']['link'], "method" => "DELETE"));
                 $tag .= "<a href='{$can['edit']['link1']}' class='btn btn-primary btn-sm {$can['edit']['dis']}' title='edit'><i class='fas fa-edit'></i></a>";
-                // $tag .= " <a href='{$can['detail']['link']}' class='btn btn-info btn-sm {$can['detail']['dis']}' title='detail'><i class='fas fa-eye'></i></a>";
+                $tag .= " <a href='{$can['detail']['link']}' class='btn btn-info btn-sm {$can['detail']['dis']}' title='detail'><i class='fas fa-eye'></i></a>";
 
-                if ($index->status) {
-                    $tag .= " <a href='{$can['edit']['link2']}' class='btn btn-warning btn-sm {$can['edit']['dis']}' title='nonaktifkan'><i class='fas fa-power-off'></i></a>";
-                } else {
-                    $tag .= " <a href='{$can['edit']['link3']}' class='btn btn-success btn-sm {$can['edit']['dis']}' title='aktifkan'><i class='fas fa-power-off'></i></a>";
-                }
+                // if ($index->status) {
+                //     $tag .= " <a href='{$can['edit']['link2']}' class='btn btn-warning btn-sm {$can['edit']['dis']}' title='nonaktifkan'><i class='fas fa-power-off'></i></a>";
+                // } else {
+                //     $tag .= " <a href='{$can['edit']['link3']}' class='btn btn-success btn-sm {$can['edit']['dis']}' title='aktifkan'><i class='fas fa-power-off'></i></a>";
+                // }
 
                 $tag .= " <button {$can['delete']['dis']} type='submit' onclick='return confirm(`apa anda yakin?`)' class='btn btn-danger btn-sm' title='hapus'><i class='fas fa-trash'></i></button>";
                 $tag .= Form::close();
@@ -152,6 +153,36 @@ class SupplierController extends Controller
             })
             ->rawColumns(['id', 'identitas', 'kontak', 'pajak', 'status', 'action'])
             ->make(true);
+    }
+
+    public function show(Request $request, $id)
+    {
+        $range_from = $request->get('range_from');
+        $range_to = $request->get('range_to');
+
+        $data['model'] = $this->table->find($id);
+
+        $pembelian = PembelianDetail::whereHas('pembelian', function($x) use($id) {
+            $x->where('supplier_id', $id);
+        });
+
+        if ($range_from) { $pembelian->whereDate('created_at', '>=', $range_from); }
+        if ($range_to) { $pembelian->whereDate('created_at', '<=', $range_to); }
+
+        $data['barang'] = $pembelian->select(DB::raw('
+                SUM(qty) as jumlah,
+                part_no,
+                nama,
+                satuan
+            '))
+            ->groupBy('part_no')
+            ->orderBy('jumlah', 'desc')
+            ->paginate(5);
+
+        $data['main'] = $this->main;
+        $data['title'] = $this->title;
+        $data['url'] = route($this->uri.'.index');
+        return view($this->folder.'.detail',$data);
     }
 
     public function create(FormBuilder $formBuilder)

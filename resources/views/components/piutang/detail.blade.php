@@ -43,7 +43,7 @@
 					<th>#</th>
 					<th>No Faktur</th>
 					<th>Jatuh Tempo</th>
-					<th>Jumlah Hutang</th>
+					<th>Jumlah Piutang</th>
 					<th width="200">Aksi</th>
 				</tr>
 			</thead>

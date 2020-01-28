@@ -26,4 +26,9 @@ class Customer extends Model implements Auditable
     {
     	return $this->hasMany(Penjualan::class)->withTrashed();
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class)->withTrashed();
+    }
 }

@@ -82,7 +82,7 @@
 					<span class="col-8">: <b>{{ $model->supplier->kode }} - {{ $model->supplier->nama }}</b></span>
 				</div>
 				<div class="row pb-2">
-					<span class="col-4">Kasir</span>
+					<span class="col-4">Pembuat Data</span>
 					<span class="col-8">: <b>{{ $model->user->username }}</b></span>
 				</div>
 				<div class="row pb-2">

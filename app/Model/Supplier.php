@@ -17,9 +17,14 @@ class Supplier extends Model implements Auditable
     	'id', 'kode', 'perusahaan', 'pemilik', 'cp', 'alamat', 'npwp', 'pkp', 'kategori', 'status', 'tempo_kredit', 'user_id',
     ];
 
+    public function user()
+    {
+    	return $this->belongsTo(User::class)->withTrashed();
+    }
+
     public function barang()
     {
-    	return $this->belongsToMany(Barang::class)->withTrashed();
+        return $this->belongsToMany(Barang::class)->withTrashed();
     }
 
     public function pembelian()
