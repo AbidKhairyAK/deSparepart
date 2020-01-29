@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>print stok barang</title>
+	<title></title>
+	<!-- Latest compiled and minified CSS -->
+	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> -->
 	<link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<style type="text/css">
 		body {
-			font-size: 20px;
+			font-size: 17px;
 			font-family: 'Inconsolata', monospace;
 		}
 		.list-barang {
-			font-size: 20px;
+			font-size: 15px;
 			width: 100%;
 			border: 1px dashed black;
 		}
@@ -40,6 +42,9 @@
 			border-left: 0;
 		}
 		.list-barang tr td:nth-child(4),
+		.list-barang tr td:nth-child(5),
+		.list-barang tr td:nth-child(6),
+		.list-barang tr td:nth-child(7),
 		.list-barang tfoot tr td:last-child {
 			text-align: right;
 		}
@@ -56,13 +61,13 @@
 		.left-head p {
 			line-height: 25px;
 			position: relative;
-			/*top: -20px;*/
+			top: -20px;
 		}
 		.right-head td {
 			line-height: 20px;
 		}
 		td.right-head:last-child {
-			width: 25%;
+			width: 30%;
 		}
 		.footer {
 			width: 100%;
@@ -75,7 +80,7 @@
 			display: block;
 			position: absolute;
 			top: -25px; right: 0;
-			font-size: 15px;
+			font-size: 12px;
 		}
 		.page-break {
 		    page-break-after: always;
@@ -96,7 +101,7 @@
 <body>
 
 	@php
-		$page_count = ceil($model->count() / 20);
+		$page_count = ceil($model->penjualan_detail()->count() / 10);
 	@endphp
 
 	@for($p=0; $p<$page_count; $p++)
@@ -106,21 +111,49 @@
 	<div class="container">
 		<p class="page">Hal: {{ $p+1 }}/{{ $page_count }}</p>
 
-		<h2><span class="c">DAFTAR STOK BARANG</span></h2>
+		<h2><span class="c">SURAT JALAN</span></h2>
 
 		<table class="head">
 			<tr>
 				<td class="left-head">
 					<p><span><b>PERUSAHAAN ANDA</b><br>Jl. Alamat Anda, Kota Anda</span></p>
+					<p><span>Kepada Yth.<br>{{ $model->customer->nama }}</span></p>
 				</td>
 				<td class="right-head">
 					<p>
 						<table>
 							<tr>
+								<td><span>NO FAKTUR</td>
+								<td><span>:</span></td>
+								<td><span>{{ $model->no_faktur }}</span></td>
+							</tr>
+							<tr>
 								<td><span>TANGGAL</td>
 								<td><span>:</span></td>
-								<td><span>{{ date('Y-m-d', strtotime($tanggal)) }}</span></td>
+								<td><span>{{ date('Y-m-d', strtotime($model->created_at)) }}</span></td>
 							</tr>
+							<tr><td></td><td></td><td></td></tr>
+							<tr><td></td><td></td><td></td></tr>
+							<tr>
+								<td><span>NO PO</span></td>
+								<td><span>:</span></td>
+								<td><span>{{ $model->no_po }}</span></td>
+							</tr>
+							<tr>
+								<td><span>TGL PO</span></td>
+								<td><span>:</span></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td><span>JT TEMPO</span></td>
+								<td><span>:</span></td>
+								<td><span>{{ $model->jatuh_tempo }}</span></td>
+							</tr>
+							<!-- <tr>
+								<td><span>NO MOBIL</span></td>
+								<td><span>:</span></td>
+								<td></td>
+							</tr> -->
 						</table>
 					</p>
 				</td>
@@ -133,39 +166,25 @@
 					<td width="5"><span class="c">NO</span></td>
 					<td width="100"><span class="c">PART NO</span></td>
 					<td><span class="c">NAMA BARANG</span></td>
-					<td width="50"><span class="c">QTY</span></td>
-					<td width="70"><span class="c">SATUAN</span></td>
+					<td width="100"><span class="c">QTY</span></td>
 				</tr>
 			</thead>
 			<tbody>
 				@php $no = isset($no) ? $no : 1; @endphp
-				@foreach($model->offset($p * 20)->limit(20)->get() as $detail)
+				@foreach($model->penjualan_detail()->offset($p * 10)->limit(10)->get() as $detail)
 				<tr>
 					<td><span>{{ $no++ }}</span></td>
 					<td><span>{{ $detail->part_no }}</span></td>
 					<td><span>{{ $detail->nama }}</span></td>
-					<td>
-						<span class="r">
-							{{ 
-								$detail->inventaris()
-									->where('tanggal', '<', $tanggal.' 23:59:59')
-									->latest('tanggal')
-									->first()
-									->inventaris_detail()
-									->sum('inv_stok')
-							}}
-						</span>
-					</td>
-					<td><span>{{ $detail->satuan->nama }}</span></td>
+					<td><span class="r">{{ $detail->qty }} {{ $detail->satuan }}</span></td>
 				</tr>
 				@endforeach
-
+				
 				@if(($p+1) == $page_count)
-					@php $placeholder = 20 - (($no-1)%20); @endphp
+					@php $placeholder = 10 - (($no-1)%10); @endphp
 					@for($i=0; $i<$placeholder; $i++)
 						<tr>
 							<td>.</td>
-							<td></td>
 							<td></td>
 							<td></td>
 							<td></td>
@@ -176,12 +195,24 @@
 			</tbody>
 		</table>
 
-		@if(($p+1) != $page_count)
+		@if(($p+1) == $page_count)
+		<table class="footer">
+			<tr>
+				<td><span>DITERIMA OLEH:</span></td>
+				<td><span>DIPERIKSA OLEH:</span></td>
+				<td><span>DIBUAT OLEH:</span></td>
+				<td><span>HORMAT KAMI,</span></td>
+			</tr>
+			<tr>
+				<td><span>(............)</span></td>
+				<td><span>(............)</span></td>
+				<td><span>(............)</span></td>
+				<td><span>(............)</span></td>
+			</tr>
+		</table>
+		@else
 		<p><span>(BERSAMBUNG)</span></p>
 		@endif
-
-		<br>
-		<p style="font-size: 15px;"><span><i>Catatan: stok yang ditamplikan merupakan sisa stok akhir pada tanggal yang tertera</i></span></p>
 
 	</div>
 	@endfor

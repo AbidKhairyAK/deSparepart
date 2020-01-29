@@ -4,13 +4,21 @@
 
 @section('content')
 
+@include('components.penjualan.modal-tanda-terima')
+
 <div class="card shadow mb-4">
 	<div class="card-header py-3 d-flex justify-content-between align-items-center">
 		<h6 class="m-0 font-weight-bold text-secondary">Detail {{ $title }}</h6>
 		<div>
 			@if(auth()->user()->can('create-'.$main))
-			<a href="{{ route($main.'.cetak', $model->id) }}" class="btn btn-sm btn-info" target="_blank">
+			<a href="{{ route($main.'.cetak', $model->id) }}" class="btn btn-sm btn-info faktur" target="_blank">
 				<i class="fas fa-print"></i> <b>Cetak Faktur</b>
+			</a>
+			<a href="{{ route($main.'.surat-jalan', $model->id) }}" class="btn btn-sm btn-warning" target="_blank">
+				<i class="fas fa-truck"></i> <b>Cetak Surat Jalan</b>
+			</a>
+			<a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-tanda-terima">
+				<i class="fas fa-file-signature"></i> <b>Cetak Tanda Terima</b>
 			</a>
 			<a href="{{ route($main.'.create') }}" class="btn btn-sm btn-primary">
 				<i class="fas fa-plus"></i> <b>Tambah {{ $title }}</b>
@@ -21,16 +29,6 @@
 			</a>
 			<a href="#" class="btn btn-sm btn-primary disabled">
 				<i class="fas fa-plus"></i> <b>Tambah {{ $title }}</b>
-			</a>
-			@endif
-
-			@if(auth()->user()->can('index-piutang'))
-			<a href="{{ route('piutang.index') }}" class="btn btn-sm btn-warning">
-				<i class="fas fa-list"></i> <b>Daftar Piutang</b>
-			</a>
-			@else
-			<a href="#" class="btn btn-sm btn-warning disabled">
-				<i class="fas fa-list"></i> <b>Daftar Piutang</b>
 			</a>
 			@endif
 		</div>
@@ -137,6 +135,14 @@
 	</div>
 </div>
 
-@include('layouts.multi')
+@endsection
+
+@section('script')
+<script type="text/javascript">
+	@if(session()->has('print'))
+    $('.faktur')[0].click();
+    @endif
+</script>
+@include('components.penjualan.modal-tanda-terima-js')
 
 @endsection

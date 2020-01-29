@@ -91,12 +91,15 @@
 		span.c {
 			transform-origin: 50% 50%;
 		}
+		.text-white {
+			color: white;
+		}
 	</style>
 </head>
 <body>
 
 	@php
-		$page_count = ceil($model->count() / 20);
+		$page_count = ceil($model->count() / 13);
 	@endphp
 
 	@for($p=0; $p<$page_count; $p++)
@@ -106,12 +109,13 @@
 	<div class="container">
 		<p class="page">Hal: {{ $p+1 }}/{{ $page_count }}</p>
 
-		<h2><span class="c">DAFTAR STOK BARANG</span></h2>
+		<h2><span class="c">TANDA TERIMA</span></h2>
 
 		<table class="head">
 			<tr>
 				<td class="left-head">
 					<p><span><b>PERUSAHAAN ANDA</b><br>Jl. Alamat Anda, Kota Anda</span></p>
+					<p><span>Kepada Yth.<br>{{ $customer->nama }}</span></p>
 				</td>
 				<td class="right-head">
 					<p>
@@ -119,8 +123,15 @@
 							<tr>
 								<td><span>TANGGAL</td>
 								<td><span>:</span></td>
-								<td><span>{{ date('Y-m-d', strtotime($tanggal)) }}</span></td>
+								<td><span>{{ date('Y-m-d') }}</span></td>
 							</tr>
+							<tr>
+								<td><span>NOTA</td>
+								<td><span>:</span></td>
+								<td><span>{{ $model->count() }}</span></td>
+							</tr>
+							<tr class="text-white"><td>.</td></tr>
+							<tr class="text-white"><td>.</td></tr>
 						</table>
 					</p>
 				</td>
@@ -131,41 +142,27 @@
 			<thead>
 				<tr>
 					<td width="5"><span class="c">NO</span></td>
-					<td width="100"><span class="c">PART NO</span></td>
-					<td><span class="c">NAMA BARANG</span></td>
-					<td width="50"><span class="c">QTY</span></td>
-					<td width="70"><span class="c">SATUAN</span></td>
+					<td><span class="c">TANGGAL</span></td>
+					<td><span class="c">NO FAKTUR</span></td>
+					<td width="150"><span class="c">JUMLAH</span></td>
 				</tr>
 			</thead>
 			<tbody>
 				@php $no = isset($no) ? $no : 1; @endphp
-				@foreach($model->offset($p * 20)->limit(20)->get() as $detail)
+				@foreach($model->offset($p * 13)->limit(13)->get() as $detail)
 				<tr>
 					<td><span>{{ $no++ }}</span></td>
-					<td><span>{{ $detail->part_no }}</span></td>
-					<td><span>{{ $detail->nama }}</span></td>
-					<td>
-						<span class="r">
-							{{ 
-								$detail->inventaris()
-									->where('tanggal', '<', $tanggal.' 23:59:59')
-									->latest('tanggal')
-									->first()
-									->inventaris_detail()
-									->sum('inv_stok')
-							}}
-						</span>
-					</td>
-					<td><span>{{ $detail->satuan->nama }}</span></td>
+					<td><span>{{ $detail->created_at }}</span></td>
+					<td><span>{{ $detail->no_faktur }}</span></td>
+					<td><span class="r">{{ rupiah($detail->total) }}</span></td>
 				</tr>
 				@endforeach
 
 				@if(($p+1) == $page_count)
-					@php $placeholder = 20 - (($no-1)%20); @endphp
+					@php $placeholder = 13 - (($no-1)%13); @endphp
 					@for($i=0; $i<$placeholder; $i++)
 						<tr>
 							<td>.</td>
-							<td></td>
 							<td></td>
 							<td></td>
 							<td></td>
@@ -174,14 +171,35 @@
 				@endif
 
 			</tbody>
+
+			@if(($p+1) == $page_count)
+			<tfoot>
+				<tr>
+					<td colspan="3"><span class="c">TOTAL</span></td>
+					<td><span class="r">{{ rupiah($model->sum('total')) }}</span></td>
+				</tr>
+			</tfoot>
+			@endif
+
 		</table>
 
-		@if(($p+1) != $page_count)
+		@if(($p+1) == $page_count)
+
+		<p class="terbilang"><span>TERBILANG: {{ strtoupper(terbilang($model->sum('total'))) }}</span></p>
+
+		<table class="footer">
+			<tr>
+				<td width="530"><span>DITERIMA OLEH:</span></td>
+				<td><span>HORMAT KAMI,</span></td>
+			</tr>
+			<tr>
+				<td><span>(............)</span></td>
+				<td><span>(............)</span></td>
+			</tr>
+		</table>
+		@else
 		<p><span>(BERSAMBUNG)</span></p>
 		@endif
-
-		<br>
-		<p style="font-size: 15px;"><span><i>Catatan: stok yang ditamplikan merupakan sisa stok akhir pada tanggal yang tertera</i></span></p>
 
 	</div>
 	@endfor
