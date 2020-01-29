@@ -3,10 +3,16 @@
 		<h6 class="m-0 font-weight-bold text-secondary">Tabel Daftar {{ $title }}</h6>
 		<div>
 			@if(auth()->user()->can('create-'.$main))
+			<a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-tanda-terima">
+				<i class="fas fa-file-signature"></i> <b>Cetak Tanda Terima</b>
+			</a>
 			<a href="{{ route($main.'.create') }}" class="btn btn-sm btn-primary">
 				<i class="fas fa-plus"></i> <b>Tambah {{ $title }}</b>
 			</a>
 			@else
+			<a href="#" class="btn btn-sm btn-success">
+				<i class="fas fa-file-signature"></i> <b>Cetak Tanda Terima</b>
+			</a>
 			<a href="#" class="btn btn-sm btn-primary disabled">
 				<i class="fas fa-plus"></i> <b>Tambah {{ $title }}</b>
 			</a>

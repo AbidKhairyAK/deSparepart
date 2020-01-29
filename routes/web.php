@@ -55,6 +55,8 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::get('barang/data', 'BarangController@data')->name('barang.data');
 	Route::resource('/barang', 'BarangController');
 
+	Route::get('penjualan/tanda-terima', 'PenjualanController@tandaterima')->name('penjualan.tanda-terima');
+	Route::get('penjualan/{id}/surat-jalan', 'PenjualanController@suratjalan')->name('penjualan.surat-jalan');
 	Route::get('penjualan/{id}/cetak', 'PenjualanController@cetak')->name('penjualan.cetak');
 	Route::get('penjualan/api/{type?}', 'PenjualanController@api')->name('penjualan.api');
 	Route::get('penjualan/data', 'PenjualanController@data')->name('penjualan.data');

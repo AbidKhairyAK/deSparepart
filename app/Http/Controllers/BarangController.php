@@ -309,7 +309,7 @@ class BarangController extends Controller
 
     public function cetak(Request $request)
     {
-        $data['test'] = $this->table->whereIn('id', $request->barang_id);
+        $data['model'] = $this->table->whereIn('id', $request->barang_id);
         $data['tanggal'] = $request->tanggal;
 
         return PDF::setOptions(['orientation' => 'potrait'])->loadView($this->folder.'.cetak',$data)->setPaper([0, 0, 720, 792], 'potrait')->stream();

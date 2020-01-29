@@ -4,11 +4,8 @@
 
 @section('content')
 
-@if(session()->has('print'))
-<a href="{{ session('print') }}" target="_blank" class="print">klik ini bila faktur tidak otomatis terprint</a>
-@endif
-
 @include('components.'.$main.'.table')
+@include('components.'.$main.'.modal-tanda-terima')
 {{-- @include('layouts.multi') --}}
 
 @endsection
@@ -34,10 +31,7 @@
 	        ],
 	    });
 
-		@if(session()->has('print'))
-	    $('.print')[0].click();
-	    @endif
-
 	});
 </script>
+@include('components.penjualan.modal-tanda-terima-js')
 @endsection

@@ -35,6 +35,7 @@ class PenjualanController extends Controller
 		$search = $request->get('search');
 		$piutang = $request->get('piutang');
 		$id = $request->get('id');
+		$customer_id = $request->get('customer_id');
 
 		$data = $this->table;
 
@@ -50,6 +51,8 @@ class PenjualanController extends Controller
 		} else if ($type=='full' && !empty($id)){
 			$data = $data->with(['customer', 'penjualan_detail', 'pembayaran_piutang', 'retur_penjualan'])->find($id);
 			$data->has_retur = $data->where('id', $id)->has('retur_penjualan')->exists();
+		} else if ($type=='customer' && !empty($customer_id)) {
+			$data = $data->where('customer_id', $customer_id)->select('no_faktur', 'id', 'created_at', 'total')->get();
 		}
 
 		return response()->json($data);
@@ -226,7 +229,7 @@ class PenjualanController extends Controller
 		$penjualan = $this->table->create($data);
 		$this->detailPenjualan($request, $penjualan->id);
 
-		return redirect($this->uri)->with('print', route('penjualan.cetak', $penjualan->id));
+		return redirect($this->uri.'/'.$penjualan->id)->with('print', true);
 	}
 
 	public function update(Request $request, $id)
@@ -514,5 +517,21 @@ class PenjualanController extends Controller
 		
 		// return view($this->folder.'.cetak',$data);
 		return PDF::setOptions(['orientation' => 'landscape'])->loadView($this->folder.'.cetak',$data)->setPaper([0, 0, 720, 792], 'landscape')->stream();
+	}
+
+	public function suratjalan($id)
+	{
+		$data['model'] = $this->table->find($id);
+		
+		// return view($this->folder.'.cetak',$data);
+		return PDF::setOptions(['orientation' => 'landscape'])->loadView($this->folder.'.surat-jalan',$data)->setPaper([0, 0, 720, 792], 'landscape')->stream();
+	}
+
+	public function tandaterima(Request $request)
+	{
+        $data['model'] = $this->table->whereIn('id', $request->penjualan_id);
+        $data['customer'] = Customer::find($request->customer_id);
+
+        return PDF::setOptions(['orientation' => 'potrait'])->loadView($this->folder.'.tanda-terima',$data)->setPaper([0, 0, 720, 792], 'potrait')->stream();
 	}
 }
