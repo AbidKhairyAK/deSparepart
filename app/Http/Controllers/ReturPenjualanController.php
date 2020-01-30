@@ -157,7 +157,7 @@ class ReturPenjualanController extends Controller
         
         $prevData = $this->table->max('no_retur');
         $newNo = (!is_null($prevData) && substr($prevData, 10) != 99999) ? ( intval("1".substr($prevData, 10)) + 1 ) : null;
-        $data['no_retur'] = "XXX-" . date('y/m/') . (!is_null($newNo) ? substr($newNo, 1) : "00001");
+        $data['no_retur'] = "RTJ-" . date('y/m/') . (!is_null($newNo) ? substr($newNo, 1) : "00001");
 
         $data['main'] = $this->main;
         $data['title'] = $this->title;

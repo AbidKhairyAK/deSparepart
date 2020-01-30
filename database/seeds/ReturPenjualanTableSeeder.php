@@ -26,7 +26,7 @@ class ReturPenjualanTableSeeder extends Seeder
             $data[] = [
                 "user_id" => 1,
                 "penjualan_id" => $pd->penjualan_detail->penjualan_id,
-                "no_retur" => "XXX-".date('y/m/', strtotime($pd->created_at)).substr((100000 + ($count - $key)), 1),
+                "no_retur" => "RTJ-".date('y/m/', strtotime($pd->created_at)).substr((100000 + ($count - $key)), 1),
                 "pembayaran" => $pembayaran,
                 'pembayaran_detail' => $pembayaran == 'giro' ? $faker->isbn13 : null,
                 "dikembalikan" => $pd->total,
