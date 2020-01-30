@@ -154,9 +154,9 @@ class PembayaranHutangController extends Controller
             $data['m'] = DB::table('pembelian')->select('no_faktur', 'id')->where('id', $id)->first();
         }
 
-        $prevData = $this->table->where('no_pelunasan', 'like', 'BM-'.date('y')."%")->orderBy('no_pelunasan', 'desc')->first();
+        $prevData = $this->table->where('no_pelunasan', 'like', 'BK-'.date('y')."%")->orderBy('no_pelunasan', 'desc')->first();
         $newNo = !is_null($prevData) ? ( intval("1".substr($prevData->no_pelunasan, 5)) + 1 ) : null;
-        $data['no_pelunasan'] = "BM-" . date('y') . (!is_null($prevData) ? substr($newNo, 1) : "00001");
+        $data['no_pelunasan'] = "BK-" . date('y') . (!is_null($prevData) ? substr($newNo, 1) : "00001");
         
         $data['main'] = $this->main;
         $data['title'] = $this->title;

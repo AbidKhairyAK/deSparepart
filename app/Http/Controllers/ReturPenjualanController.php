@@ -196,8 +196,8 @@ class ReturPenjualanController extends Controller
             'no_retur' => $request->no_retur,
             'pembayaran' => $request->pembayaran,
             'pembayaran_detail' => $request->pembayaran_detail,
-            'dikurangi' => removedot($request->dikurangi),
-            'dikembalikan' => removedot($request->dikembalikan),
+            'dikurangi' => removedot($request->dikurangi) ?: 0,
+            'dikembalikan' => removedot($request->dikembalikan) ?: 0,
         ]);
 
         $rpd = $request->qty;
@@ -225,7 +225,7 @@ class ReturPenjualanController extends Controller
     {
         $model = ReturPenjualan::find($id);
 
-        $sisa_hutang = ($model->penjualan->hutang + $request->dikurangi_sebelumnya) - removedot($request->dikurangi);
+        $sisa_hutang = ($model->penjualan->hutang + intval($request->dikurangi_sebelumnya)) - intval(removedot($request->dikurangi));
 
         $model->penjualan->update([
             'hutang' => $sisa_hutang,
@@ -236,8 +236,8 @@ class ReturPenjualanController extends Controller
             'user_id' => auth()->user()->id,
             'pembayaran' => $request->pembayaran,
             'pembayaran_detail' => $request->pembayaran_detail,
-            'dikembalikan' => removedot($request->dikembalikan),
-            'dikurangi' => removedot($request->dikurangi),
+            'dikembalikan' => removedot($request->dikembalikan) ?: 0,
+            'dikurangi' => removedot($request->dikurangi) ?: 0,
         ]);
 
         $old_rpd = ReturPenjualanDetail::where('retur_penjualan_id', $id);
