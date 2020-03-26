@@ -3,18 +3,18 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
-use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
 
 class ReturPembelian extends Model implements Auditable
 {
-	use \OwenIt\Auditing\Auditable;
+    use \OwenIt\Auditing\Auditable;
     use SoftDeletes;
-    
-	protected $table = 'retur_pembelian';
+
+    protected $table = 'retur_pembelian';
 
     protected $fillable = [
-    	'id', "user_id", "pembelian_id", "no_retur", "dikurangi", "dikembalikan", "pembayaran"
+        'id', "user_id", "pembelian_id", "no_retur", "dikurangi", "dikembalikan", "pembayaran",
     ];
 
     public function user()
@@ -29,6 +29,14 @@ class ReturPembelian extends Model implements Auditable
 
     public function retur_pembelian_detail()
     {
-    	return $this->hasMany(ReturPembelianDetail::class);
+        return $this->hasMany(ReturPembelianDetail::class);
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+        self::creating(function ($model) {
+            $model->user_id = auth()->user()->id;
+        });
     }
 }

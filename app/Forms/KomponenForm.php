@@ -3,7 +3,6 @@
 namespace App\Forms;
 
 use Kris\LaravelFormBuilder\Form;
-use App\Model\Role;
 
 class KomponenForm extends Form
 {
@@ -12,20 +11,24 @@ class KomponenForm extends Form
         $this
             ->add('nama', 'text', [
                 'label' => 'Nama Komponen',
-                'attr' => ['required' => true]
+                'attr'  => ['required' => true],
+            ])
+            ->add('kode', 'text', [
+                'label' => 'Kode',
+                'attr'  => ['required' => true],
             ])
             ->add('tipe', 'choice', [
-			    'choices' => ['umum' => 'Umum', 'mobil' => 'Mobil', 'motor' => 'Motor', 'sepeda' => 'Sepeda'],
-                'label_attr' => ['class' => 'w-100'],
-                'attr' => ['required' => true],
+                'choices'        => ['umum' => 'Umum', 'mobil' => 'Mobil', 'motor' => 'Motor', 'sepeda' => 'Sepeda'],
+                'label_attr'     => ['class' => 'w-100'],
+                'attr'           => ['required' => true],
                 'choice_options' => [
-                    'label_attr' => ['class' => 'pr-3']
+                    'label_attr' => ['class' => 'pr-3'],
                 ],
-                'multiple' => false,
-                'expanded' => true,
-			])
+                'multiple'       => false,
+                'expanded'       => true,
+            ])
             ->add('bagian', 'text', [
-                'attr' => ['required' => true]
+                'attr' => ['required' => true],
             ]);
     }
 }

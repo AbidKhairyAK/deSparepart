@@ -3,25 +3,25 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
-use OwenIt\Auditing\Contracts\Auditable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
 
 class Barang extends Model implements Auditable
 {
-	use \OwenIt\Auditing\Auditable;
+    use \OwenIt\Auditing\Auditable;
     use SoftDeletes;
 
-	protected $table = 'barang';
+    protected $table = 'barang';
 
     protected $fillable = [
-    	'id', 'user_id', 'komponen_id', 'kendaraan_id', 'kode', 'part_no', 'nama', 'merk', 'stok', 'limit', 'satuan_id', 'harga_beli', 'harga_jual', 'keterangan', 'gambar'
+        'id', 'user_id', 'komponen_id', 'kendaraan_id', 'kode', 'part_no', 'nama', 'merk', 'stok', 'limit', 'satuan_id', 'harga_beli', 'harga_jual', 'keterangan', 'gambar',
     ];
 
     protected $with = ['user', 'komponen', 'satuan', 'kendaraan', 'pembelian_detail'];
 
     public function user()
     {
-    	return $this->belongsTo(User::class)->withTrashed();
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     public function komponen()
@@ -31,12 +31,12 @@ class Barang extends Model implements Auditable
 
     public function satuan()
     {
-    	return $this->belongsTo(Satuan::class);
+        return $this->belongsTo(Satuan::class);
     }
 
     public function kendaraan()
     {
-    	return $this->belongsTo(Kendaraan::class)->withTrashed();
+        return $this->belongsTo(Kendaraan::class)->withTrashed();
     }
 
     public function pembelian_detail()
@@ -62,5 +62,13 @@ class Barang extends Model implements Auditable
     public function setHargaJualAttribute($value)
     {
         $this->attributes['harga_jual'] = str_replace(".", "", $value);
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+        self::creating(function ($model) {
+            $model->user_id = auth()->user()->id;
+        });
     }
 }
